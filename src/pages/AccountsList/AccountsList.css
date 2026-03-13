@@ -1,0 +1,238 @@
+.accounts-list-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.accounts-header {
+  margin-bottom: 2rem;
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-lg);
+  padding: 1rem 1.5rem;
+  margin-bottom: 1.5rem;
+  backdrop-filter: blur(10px);
+}
+
+.search-bar svg {
+  color: var(--text-muted);
+}
+
+.search-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text-primary);
+  font-size: 1rem;
+  font-family: 'Inter', sans-serif;
+}
+
+.search-input::placeholder {
+  color: var(--text-muted);
+}
+
+.accounts-stats {
+  display: flex;
+  gap: 2rem;
+  padding: 1.5rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-lg);
+  backdrop-filter: blur(10px);
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.stat-item svg {
+  color: var(--cyan);
+}
+
+.stat-value {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1;
+  margin-bottom: 0.25rem;
+}
+
+.stat-label {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+.accounts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 1.5rem;
+}
+
+.account-card {
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  position: relative;
+}
+
+.account-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 60px rgba(27, 150, 255, 0.2);
+  border-color: var(--salesforce-blue);
+}
+
+.account-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.account-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--salesforce-blue), var(--cyan));
+  color: white;
+}
+
+.account-name {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 0.5rem 0;
+}
+
+.account-industry {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  margin: 0 0 1.5rem 0;
+}
+
+.account-metrics {
+  display: flex;
+  gap: 1.5rem;
+  padding: 1rem 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 1rem;
+}
+
+.metric {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex: 1;
+}
+
+.metric svg {
+  color: var(--cyan);
+  flex-shrink: 0;
+}
+
+.metric-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-bottom: 0.25rem;
+}
+
+.metric-value {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.account-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.account-location {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.account-location svg {
+  color: var(--text-muted);
+}
+
+.account-opportunities {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--salesforce-blue);
+  padding: 0.25rem 0.75rem;
+  background: rgba(27, 150, 255, 0.1);
+  border-radius: var(--radius-sm);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .page-body {
+    padding: 1rem;
+  }
+  
+  .accounts-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .accounts-stats {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .account-metrics {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .accounts-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+  }
+  
+  .search-box {
+    width: 100%;
+  }
+  
+  .account-card {
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-body {
+    padding: 0.75rem;
+  }
+  
+  .page-header h1 {
+    font-size: 1.25rem;
+  }
+  
+  .stat-value {
+    font-size: 1.25rem;
+  }
+  
+  .stat-label {
+    font-size: 0.75rem;
+  }
+  
+  .account-name {
+    font-size: 1rem;
+  }
+}

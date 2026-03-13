@@ -1,0 +1,105 @@
+.organization-plan-page {
+  padding: 2rem;
+}
+
+.org-plan-header {
+  margin-bottom: 2rem;
+}
+
+.header-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5rem;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+}
+
+.stat-item svg {
+  color: var(--salesforce-blue);
+}
+
+.stat-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  margin-top: 0.25rem;
+}
+
+.all-reps-plans {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+.rep-plan-section {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  padding: 2rem;
+  backdrop-filter: blur(10px);
+}
+
+.rep-plan-header {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.rep-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.rep-avatar {
+  font-size: 2.5rem;
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, var(--salesforce-blue), var(--cyan));
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rep-info h3 {
+  font-size: 1.5rem;
+  margin: 0;
+  color: var(--text-primary);
+}
+
+.rep-region {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  margin: 0.25rem 0 0 0;
+}
+
+@media (max-width: 768px) {
+  .organization-plan-page {
+    padding: 1rem;
+  }
+
+  .header-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .rep-plan-section {
+    padding: 1rem;
+  }
+}

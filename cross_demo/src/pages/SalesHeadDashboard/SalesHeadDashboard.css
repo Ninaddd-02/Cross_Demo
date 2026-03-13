@@ -1,0 +1,688 @@
+/* Sales Head Dashboard Styles - Matching Current Theme */
+
+/* Layout Containers */
+.admin-layout {
+  overflow-x: hidden;
+  width: 100%;
+}
+
+.admin-content {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+}
+
+.dashboard-body {
+  padding: 2rem;
+  overflow-x: hidden;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* KPI Cards Grid */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.kpi-card {
+  padding: 1.5rem;
+}
+
+.kpi-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.kpi-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, var(--salesforce-blue), var(--cyan));
+  border-radius: var(--radius-md);
+  color: white;
+}
+
+.kpi-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin: 0 0 0.5rem 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.kpi-value {
+  font-size: 2rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--salesforce-blue), var(--cyan));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0.5rem 0;
+}
+
+.kpi-subtitle {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.kpi-trend {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--radius-sm);
+}
+
+.kpi-trend-up {
+  color: var(--success);
+  background: rgba(59, 167, 85, 0.1);
+}
+
+.kpi-trend-down {
+  color: var(--error);
+  background: rgba(234, 0, 30, 0.1);
+}
+
+/* Revenue Forecast Card */
+.revenue-forecast-card {
+  grid-column: 1 / -1;
+  animation: fadeIn 0.5s ease;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+}
+
+.card-header .section-title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--text-primary);
+}
+
+.card-header .section-title svg {
+  color: var(--salesforce-blue);
+}
+
+.forecast-comparison {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr auto 1fr;
+  gap: 2rem;
+  padding: 2rem;
+  background: #F9FAFB;
+  border-radius: var(--radius-md);
+  margin-bottom: 2rem;
+}
+
+.forecast-item {
+  text-align: center;
+}
+
+.forecast-label {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+}
+
+.forecast-value {
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.forecast-predicted {
+  background: linear-gradient(135deg, var(--salesforce-blue), var(--cyan));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.forecast-salesforce {
+  color: var(--purple);
+}
+
+.forecast-adjusted {
+  color: var(--neon-green);
+}
+
+.forecast-divider {
+  width: 1px;
+  background: #E5E7EB;
+}
+
+.forecast-confidence {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  padding: 2rem;
+  background: linear-gradient(135deg, rgba(1, 118, 211, 0.05), rgba(27, 150, 255, 0.05));
+  border-radius: var(--radius-md);
+  margin-bottom: 2rem;
+}
+
+.confidence-details {
+  flex: 1;
+}
+
+.confidence-title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.confidence-description {
+  font-size: 0.9375rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.forecast-subtitle {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 1rem 0;
+}
+
+.quarterly-forecast {
+  padding: 1.5rem;
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: var(--radius-md);
+}
+
+.quarterly-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr));
+  gap: 1.5rem;
+}
+
+.quarter-item {
+  padding: 1rem;
+  background: #F9FAFB;
+  border-radius: var(--radius-md);
+  border: 1px solid #E5E7EB;
+}
+
+.quarter-name {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.quarter-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.quarter-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.bar-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.bar-visual {
+  height: 8px;
+  background: #E5E7EB;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width var(--transition-normal);
+}
+
+.bar-fill-predicted {
+  background: linear-gradient(135deg, var(--salesforce-blue), var(--cyan));
+}
+
+.bar-fill-salesforce {
+  background: var(--purple);
+}
+
+.bar-value {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.quarter-confidence {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  padding-top: 0.5rem;
+  border-top: 1px solid #E5E7EB;
+}
+
+/* Risk Map Card */
+.risk-map-card {
+  grid-column: 1 / -1;
+  animation: fadeIn 0.5s ease 0.1s;
+  animation-fill-mode: both;
+}
+
+.risk-exposure {
+  text-align: right;
+}
+
+.exposure-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--warning);
+}
+
+.exposure-label {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.risk-section {
+  margin-bottom: 2rem;
+}
+
+.risk-section:last-child {
+  margin-bottom: 0;
+}
+
+.risk-section-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #E5E7EB;
+}
+
+.risk-section-title svg {
+  color: var(--salesforce-blue);
+}
+
+.risk-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.risk-item {
+  padding: 1rem;
+  background: #F9FAFB;
+  border-radius: var(--radius-md);
+  border: 1px solid #E5E7EB;
+  transition: all var(--transition-fast);
+}
+
+.risk-item:hover {
+  background: #FFFFFF;
+  border-color: var(--salesforce-blue);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.risk-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.risk-item-name {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.risk-item-deals {
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+  background: #FFFFFF;
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--radius-sm);
+}
+
+.risk-item-pipeline {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+}
+
+.risk-amount {
+  font-weight: 600;
+}
+
+.risk-bar {
+  height: 6px;
+  background: #E5E7EB;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.risk-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width var(--transition-normal);
+}
+
+/* Manager Effectiveness Card */
+.manager-effectiveness-card {
+  grid-column: 1 / -1;
+  animation: fadeIn 0.5s ease 0.2s;
+  animation-fill-mode: both;
+}
+
+.manager-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
+  gap: 1.5rem;
+}
+
+.manager-card {
+  padding: 1.5rem;
+  background: #F9FAFB;
+  border: 1px solid #E5E7EB;
+  border-radius: var(--radius-md);
+  transition: all var(--transition-normal);
+}
+
+.manager-card:hover {
+  background: #FFFFFF;
+  border-color: var(--salesforce-blue);
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.manager-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #E5E7EB;
+}
+
+.manager-name {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+}
+
+.manager-region {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+.manager-ranking {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, var(--salesforce-blue), var(--cyan));
+  color: white;
+  font-size: 1.25rem;
+  font-weight: 700;
+  border-radius: 50%;
+}
+
+.manager-metrics {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.manager-metric {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.metric-label {
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.metric-value-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.metric-value {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  min-width: 70px;
+}
+
+.metric-bar {
+  flex: 1;
+  height: 8px;
+  background: #E5E7EB;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.metric-bar-fill {
+  height: 100%;
+  background: linear-gradient(135deg, var(--salesforce-blue), var(--cyan));
+  border-radius: 4px;
+  transition: width var(--transition-normal);
+}
+
+.metric-bar-velocity {
+  background: linear-gradient(135deg, var(--neon-green), var(--success));
+}
+
+.metric-bar-coaching {
+  background: linear-gradient(135deg, var(--purple), #B794F6);
+}
+
+.manager-pipeline {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #E5E7EB;
+}
+
+.pipeline-stat {
+  text-align: center;
+}
+
+.pipeline-stat-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.25rem;
+}
+
+.pipeline-stat-value {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+/* Pattern Insights Card */
+.pattern-insights-card {
+  grid-column: 1 / -1;
+  animation: fadeIn 0.5s ease 0.3s;
+  animation-fill-mode: both;
+}
+
+.insights-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+  gap: 1.5rem;
+}
+
+.insight-card {
+  padding: 1.5rem;
+  background: #F9FAFB;
+  border: 1px solid #E5E7EB;
+  border-radius: var(--radius-md);
+  transition: all var(--transition-normal);
+}
+
+.insight-card:hover {
+  background: #FFFFFF;
+  border-color: var(--salesforce-blue);
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.insight-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.insight-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, var(--salesforce-blue), var(--cyan));
+  border-radius: var(--radius-md);
+  color: white;
+}
+
+.insight-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 0.75rem 0;
+}
+
+.insight-text {
+  font-size: 0.9375rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin: 0 0 1rem 0;
+}
+
+.insight-recommendation {
+  padding: 1rem;
+  background: #EFF6FF;
+  border-left: 3px solid var(--salesforce-blue);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  margin-bottom: 1rem;
+}
+
+.recommendation-label {
+  font-size: 0.75rem;
+  color: var(--salesforce-blue);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.recommendation-text {
+  font-size: 0.875rem;
+  color: var(--text-primary);
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.insight-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 1rem;
+  border-top: 1px solid #E5E7EB;
+}
+
+.insight-confidence {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.8125rem;
+  color: var(--success);
+  font-weight: 600;
+}
+
+.insight-source {
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .dashboard-main-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .forecast-comparison {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .forecast-divider {
+    height: 1px;
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .kpi-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .manager-grid,
+  .insights-grid,
+  .quarterly-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .manager-pipeline {
+    grid-template-columns: 1fr;
+  }
+}

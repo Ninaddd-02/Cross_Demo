@@ -1,0 +1,266 @@
+.retrain-container {
+  width: 100%;
+  padding: 2rem 0;
+}
+
+.retrain-card {
+  text-align: center;
+}
+
+.retrain-header {
+  margin-bottom: 3rem;
+}
+
+.retrain-icon-main {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 120px;
+  height: 120px;
+  background: linear-gradient(135deg, var(--salesforce-blue), var(--cyan));
+  border-radius: 50%;
+  margin-bottom: 2rem;
+  box-shadow: 0 0 40px rgba(27, 150, 255, 0.4);
+}
+
+.rotating-icon {
+  color: white;
+  animation: spin 3s linear infinite;
+}
+
+.retrain-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 1rem 0;
+}
+
+.retrain-subtitle {
+  font-size: 1.125rem;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.retrain-stages {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 3rem;
+  padding: 2rem;
+  background: #F9FAFB;
+  border-radius: var(--radius-lg);
+  overflow-x: auto;
+}
+
+.stage-container {
+  display: flex;
+  align-items: center;
+}
+
+.stage-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.5rem;
+  min-width: 200px;
+  border-radius: var(--radius-md);
+  background: #FFFFFF;
+  border: 2px solid #E5E7EB;
+  transition: all var(--transition-normal);
+}
+
+.stage-complete {
+  border-color: var(--success);
+  background: rgba(34, 197, 94, 0.05);
+}
+
+.stage-active {
+  border-color: var(--salesforce-blue);
+  background: rgba(27, 150, 255, 0.1);
+  box-shadow: 0 0 24px rgba(27, 150, 255, 0.3);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.stage-pending {
+  opacity: 0.5;
+}
+
+.stage-icon-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  margin-bottom: 1rem;
+}
+
+.stage-complete .stage-icon-wrapper {
+  color: var(--success);
+}
+
+.stage-active .stage-icon-wrapper {
+  color: var(--salesforce-blue);
+}
+
+.stage-pending .stage-icon-wrapper {
+  color: var(--text-muted);
+}
+
+.stage-checkmark {
+  position: absolute;
+  bottom: -4px;
+  right: -4px;
+  background: var(--success);
+  border-radius: 50%;
+  color: white;
+  padding: 2px;
+}
+
+.stage-label {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 0.5rem 0;
+}
+
+.stage-description {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.stage-connector {
+  font-size: 2rem;
+  color: var(--text-muted);
+  margin: 0 1rem;
+}
+
+.connector-active {
+  color: var(--salesforce-blue);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.feedback-loop-explanation {
+  margin-bottom: 2rem;
+  background: linear-gradient(135deg, rgba(27, 150, 255, 0.03), rgba(34, 211, 238, 0.03));
+}
+
+.explanation-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 2rem 0;
+}
+
+.cycle-diagram {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.cycle-step {
+  display: flex;
+  gap: 1rem;
+  flex: 1;
+  min-width: 200px;
+}
+
+.cycle-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, var(--salesforce-blue), var(--cyan));
+  border-radius: 50%;
+  color: white;
+  font-size: 1.25rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.cycle-content {
+  text-align: left;
+}
+
+.cycle-content h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 0.25rem 0;
+}
+
+.cycle-content p {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.cycle-arrow {
+  font-size: 1.5rem;
+  color: var(--salesforce-blue);
+  font-weight: 700;
+}
+
+.impact-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr));
+  gap: 2rem;
+  padding: 2rem;
+  background: #F9FAFB;
+  border-radius: var(--radius-md);
+  margin-bottom: 2rem;
+}
+
+.impact-stat {
+  text-align: center;
+}
+
+.impact-value {
+  font-size: 2.5rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--success), #16A34A);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 0.5rem;
+}
+
+.impact-label {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+.retrain-actions {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+@media (max-width: 1024px) {
+  .retrain-stages {
+    flex-direction: column;
+  }
+
+  .stage-connector {
+    transform: rotate(90deg);
+    margin: 1rem 0;
+  }
+
+  .cycle-diagram {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .cycle-arrow {
+    transform: rotate(90deg);
+    align-self: center;
+  }
+
+  .impact-stats {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}

@@ -1,0 +1,367 @@
+.team-recommendations-page {
+  padding: 2rem;
+  width: 100%;
+}
+
+.header-banner {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+}
+
+.banner-content {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.banner-icon {
+  width: 64px;
+  height: 64px;
+  background: rgba(27, 150, 255, 0.2);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--salesforce-blue);
+}
+
+.banner-content h1 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.75rem;
+  color: var(--text-primary);
+}
+
+.view-only-note {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-secondary);
+  font-size: 0.9375rem;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.stat-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1;
+  margin-bottom: 0.25rem;
+}
+
+.stat-label {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.controls-card {
+  margin-bottom: 2rem;
+  padding: 1.25rem;
+}
+
+.controls-row {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.search-box {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 0.625rem 1rem;
+  flex: 1;
+  min-width: 300px;
+}
+
+.search-box input {
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  font-size: 0.875rem;
+  outline: none;
+  flex: 1;
+}
+
+.filters-group {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.filters-group select {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 0.625rem 0.875rem;
+  color: var(--text-primary);
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.filters-group select:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.filters-group select:focus {
+  outline: none;
+  border-color: var(--salesforce-blue);
+}
+
+.recommendations-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.recommendation-card-readonly {
+  padding: 1.5rem;
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+
+.recommendation-card-readonly::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(180deg, var(--salesforce-blue), #22D3EE);
+  opacity: 0.6;
+}
+
+.recommendation-card-readonly:hover {
+  transform: translateX(4px);
+}
+
+.rec-header {
+  margin-bottom: 1rem;
+}
+
+.rec-title-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.rec-account-name {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
+.rec-title-row h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  color: var(--text-primary);
+}
+
+.rec-badges {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-top: 0.5rem;
+}
+
+.rec-rep-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+}
+
+.rep-name {
+  color: var(--salesforce-blue);
+  font-weight: 600;
+}
+
+.rep-region {
+  color: var(--text-secondary);
+}
+
+.rec-time {
+  color: var(--text-secondary);
+}
+
+.rec-description {
+  color: var(--text-primary);
+  line-height: 1.6;
+  margin: 0 0 1.25rem 0;
+  font-size: 0.9375rem;
+}
+
+.rec-details-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+}
+
+.detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.detail-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.detail-value {
+  font-size: 1rem;
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.value-highlight {
+  color: var(--salesforce-blue);
+  font-weight: 600;
+  font-size: 1.125rem;
+}
+
+.rec-reason {
+  padding: 1rem;
+  background: rgba(27, 150, 255, 0.1);
+  border-left: 3px solid var(--salesforce-blue);
+  border-radius: 4px;
+  font-size: 0.875rem;
+  color: var(--text-primary);
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.rec-reason strong {
+  color: var(--salesforce-blue);
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.rec-decision {
+  padding: 1rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  margin-top: 1rem;
+  border: 1px solid;
+}
+
+.rec-decision.accepted {
+  background: rgba(34, 197, 94, 0.1);
+  border-color: rgba(34, 197, 94, 0.3);
+  color: #22C55E;
+}
+
+.rec-decision.rejected {
+  background: rgba(239, 83, 80, 0.1);
+  border-color: rgba(239, 83, 80, 0.3);
+  color: #EF5350;
+}
+
+.rec-decision strong {
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.rec-decision span {
+  color: var(--text-primary);
+  font-style: italic;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  text-align: center;
+  gap: 1rem;
+}
+
+.empty-state h3 {
+  font-size: 1.25rem;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.empty-state p {
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+@media (max-width: 1024px) {
+  .rec-title-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .rec-badges {
+    width: 100%;
+  }
+  
+  .controls-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .search-box {
+    min-width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .team-recommendations-page {
+    padding: 1rem;
+  }
+  
+  .banner-content {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .rec-details-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .filters-group {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .filters-group select {
+    width: 100%;
+  }
+}

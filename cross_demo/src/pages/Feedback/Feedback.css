@@ -1,0 +1,177 @@
+.feedback-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem 0;
+}
+
+.feedback-card {
+  text-align: center;
+}
+
+.feedback-header {
+  margin-bottom: 2.5rem;
+}
+
+.feedback-icon {
+  color: var(--salesforce-blue);
+  margin-bottom: 1rem;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.feedback-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 1rem 0;
+}
+
+.feedback-subtitle {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin: 0;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.feedback-options {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.feedback-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 2rem 1.5rem;
+  background: #F9FAFB;
+  border: 2px solid #E5E7EB;
+  border-radius: var(--radius-lg);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  text-align: center;
+}
+
+.feedback-button:hover {
+  background: #FFFFFF;
+  transform: translateY(-4px);
+}
+
+.feedback-button-active {
+  border-color: var(--salesforce-blue);
+  background: rgba(27, 150, 255, 0.1);
+}
+
+.feedback-button-active.positive {
+  border-color: var(--success);
+  background: rgba(34, 197, 94, 0.1);
+  color: var(--success);
+  box-shadow: 0 0 24px rgba(34, 197, 94, 0.2);
+}
+
+.feedback-button-active.negative {
+  border-color: var(--error);
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--error);
+  box-shadow: 0 0 24px rgba(239, 68, 68, 0.2);
+}
+
+.feedback-button svg {
+  transition: transform var(--transition-normal);
+}
+
+.feedback-button:hover svg {
+  transform: scale(1.1);
+}
+
+.feedback-label {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.feedback-description {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+.feedback-comment-section {
+  text-align: left;
+  margin-bottom: 1.5rem;
+}
+
+.comment-label {
+  display: block;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 0.75rem;
+}
+
+.comment-textarea {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  font-size: 0.9375rem;
+  color: var(--text-primary);
+  font-family: 'Inter', sans-serif;
+  resize: vertical;
+  transition: all var(--transition-fast);
+}
+
+.comment-textarea:focus {
+  outline: none;
+  border-color: var(--salesforce-blue);
+  box-shadow: 0 0 0 3px rgba(27, 150, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.comment-textarea::placeholder {
+  color: var(--text-muted);
+}
+
+.feedback-impact-box {
+  background: rgba(27, 150, 255, 0.05);
+  border-left: 3px solid var(--salesforce-blue);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  text-align: left;
+}
+
+.feedback-impact-box h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 1rem 0;
+}
+
+.feedback-impact-box ul {
+  margin: 0;
+  padding-left: 1.25rem;
+  color: var(--text-secondary);
+  font-size: 0.9375rem;
+  line-height: 1.8;
+}
+
+.feedback-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+@media (max-width: 768px) {
+  .feedback-options {
+    grid-template-columns: 1fr;
+  }
+
+  .feedback-actions {
+    flex-direction: column;
+  }
+}

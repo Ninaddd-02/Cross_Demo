@@ -1,0 +1,85 @@
+.gradient-button {
+  position: relative;
+  border: none;
+  border-radius: var(--radius-md);
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  overflow: hidden;
+}
+
+.gradient-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.gradient-button-primary {
+  background: linear-gradient(135deg, var(--salesforce-blue), var(--cyan));
+  color: white;
+}
+
+.gradient-button-primary:hover:not(:disabled) {
+  box-shadow: 0 8px 24px rgba(27, 150, 255, 0.4);
+  transform: translateY(-2px);
+}
+
+.gradient-button-secondary {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-primary);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.gradient-button-secondary:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: var(--salesforce-blue);
+}
+
+.gradient-button-success {
+  background: linear-gradient(135deg, var(--success), #16A34A);
+  color: white;
+}
+
+.gradient-button-success:hover:not(:disabled) {
+  box-shadow: 0 8px 24px rgba(34, 197, 94, 0.4);
+  transform: translateY(-2px);
+}
+
+.gradient-button-danger {
+  background: linear-gradient(135deg, var(--error), #DC2626);
+  color: white;
+}
+
+.gradient-button-danger:hover:not(:disabled) {
+  box-shadow: 0 8px 24px rgba(239, 68, 68, 0.4);
+  transform: translateY(-2px);
+}
+
+.gradient-button-small {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+}
+
+.gradient-button-medium {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+}
+
+.gradient-button-large {
+  padding: 1rem 2rem;
+  font-size: 1.125rem;
+}
+
+.gradient-button-full {
+  width: 100%;
+}
+
+.button-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

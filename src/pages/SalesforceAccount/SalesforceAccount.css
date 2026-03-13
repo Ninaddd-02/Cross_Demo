@@ -1,0 +1,293 @@
+.salesforce-page {
+  background: var(--bg-primary);
+}
+
+.salesforce-layout {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 1.5rem;
+}
+
+.account-main-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.account-header-card {
+  border-top: 4px solid var(--salesforce-blue);
+}
+
+.account-header-top {
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+}
+
+.account-icon-large {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 72px;
+  height: 72px;
+  background: linear-gradient(135deg, var(--salesforce-blue), var(--cyan));
+  border-radius: var(--radius-lg);
+  color: white;
+  flex-shrink: 0;
+}
+
+.account-info-main {
+  flex: 1;
+}
+
+.account-name {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 0.75rem 0;
+}
+
+.account-meta {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.account-industry {
+  font-size: 0.9375rem;
+  color: var(--text-muted);
+}
+
+.account-details-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  padding: 1.5rem;
+  background: #F9FAFB;
+  border-radius: var(--radius-md);
+  margin-bottom: 1.5rem;
+}
+
+.detail-item {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.detail-icon {
+  color: var(--salesforce-blue);
+  margin-top: 0.125rem;
+}
+
+.detail-label {
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+  margin-bottom: 0.25rem;
+}
+
+.detail-value {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.account-contact-info {
+  display: flex;
+  gap: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #E5E7EB;
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9375rem;
+  color: var(--text-secondary);
+}
+
+.contact-item svg {
+  color: var(--salesforce-blue);
+}
+
+.opportunities-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.opportunity-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background: #F9FAFB;
+  border-radius: var(--radius-md);
+  border: 1px solid #E5E7EB;
+  transition: all var(--transition-fast);
+}
+
+.opportunity-item:hover {
+  background: #FFFFFF;
+  border-color: var(--salesforce-blue);
+}
+
+.opp-name {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+}
+
+.opp-details {
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+}
+
+.opp-amount {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--success);
+}
+
+.account-sidebar {
+  position: sticky;
+  top: 90px;
+  height: fit-content;
+}
+
+.ai-recommendations-preview {
+  position: relative;
+  overflow: hidden;
+}
+
+.ai-recommendations-preview::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--salesforce-blue), var(--cyan), var(--purple));
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+.ai-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.sparkle-icon {
+  color: var(--warning);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.ai-header h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.ai-description {
+  font-size: 0.9375rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin: 0 0 1.5rem 0;
+}
+
+.preview-badges {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #E5E7EB;
+}
+
+@media (max-width: 1280px) {
+  .salesforce-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .account-sidebar {
+    position: static;
+  }
+
+  .account-details-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .page-body.salesforce-page {
+    padding: 1rem;
+  }
+  
+  .account-header-top {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .account-icon-large {
+    width: 48px;
+    height: 48px;
+  }
+  
+  .account-name {
+    font-size: 1.25rem;
+  }
+  
+  .account-details-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .detail-item {
+    padding: 0.75rem;
+  }
+  
+  .opportunities-list {
+    gap: 0.75rem;
+  }
+  
+  .opportunity-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  
+  .opp-amount {
+    align-self: flex-end;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-body.salesforce-page {
+    padding: 0.75rem;
+  }
+  
+  .account-header-card {
+    padding: 1rem;
+  }
+  
+  .account-name {
+    font-size: 1.125rem;
+  }
+  
+  .section-title {
+    font-size: 1rem;
+  }
+}

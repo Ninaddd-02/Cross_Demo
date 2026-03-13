@@ -1,0 +1,296 @@
+.admin-layout {
+  display: flex;
+  min-height: 100vh;
+  background: var(--bg-primary);
+}
+
+.admin-content {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.dashboard-body {
+  flex: 1;
+  padding: 2rem;
+  overflow-y: auto;
+}
+
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.kpi-card {
+  padding: 1.5rem;
+}
+
+.kpi-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.kpi-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, var(--salesforce-blue), var(--cyan));
+  border-radius: var(--radius-md);
+  color: white;
+}
+
+.kpi-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin: 0 0 0.25rem 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.kpi-subtitle {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin: 0 0 0.75rem 0;
+}
+
+.kpi-change {
+  font-size: 0.8125rem;
+  color: var(--success);
+  font-weight: 600;
+}
+
+.dashboard-main-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1.5rem;
+}
+
+.architecture-card {
+  grid-column: 1 / -1;
+}
+
+.section-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 0.5rem 0;
+}
+
+.section-subtitle {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  margin: 0 0 1.5rem 0;
+}
+
+.architecture-flow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2rem;
+  background: #F9FAFB;
+  border-radius: var(--radius-md);
+  margin-bottom: 1.5rem;
+  overflow-x: auto;
+  border: 1px solid #E5E7EB;
+}
+
+.flow-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 120px;
+}
+
+.node-indicator {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #D1D5DB;
+  background: #FFFFFF;
+  transition: all var(--transition-normal);
+}
+
+.node-connected {
+  background: linear-gradient(135deg, rgba(1, 118, 211, 0.1), rgba(27, 150, 255, 0.1));
+  border-color: var(--salesforce-blue);
+  color: var(--salesforce-blue);
+  box-shadow: 0 0 12px rgba(1, 118, 211, 0.2);
+}
+
+.node-disconnected {
+  border-color: var(--text-muted);
+  color: var(--text-muted);
+}
+
+.node-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  text-align: center;
+}
+
+.flow-arrow {
+  color: var(--salesforce-blue);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.architecture-description {
+  padding: 1rem 1.5rem;
+  background: #EFF6FF;
+  border-left: 3px solid var(--salesforce-blue);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+}
+
+.architecture-description p {
+  font-size: 0.9375rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.quick-actions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.quick-action-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  text-align: left;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  width: 100%;
+}
+
+.quick-action-item:hover {
+  background: #F9FAFB;
+  border-color: var(--salesforce-blue);
+  transform: translateX(4px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.quick-action-item > svg:first-child {
+  color: var(--salesforce-blue);
+  min-width: 20px;
+}
+
+.quick-action-item > div {
+  flex: 1;
+}
+
+.action-title {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.action-description {
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+}
+
+.quick-action-item > svg:last-child {
+  color: var(--text-muted);
+  min-width: 18px;
+}
+
+.health-metrics {
+  display: flex;
+  justify-content: space-around;
+  padding: 2rem 0;
+  margin-bottom: 1.5rem;
+}
+
+.health-metric {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.health-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #E5E7EB;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.info-label {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+.info-value {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+@media (max-width: 1024px) {
+  .dashboard-main-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .kpi-grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .admin-content {
+    margin-left: 0;
+  }
+  
+  .dashboard-body {
+    padding: 1rem;
+  }
+  
+  .kpi-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .kpi-card {
+    padding: 1rem;
+  }
+  
+  .kpi-icon {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-body {
+    padding: 0.75rem;
+  }
+  
+  .section-title {
+    font-size: 1rem;
+  }
+}

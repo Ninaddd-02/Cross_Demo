@@ -1,0 +1,221 @@
+.page-body {
+  flex: 1;
+  padding: 2rem;
+  overflow-y: auto;
+}
+
+.page-header-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+}
+
+.page-section-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 0.5rem 0;
+}
+
+.page-section-subtitle {
+  font-size: 0.9375rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.data-sources-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(320px, 100%), 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.data-source-card {
+  display: flex;
+  flex-direction: column;
+  min-height: 360px;
+}
+
+.source-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.source-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  border-radius: var(--radius-md);
+  background: #F9FAFB;
+  color: var(--text-muted);
+  border: 1px solid #E5E7EB;
+}
+
+.source-icon-connected {
+  background: linear-gradient(135deg, rgba(27, 150, 255, 0.15), rgba(34, 211, 238, 0.15));
+  color: var(--salesforce-blue);
+  border-color: var(--salesforce-blue);
+  box-shadow: 0 0 24px rgba(27, 150, 255, 0.2);
+}
+
+.source-name {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 0.5rem 0;
+}
+
+.source-type {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--cyan);
+  background: rgba(34, 211, 238, 0.1);
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  margin-bottom: 1rem;
+  border: 1px solid rgba(34, 211, 238, 0.2);
+}
+
+.source-description {
+  font-size: 0.9375rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin-bottom: 1.5rem;
+  flex: 1;
+}
+
+.source-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  padding: 1rem;
+  background: #F9FAFB;
+  border-radius: var(--radius-md);
+  margin-bottom: 1.5rem;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stat-value {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.source-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.integration-info-card {
+  margin-top: 2rem;
+}
+
+.info-card-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 2rem 0;
+}
+
+.info-steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr));
+  gap: 2rem;
+}
+
+.info-step {
+  display: flex;
+  gap: 1rem;
+}
+
+.step-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, var(--salesforce-blue), var(--cyan));
+  border-radius: 50%;
+  color: white;
+  font-size: 1.125rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.step-content h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 0.5rem 0;
+}
+
+.step-content p {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* CSV Upload Specific Styles */
+.csv-upload-source-card {
+  position: relative;
+}
+
+.csv-upload-area {
+  margin-bottom: 1.5rem;
+}
+
+.file-input-label {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.875rem 1rem;
+  background: #E0F2FE;
+  border: 1px solid #BAE6FD;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  width: 100%;
+  justify-content: flex-start;
+}
+
+.file-input-label:hover {
+  background: #BAE6FD;
+  border-color: #7DD3FC;
+}
+
+.file-input-label svg {
+  color: var(--salesforce-blue);
+  flex-shrink: 0;
+}
+
+.file-input-label span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.file-input-hidden {
+  display: none;
+}

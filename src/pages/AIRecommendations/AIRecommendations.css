@@ -1,0 +1,269 @@
+.recommendations-header-card {
+  margin-bottom: 1.5rem;
+}
+
+.reco-header-content {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.reco-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  background: linear-gradient(135deg, var(--salesforce-blue), var(--cyan));
+  border-radius: var(--radius-lg);
+  color: white;
+  flex-shrink: 0;
+  animation: glow 3s ease-in-out infinite;
+}
+
+.reco-header-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 0.5rem 0;
+}
+
+.reco-header-subtitle {
+  font-size: 0.9375rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.reco-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  padding: 1.5rem;
+  background: #F9FAFB;
+  border-radius: var(--radius-md);
+}
+
+.reco-stat-item {
+  text-align: center;
+}
+
+.stat-number {
+  font-size: 2rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--salesforce-blue), var(--cyan));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 0.5rem;
+}
+
+.stat-text {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+.recommendations-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.controls-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.update-text {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+.filter-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1rem;
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.filter-button:hover {
+  background: #F9FAFB;
+  border-color: var(--salesforce-blue);
+}
+
+.recommendations-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.recommendations-section {
+  margin-bottom: 3rem;
+}
+
+.section-header {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #E5E7EB;
+}
+
+.section-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 0.5rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.section-subtitle {
+  font-size: 0.9375rem;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.how-it-works-card {
+  background: linear-gradient(135deg, rgba(1, 118, 211, 0.05), rgba(34, 211, 238, 0.05));
+}
+
+.how-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 1.5rem 0;
+}
+
+.how-steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 2rem;
+}
+
+.how-step {
+  display: flex;
+  gap: 1rem;
+}
+
+.step-num {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: linear-gradient(135deg, var(--salesforce-blue), var(--cyan));
+  border-radius: 50%;
+  color: white;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.how-step h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 0.5rem 0;
+}
+
+.how-step p {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin: 0;
+}
+
+@media (max-width: 1280px) {
+  .recommendations-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .reco-stats {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .page-body {
+    padding: 1rem;
+  }
+  
+  .reco-header-content {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .reco-icon {
+    width: 48px;
+    height: 48px;
+  }
+  
+  .reco-header-title {
+    font-size: 1.25rem;
+  }
+  
+  .recommendations-controls {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+  
+  .controls-left {
+    justify-content: flex-start;
+  }
+  
+  .filter-button {
+    width: 100%;
+  }
+  
+  .section-title {
+    font-size: 1.125rem;
+  }
+  
+  .how-steps {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-body {
+    padding: 0.75rem;
+  }
+  
+  .reco-header-title {
+    font-size: 1.125rem;
+  }
+  
+  .reco-header-subtitle {
+    font-size: 0.8125rem;
+  }
+  
+  .stat-number {
+    font-size: 1.5rem;
+  }
+  
+  .stat-text {
+    font-size: 0.75rem;
+  }
+  
+  .section-title {
+    font-size: 1rem;
+  }
+  
+  .section-subtitle {
+    font-size: 0.8125rem;
+  }
+}
