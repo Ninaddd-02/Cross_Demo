@@ -245,11 +245,224 @@
   border-radius: var(--radius-sm);
   border: 1px solid rgba(27, 150, 255, 0.3);
   transition: all var(--transition-normal);
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.account-opportunities:hover {
+  background: rgba(27, 150, 255, 0.3);
+  border-color: var(--salesforce-blue);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(27, 150, 255, 0.3);
 }
 
 .account-card:hover .account-opportunities {
   background: rgba(27, 150, 255, 0.25);
   border-color: var(--salesforce-blue);
+}
+
+/* Opportunities Modal */
+.opportunities-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(24, 24, 24, 0.6);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 2rem;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.opportunities-modal {
+  background: #FFFFFF;
+  border: 2px solid #E5E7EB;
+  border-radius: var(--radius-xl);
+  width: 100%;
+  max-width: 700px;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15), 
+              0 0 0 1px rgba(1, 118, 211, 0.1);
+  animation: slideUp 0.3s ease;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 2rem;
+  border-bottom: 2px solid #F3F4F6;
+  background: linear-gradient(135deg, rgba(1, 118, 211, 0.02), rgba(27, 150, 255, 0.02));
+}
+
+.modal-header h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 0.5rem 0;
+  background: linear-gradient(135deg, var(--salesforce-blue), var(--cyan));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.modal-subtitle {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  margin: 0;
+  font-weight: 500;
+}
+
+.modal-close-btn {
+  background: var(--bg-secondary);
+  border: 1px solid #E5E7EB;
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-normal);
+}
+
+.modal-close-btn:hover {
+  background: #E5E7EB;
+  border-color: #D1D5DB;
+  color: var(--text-primary);
+  transform: rotate(90deg);
+}
+
+.modal-body {
+  padding: 1.5rem 2rem 2rem;
+  overflow-y: auto;
+  background: var(--bg-primary);
+}
+
+/* Modal scrollbar */
+.modal-body::-webkit-scrollbar {
+  width: 6px;
+}
+
+.modal-body::-webkit-scrollbar-track {
+  background: #F3F4F6;
+  border-radius: 3px;
+}
+
+.modal-body::-webkit-scrollbar-thumb {
+  background: #D1D5DB;
+  border-radius: 3px;
+}
+
+.modal-body::-webkit-scrollbar-thumb:hover {
+  background: var(--salesforce-blue);
+}
+
+.opportunities-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.opportunity-item {
+  background: #FFFFFF;
+  border: 2px solid #E5E7EB;
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  transition: all var(--transition-normal);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.opportunity-item:hover {
+  background: var(--surface-light);
+  border-color: var(--salesforce-blue);
+  transform: translateX(4px);
+  box-shadow: 0 4px 12px rgba(1, 118, 211, 0.15);
+}
+
+.opportunity-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 2rem;
+}
+
+.opportunity-left {
+  flex: 1;
+  min-width: 0;
+}
+
+.opportunity-name {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.4;
+  margin-bottom: 0.75rem;
+}
+
+.opportunity-meta {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.opportunity-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.opportunity-value {
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--salesforce-blue);
+  background: rgba(1, 118, 211, 0.1);
+  padding: 0.375rem 0.875rem;
+  border-radius: var(--radius-sm);
+  white-space: nowrap;
+}
+
+.opportunity-owner {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.opportunity-date {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  white-space: nowrap;
 }
 
 /* Responsive */
@@ -287,6 +500,40 @@
 
   .accounts-header {
     margin-bottom: 1.5rem;
+  }
+
+  .opportunities-modal {
+    max-width: 95%;
+    max-height: 90vh;
+  }
+
+  .modal-header {
+    padding: 1.5rem;
+  }
+
+  .modal-header h2 {
+    font-size: 1.25rem;
+  }
+
+  .modal-body {
+    padding: 1rem 1.5rem 1.5rem;
+  }
+
+  .opportunity-row {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .opportunity-right {
+    align-items: flex-start;
+  }
+
+  .opportunity-meta {
+    flex-wrap: wrap;
+  }
+
+  .opportunity-item {
+    padding: 1.25rem;
   }
 }
   

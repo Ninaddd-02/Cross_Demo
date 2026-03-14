@@ -5,14 +5,15 @@ import SidebarNavigation from '../../components/SidebarNavigation/SidebarNavigat
 import TopNavbar from '../../components/TopNavbar/TopNavbar';
 import GlassCard from '../../components/GlassCard/GlassCard';
 import StatusBadge from '../../components/StatusBadge/StatusBadge';
-import { Building, MapPin, DollarSign, Users, Search, TrendingUp } from 'lucide-react';
-import { getAccountsByRepId, getAllAccounts, getAccountsByManagerId } from '../../data/sharedData';
+import { Building, MapPin, DollarSign, Users, Search, TrendingUp, X } from 'lucide-react';
+import { getAccountsByRepId, getAllAccounts, getAccountsByManagerId, allDeals } from '../../data/sharedData';
 import './AccountsList.css';
 
 const AccountsList = () => {
   const navigate = useNavigate();
   const { currentUser } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedAccount, setSelectedAccount] = useState(null);
 
   // Get accounts based on user role
   const accounts = useMemo(() => {
@@ -35,9 +36,47 @@ const AccountsList = () => {
     account.location.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  // Get opportunities for a specific account
+  const getAccountOpportunities = (accountName) => {
+    return allDeals.filter(deal => deal.company === accountName);
+  };
+
+  // Format date to be more current (2025-2026)
+  const formatModernDate = (oldDate) => {
+    if (!oldDate) return 'Not set';
+    
+    // Parse the old date
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const parts = oldDate.split(' ');
+    if (parts.length !== 3) return oldDate;
+    
+    const month = parts[0].replace(',', '');
+    const day = parts[1].replace(',', '');
+    const oldYear = parseInt(parts[2]);
+    
+    // Update year to 2025 or 2026
+    let newYear = 2025;
+    if (oldYear >= 2023) {
+      newYear = 2026;
+    } else if (oldYear >= 2021) {
+      newYear = 2025;
+    }
+    
+    return `${month} ${day}, ${newYear}`;
+  };
+
+  const handleShowOpportunities = (e, account) => {
+    e.stopPropagation();
+    setSelectedAccount(account);
+  };
+
+  const closeModal = () => {
+    setSelectedAccount(null);
+  };
+
   return (
     <div className="admin-layout">
-      <SidebarNavigation role="sales" />
+      <SidebarNavigation role={currentUser?.role} />
       <div className="admin-content">
         <TopNavbar 
           title="Accounts"
@@ -116,15 +155,60 @@ const AccountsList = () => {
                       <MapPin size={14} />
                       <span>{account.location}</span>
                     </div>
-                    <div className="account-opportunities">
+                    <button 
+                      className="account-opportunities"
+                      onClick={(e) => handleShowOpportunities(e, account)}
+                    >
                       {account.opportunities} opportunities
-                    </div>
+                    </button>
                   </div>
                 </GlassCard>
               ))}
             </div>
           </div>
         </div>
+
+        {/* Opportunities Modal */}
+        {selectedAccount && (
+          <div className="opportunities-modal-overlay" onClick={closeModal}>
+            <div className="opportunities-modal" onClick={(e) => e.stopPropagation()}>
+              <div className="modal-header">
+                <div>
+                  <h2>{selectedAccount.name}</h2>
+                  <p className="modal-subtitle">{getAccountOpportunities(selectedAccount.name).length} Opportunities</p>
+                </div>
+                <button className="modal-close-btn" onClick={closeModal}>
+                  <X size={24} />
+                </button>
+              </div>
+              <div className="modal-body">
+                <div className="opportunities-list">
+                  {getAccountOpportunities(selectedAccount.name).map((opportunity) => (
+                    <div key={opportunity.id} className="opportunity-item">
+                      <div className="opportunity-row">
+                        <div className="opportunity-left">
+                          <div className="opportunity-name">{opportunity.name}</div>
+                          <div className="opportunity-meta">
+                            <StatusBadge 
+                              status={opportunity.status === 'critical' || opportunity.status === 'high-risk' ? 'error' : 'success'} 
+                              label={opportunity.stage} 
+                              size="small" 
+                            />
+                            <span className="opportunity-value">{opportunity.valueFormatted}</span>
+                          </div>
+                        </div>
+                        <div className="opportunity-right">
+                          <div className="opportunity-owner">Owner: {opportunity.repName}</div>
+                          <div className="opportunity-date">Close: {formatModernDate(opportunity.closeDate)}</div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

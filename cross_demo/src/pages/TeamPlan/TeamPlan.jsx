@@ -22,7 +22,7 @@ const TeamPlan = () => {
 
   return (
     <div className="admin-layout">
-      <SidebarNavigation role="sales-manager" />
+      <SidebarNavigation role={currentUser?.role} />
       <div className="admin-content">
         <TopNavbar 
           title="Team Plan"
