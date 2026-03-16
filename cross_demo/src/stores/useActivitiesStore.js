@@ -149,13 +149,73 @@ const useActivitiesStore = create(
       // Clear all activities
       clearAllActivities: () => {
         set({ activities: [] });
+      },
+      
+      // Seed demo activities (for testing)
+      seedDemoActivities: () => {
+        const now = new Date();
+        const demoActivities = [
+          {
+            id: uuidv4(),
+            repId: 1,
+            type: 'recommendation',
+            action: 'accepted',
+            description: 'Accepted AI recommendation for Data Engineering',
+            metadata: {
+              productName: 'Data Engineering',
+              accountName: 'ACCELYA SOLUTIONS INDIA LIMITED',
+              confidence: 100
+            },
+            timestamp: new Date(now.getTime() - 1000 * 60 * 5).toISOString() // 5 min ago
+          },
+          {
+            id: uuidv4(),
+            repId: 1,
+            type: 'recommendation',
+            action: 'viewed',
+            description: 'Viewed AI recommendations',
+            metadata: {},
+            timestamp: new Date(now.getTime() - 1000 * 60 * 15).toISOString() // 15 min ago
+          },
+          {
+            id: uuidv4(),
+            repId: 1,
+            type: 'recommendation',
+            action: 'rejected',
+            description: 'Rejected AI recommendation for Connectivity & Comms',
+            metadata: {
+              productName: 'Connectivity & Comms',
+              accountName: 'ACCELYA SOLUTIONS INDIA LIMITED',
+              confidence: 87.9,
+              reason: 'Not aligned with current priorities'
+            },
+            timestamp: new Date(now.getTime() - 1000 * 60 * 30).toISOString() // 30 min ago
+          },
+          {
+            id: uuidv4(),
+            repId: 1,
+            type: 'user_action',
+            action: 'login',
+            description: 'Logged into system',
+            metadata: {},
+            timestamp: new Date(now.getTime() - 1000 * 60 * 60).toISOString() // 1 hour ago
+          }
+        ];
+        
+        set({ activities: demoActivities });
       }
     }),
     {
       name: 'activities-storage',
-      version: 1
+      version: 2 // Bumped version to reset store with demo data
     }
   )
 );
+
+// Initialize demo activities on first load
+const store = useActivitiesStore.getState();
+if (store.activities.length === 0) {
+  store.seedDemoActivities();
+}
 
 export default useActivitiesStore;

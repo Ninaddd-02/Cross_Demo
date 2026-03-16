@@ -1,5 +1,6 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 import SidebarNavigation from '../../components/SidebarNavigation/SidebarNavigation';
 import TopNavbar from '../../components/TopNavbar/TopNavbar';
 import GlassCard from '../../components/GlassCard/GlassCard';
@@ -9,6 +10,27 @@ import './ActionConfirmation.css';
 
 const ActionConfirmation = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { currentUser } = useAuth();
+  
+  // Get recommendation data from navigation state
+  const recommendationData = location.state || {};
+  const {
+    accountName = 'Account',
+    product = 'Recommended Product',
+    value = 'Value TBD',
+    confidence = 0
+  } = recommendationData;
+
+  // Format current date
+  const formatDate = () => {
+    const today = new Date();
+    return today.toLocaleDateString('en-US', { 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric' 
+    });
+  };
 
   const handleContinue = () => {
     navigate('/sales/accounts');
@@ -16,7 +38,7 @@ const ActionConfirmation = () => {
 
   return (
     <div className="admin-layout">
-      <SidebarNavigation role="sales" />
+      <SidebarNavigation role={currentUser?.role || 'sales-rep'} />
       <div className="admin-content">
         <TopNavbar 
           title="Action Confirmation" 
@@ -46,21 +68,21 @@ const ActionConfirmation = () => {
                   <FileText size={20} className="summary-icon" />
                   <div>
                     <div className="summary-label">Recommendation Applied</div>
-                    <div className="summary-value">EV Charging Infrastructure for Tata Motors Ltd</div>
+                    <div className="summary-value">{product} for {accountName}</div>
                   </div>
                 </div>
                 <div className="summary-item">
                   <DollarSign size={20} className="summary-icon" />
                   <div>
                     <div className="summary-label">Estimated Value</div>
-                    <div className="summary-value">₹68 Lakh/year</div>
+                    <div className="summary-value">{value || 'Value estimation pending'}</div>
                   </div>
                 </div>
                 <div className="summary-item">
                   <Calendar size={20} className="summary-icon" />
                   <div>
                     <div className="summary-label">Action Date</div>
-                    <div className="summary-value">February 5, 2026</div>
+                    <div className="summary-value">{formatDate()}</div>
                   </div>
                 </div>
               </div>
@@ -71,7 +93,7 @@ const ActionConfirmation = () => {
                   <li>Opportunity created in CRM system</li>
                   <li>Follow-up tasks automatically scheduled</li>
                   <li>Your feedback will improve AI accuracy</li>
-                  <li>Similar automotive accounts will receive refined recommendations</li>
+                  <li>Similar accounts will receive refined recommendations</li>
                 </ul>
               </div>
 

@@ -73,13 +73,6 @@ const AIRecommendationCard = ({
           </div>
         )}
 
-        {reason && (
-          <div className="recommendation-reason">
-            <span className="reason-label">Why this matters:</span>
-            <p className="reason-text">{reason}</p>
-          </div>
-        )}
-
         {/* Option A & B Section */}
         {hasOptions && (
           <div className="options-section">

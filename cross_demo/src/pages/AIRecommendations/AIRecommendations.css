@@ -115,6 +115,45 @@
   text-overflow: ellipsis;
 }
 
+.controls-right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.refresh-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1rem;
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.refresh-button:hover {
+  background: #F9FAFB;
+  border-color: var(--salesforce-blue);
+}
+
+.refresh-button:active svg {
+  animation: spin 0.6s ease-in-out;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 .filter-button {
   display: flex;
   align-items: center;
@@ -287,8 +326,16 @@
     justify-content: flex-start;
   }
   
+  .controls-right {
+    width: 100%;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .refresh-button,
   .filter-button {
     width: 100%;
+    justify-content: center;
   }
   
   .section-title {
@@ -297,6 +344,178 @@
   
   .how-steps {
     grid-template-columns: 1fr;
+  }
+}
+
+/* Filter Panel Styles */
+.filter-button.active {
+  background: var(--salesforce-blue);
+  color: white;
+  border-color: var(--salesforce-blue);
+}
+
+.filter-button.has-filters {
+  border-color: var(--salesforce-blue);
+}
+
+.filter-count {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  background: white;
+  color: var(--salesforce-blue);
+  border-radius: 50%;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.filter-button.active .filter-count {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+.filter-panel {
+  margin-bottom: 1.5rem;
+  animation: slideDown 0.3s ease-out;
+  padding: 2rem;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.filter-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.filter-panel-header h4 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.clear-filters-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: var(--radius-md);
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.clear-filters-btn:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: var(--error);
+  color: var(--error);
+}
+
+.filter-panel-body {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  margin-bottom: 1.5rem;
+  align-items: start;
+}
+
+@media (max-width: 1024px) {
+  .filter-panel-body {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.filter-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.filter-select-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.filter-select {
+  width: 100%;
+  padding: 0.875rem 2.75rem 0.875rem 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-size: 0.9375rem;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  appearance: none;
+  font-weight: 500;
+}
+  transition: all var(--transition-fast);
+  appearance: none;
+}
+
+.filter-select:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--salesforce-blue);
+}
+
+.filter-select:focus {
+  outline: none;
+  border-color: var(--salesforce-blue);
+  box-shadow: 0 0 0 3px rgba(27, 150, 255, 0.1);
+}
+
+.select-icon {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: var(--text-muted);
+}
+
+.filter-results-count {
+  padding: 1rem 1.25rem;
+  background: rgba(27, 150, 255, 0.1);
+  border-left: 4px solid var(--salesforce-blue);
+  border-radius: var(--radius-sm);
+  font-size: 0.9375rem;
+  color: var(--text-primary);
+  font-weight: 600;
+  margin-top: 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .filter-panel-body {
+    grid-template-columns: 1fr;
+    gap: 1rem;
   }
 }
 

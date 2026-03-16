@@ -7,12 +7,12 @@ import { useAuth } from './context/AuthContext';
 import Login from './pages/Login/Login';
 
 // Sales Pages
-import SalesforceAccount from './pages/SalesforceAccount/SalesforceAccount';
 import AIRecommendations from './pages/AIRecommendations/AIRecommendations';
 import ActionConfirmation from './pages/ActionConfirmation/ActionConfirmation';
 import RetrainVisualization from './pages/RetrainVisualization/RetrainVisualization';
 import MyPlan from './pages/MyPlan/MyPlan';
 import AccountsList from './pages/AccountsList/AccountsList';
+import AccountDetail from './pages/AccountDetail/AccountDetail';
 
 // Sales Head Pages
 import SalesHeadDashboard from './pages/SalesHeadDashboard/SalesHeadDashboard';
@@ -85,14 +85,14 @@ function App() {
         <Route path="/login" element={<Login />} />
         
         {/* Sales Routes */}
-        <Route path="/sales/dashboard" element={
-          <ProtectedRoute allowedRoles={['sales-rep']}>
-            <SalesforceAccount />
-          </ProtectedRoute>
-        } />
         <Route path="/sales/accounts" element={
           <ProtectedRoute allowedRoles={['sales-rep']}>
-            <SalesforceAccount />
+            <AccountsList />
+          </ProtectedRoute>
+        } />
+        <Route path="/sales/accounts/:accountId" element={
+          <ProtectedRoute allowedRoles={['sales-rep']}>
+            <AccountDetail />
           </ProtectedRoute>
         } />
         <Route path="/sales/my-plan" element={
@@ -125,6 +125,11 @@ function App() {
         <Route path="/sales-head/accounts" element={
           <ProtectedRoute allowedRoles={['sales-head']}>
             <AccountsList />
+          </ProtectedRoute>
+        } />
+        <Route path="/sales-head/accounts/:accountId" element={
+          <ProtectedRoute allowedRoles={['sales-head']}>
+            <AccountDetail />
           </ProtectedRoute>
         } />
         <Route path="/sales-head/organization-plan" element={
@@ -165,42 +170,52 @@ function App() {
         
         {/* Sales Manager Routes */}
         <Route path="/sales-manager/dashboard" element={
-          <ProtectedRoute allowedRoles={['sales-manager', 'sales-head']}>
+          <ProtectedRoute allowedRoles={['sales-manager']}>
             <SalesManagerDashboard />
           </ProtectedRoute>
         } />
+        <Route path="/sales-manager/accounts" element={
+          <ProtectedRoute allowedRoles={['sales-manager']}>
+            <AccountsList />
+          </ProtectedRoute>
+        } />
+        <Route path="/sales-manager/accounts/:accountId" element={
+          <ProtectedRoute allowedRoles={['sales-manager']}>
+            <AccountDetail />
+          </ProtectedRoute>
+        } />
         <Route path="/sales-manager/team-activity" element={
-          <ProtectedRoute allowedRoles={['sales-manager', 'sales-head']}>
+          <ProtectedRoute allowedRoles={['sales-manager']}>
             <TeamActivityPage />
           </ProtectedRoute>
         } />
         <Route path="/sales-manager/team-performance" element={
-          <ProtectedRoute allowedRoles={['sales-manager', 'sales-head']}>
+          <ProtectedRoute allowedRoles={['sales-manager']}>
             <SalesManagerDashboard />
           </ProtectedRoute>
         } />
         <Route path="/sales-manager/deal-risk" element={
-          <ProtectedRoute allowedRoles={['sales-manager', 'sales-head']}>
+          <ProtectedRoute allowedRoles={['sales-manager']}>
             <SalesManagerDashboard />
           </ProtectedRoute>
         } />
         <Route path="/sales-manager/coaching" element={
-          <ProtectedRoute allowedRoles={['sales-manager', 'sales-head']}>
+          <ProtectedRoute allowedRoles={['sales-manager']}>
             <SalesManagerDashboard />
           </ProtectedRoute>
         } />
         <Route path="/sales-manager/forecast" element={
-          <ProtectedRoute allowedRoles={['sales-manager', 'sales-head']}>
+          <ProtectedRoute allowedRoles={['sales-manager']}>
             <SalesManagerDashboard />
           </ProtectedRoute>
         } />
         <Route path="/sales-manager/team-plan" element={
-          <ProtectedRoute allowedRoles={['sales-manager', 'sales-head']}>
+          <ProtectedRoute allowedRoles={['sales-manager']}>
             <TeamPlan />
           </ProtectedRoute>
         } />
         <Route path="/sales-manager/team-recommendations" element={
-          <ProtectedRoute allowedRoles={['sales-manager', 'sales-head']}>
+          <ProtectedRoute allowedRoles={['sales-manager']}>
             <TeamRecommendations />
           </ProtectedRoute>
         } />

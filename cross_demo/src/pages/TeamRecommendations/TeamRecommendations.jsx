@@ -5,10 +5,10 @@ import TopNavbar from '../../components/TopNavbar/TopNavbar';
 import GlassCard from '../../components/GlassCard/GlassCard';
 import StatusBadge from '../../components/StatusBadge/StatusBadge';
 import useRecommendationsStore from '../../stores/useRecommendationsStore';
-import { salesReps, aiRecommendations } from '../../data/sharedData';
+import { salesReps, getAIRecommendations } from '../../data/sharedData';
 import { formatCurrency, formatRelativeTime, getStatusColor } from '../../utils/helpers';
 import { onSyncEvent, createPollingRefresh, SYNC_EVENTS } from '../../utils/syncManager';
-import { Users, TrendingUp, Sparkles, Filter, Search, Eye, CheckCircle, XCircle, Clock } from 'lucide-react';
+import { Users, TrendingUp, Sparkles, Filter, Search, Eye, CheckCircle, XCircle, Clock, RefreshCw } from 'lucide-react';
 import './TeamRecommendations.css';
 
 const TeamRecommendations = () => {
@@ -26,6 +26,9 @@ const TeamRecommendations = () => {
   const [statusFilter, setStatusFilter] = useState('all');
   const [sortBy, setSortBy] = useState('createdAt');
   const [refreshKey, setRefreshKey] = useState(0); // Force re-render on sync
+
+  // Get fresh recommendations based on current tenant
+  const aiRecommendations = useMemo(() => getAIRecommendations(), [refreshKey]);
 
   // Determine which reps the current user can see
   const visibleReps = useMemo(() => {
@@ -47,20 +50,39 @@ const TeamRecommendations = () => {
 
   const visibleRepIds = visibleReps.map(r => r.id);
 
-  // Initialize sample recommendations for demo
+  // Helper function to get recommendations for a specific rep from tenant data
+  const getTenantRecommendationsForRep = (repId) => {
+    return aiRecommendations
+      .filter(rec => rec.repId === repId)
+      .map(rec => ({
+        id: `team-rec-${repId}-${rec.id}`,
+        type: rec.type,
+        accountName: rec.company || 'Unknown',
+        title: rec.title,
+        description: rec.description,
+        confidence: rec.confidence,
+        reason: rec.reason,
+        estimatedValue: rec.estimatedValue,
+        impact: rec.confidence >= 85 ? 'High' : rec.confidence >= 75 ? 'Medium' : 'Low',
+        region: rec.region,
+        product: rec.product
+      }));
+  };
+
+  // Initialize recommendations from current tenant data
   useEffect(() => {
-    console.log('🔄 Initializing Team Recommendations for all reps...');
-    // Initialize recommendations for each rep
+    console.log('🔄 Initializing Team Recommendations from tenant data...');
+    // Initialize recommendations for each rep using current tenant's data
     salesReps.forEach(rep => {
-      const sampleRecs = getStaticRecommendations(rep.id);
-      console.log(`  📝 Rep ${rep.id} (${rep.name}): ${sampleRecs.length} recommendations found`);
-      if (sampleRecs.length > 0) {
-        initRecommendations(rep.id, sampleRecs);
-        console.log(`  ✅ Initialized ${sampleRecs.length} recommendations for Rep ${rep.id}`);
+      const tenantRecs = getTenantRecommendationsForRep(rep.id);
+      console.log(`  📝 Rep ${rep.id} (${rep.name}): ${tenantRecs.length} recommendations from tenant`);
+      if (tenantRecs.length > 0) {
+        initRecommendations(rep.id, tenantRecs);
+        console.log(`  ✅ Initialized ${tenantRecs.length} tenant recommendations for Rep ${rep.id}`);
       }
     });
-    console.log('✅ Team Recommendations initialization complete');
-  }, [initRecommendations]);
+    console.log('✅ Team Recommendations initialization complete with tenant data');
+  }, [aiRecommendations, initRecommendations]);
 
   // REAL-TIME SYNC: Listen for cross-tab updates
   useEffect(() => {
@@ -169,6 +191,18 @@ const TeamRecommendations = () => {
 
   // Get unique regions for filter
   const regions = [...new Set(visibleReps.map(r => r.region))];
+  
+  // Get unique opportunity types from recommendations (tenant-aware)
+  const opportunityTypes = useMemo(() => {
+    return [...new Set(teamRecommendations.map(rec => rec.type).filter(Boolean))].sort();
+  }, [teamRecommendations]);
+  
+  // Helper to format opportunity type for display
+  const formatOpportunityType = (type) => {
+    if (!type) return 'Unknown';
+    // Convert "cross-sell" to "Cross-Sell", "upsell" to "Upsell", etc.
+    return type.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join('-');
+  };
 
   // Loading check - after all hooks
   if (!currentUser) {
@@ -271,6 +305,15 @@ const TeamRecommendations = () => {
                 />
               </div>
               
+              <button 
+                className="refresh-button"
+                onClick={() => setRefreshKey(prev => prev + 1)}
+                title="Refresh recommendations"
+              >
+                <RefreshCw size={18} />
+                Refresh
+              </button>
+              
               <div className="filters-group">
                 {currentUser.role === 'sales-head' && regions.length > 1 && (
                   <select value={regionFilter} onChange={(e) => setRegionFilter(e.target.value)}>
@@ -290,8 +333,9 @@ const TeamRecommendations = () => {
                 
                 <select value={typeFilter} onChange={(e) => setTypeFilter(e.target.value)}>
                   <option value="all">All Types</option>
-                  <option value="cross-sell">Cross-Sell</option>
-                  <option value="upsell">Upsell</option>
+                  {opportunityTypes.map(type => (
+                    <option key={type} value={type}>{formatOpportunityType(type)}</option>
+                  ))}
                 </select>
                 
                 <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
@@ -330,7 +374,7 @@ const TeamRecommendations = () => {
                       <div className="rec-badges">
                         <StatusBadge 
                           status={rec.type === 'cross-sell' ? 'info' : 'active'} 
-                          label={rec.type === 'cross-sell' ? 'Cross-Sell' : 'Upsell'} 
+                          label={formatOpportunityType(rec.type)} 
                         />
                         <StatusBadge 
                           status={rec.confidence >= 85 ? 'success' : 'warning'} 
@@ -374,10 +418,6 @@ const TeamRecommendations = () => {
                     )}
                   </div>
 
-                  <div className="rec-reason">
-                    <strong>AI Reasoning:</strong> {rec.reason}
-                  </div>
-
                   {(rec.notes || rec.reason) && rec.status !== 'pending' && (
                     <div className={`rec-decision ${rec.status}`}>
                       <strong>
@@ -397,25 +437,4 @@ const TeamRecommendations = () => {
 };
 
 // Helper function to get static recommendations by rep ID
-function getStaticRecommendations(repId) {
-  // Pull recommendations from shared data instead of hardcoded values
-  const repRecommendations = aiRecommendations
-    .filter(rec => rec.repId === repId)
-    .map(rec => ({
-      id: `team-rec-${repId}-${rec.id}`,
-      type: rec.type,
-      accountName: rec.company || 'Unknown',
-      title: rec.title,
-      description: rec.description,
-      confidence: rec.confidence,
-      reason: rec.reason,
-      estimatedValue: rec.estimatedValue,
-      impact: rec.confidence >= 85 ? 'High' : rec.confidence >= 75 ? 'Medium' : 'Low',
-      region: rec.region,
-      product: rec.product
-    }));
-  
-  return repRecommendations;
-}
-
 export default TeamRecommendations;

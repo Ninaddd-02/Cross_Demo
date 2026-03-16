@@ -13,7 +13,7 @@ const MyPlan = () => {
   
   // Get repId from logged-in user
   const repId = currentUser?.repId || 1;
-  const repName = currentUser?.name || 'Rahul Sharma';
+  const repName = currentUser?.name || 'Sales Representative';
   
   const activities = getRepActivities(repId);
   const aiSuggestions = getAISuggestions(repId);
@@ -21,7 +21,7 @@ const MyPlan = () => {
 
   return (
     <div className="admin-layout">
-      <SidebarNavigation role="sales" />
+      <SidebarNavigation role={currentUser?.role || 'sales-rep'} />
       <div className="admin-content">
         <TopNavbar 
           title="My Daily Plan"

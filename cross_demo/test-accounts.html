@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Account Navigation Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .account-card { 
+            border: 1px solid #ccc; 
+            padding: 15px; 
+            margin: 10px 0;
+            cursor: pointer;
+            border-radius: 8px;
+        }
+        .account-card:hover { background: #f0f0f0; }
+        .status { color: green; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>Account List Test</h1>
+    <div id="accounts-container"></div>
+    
+    <hr>
+    <h2>Selected Account Details</h2>
+    <div id="account-details"></div>
+
+    <script type="module">
+        import { getAllAccounts, getAccountById } from './src/data/sharedData.js';
+        
+        const accounts = getAllAccounts();
+        console.log('All accounts:', accounts);
+        
+        const container = document.getElementById('accounts-container');
+        const detailsDiv = document.getElementById('account-details');
+        
+        accounts.forEach(account => {
+            const card = document.createElement('div');
+            card.className = 'account-card';
+            card.innerHTML = `
+                <h3>${account.name}</h3>
+                <p>ID: ${account.id}</p>
+                <p>Industry: ${account.industry}</p>
+                <p>Revenue: ${account.revenue}</p>
+                <p class="status">Status: ${account.status}</p>
+                <p>${account.opportunities} opportunities</p>
+            `;
+            
+            card.onclick = () => {
+                console.log('Clicked account ID:', account.id);
+                const details = getAccountById(account.id);
+                console.log('Account details:', details);
+                
+                if (details) {
+                    detailsDiv.innerHTML = `
+                        <h3>${details.name}</h3>
+                        <p><strong>Email:</strong> ${details.email}</p>
+                        <p><strong>Phone:</strong> ${details.phone}</p>
+                        <p><strong>Since:</strong> ${details.since}</p>
+                        <p><strong>Location:</strong> ${details.location}</p>
+                        <p><strong>Industry:</strong> ${details.industry}</p>
+                        <p><strong>Revenue:</strong> ${details.revenue}</p>
+                        <p><strong>Deals:</strong> ${details.deals ? details.deals.length : 0}</p>
+                    `;
+                } else {
+                    detailsDiv.innerHTML = '<p style="color: red;">Account not found!</p>';
+                }
+            };
+            
+            container.appendChild(card);
+        });
+    </script>
+</body>
+</html>

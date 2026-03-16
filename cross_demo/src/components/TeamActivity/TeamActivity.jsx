@@ -229,10 +229,14 @@ const TeamActivity = ({ teamActivities = [], teamMembers = [] }) => {
           <div className="timeline">
             {filteredActivities
               .sort((a, b) => {
-                // Sort by time
+                // Sort by timestamp (most recent first)
+                if (a.timestamp && b.timestamp) {
+                  return new Date(b.timestamp) - new Date(a.timestamp);
+                }
+                // Fallback to time string comparison
                 const timeA = a.time.split(':')[0] + a.time.split(' ')[1];
                 const timeB = b.time.split(':')[0] + b.time.split(' ')[1];
-                return timeA.localeCompare(timeB);
+                return timeB.localeCompare(timeA);
               })
               .map(activity => (
                 <div key={activity.id} className={`timeline-item ${getStatusClass(activity.status)}`}>

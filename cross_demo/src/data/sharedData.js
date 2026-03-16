@@ -2,67 +2,74 @@
 // This creates a connected real-time demo experience
 //
 // =============================================================================
-// ORGANIZATIONAL HIERARCHY (For Demo Understanding)
+// DATA SOURCES (JSON-Based)
+// =============================================================================
+// 
+// PRIMARY: tenant_data.json (Tenant: P2SCSJ91BR52L8U)
+// - 3 Accounts: ACCELYA, ADANI GREEN ENERGY, ADANI WILMAR
+// - 9 AI Recommendations
+// - Real KPIs: Revenue ₹1,017.85 Cr, 79 days velocity, 18.1% renewal rate
+//
+// ALTERNATIVE: tenant_data_2.json (Tenant: 3DNYQNWGZEGT6PD) 
+// - 20 Accounts: Various tech companies
+// - 56 AI Recommendations
+// - Real KPIs: Revenue ₹1,540.57 Cr, 103 days velocity, 36% renewal rate
+// - Available for multi-tenant or expanded demo scenarios
+//
+// =============================================================================
+// ORGANIZATIONAL HIERARCHY
 // =============================================================================
 //
 // SALES HEAD / VP (Reports to: CEO)
 //   ↓
-// ├── MANAGER 1: Rajesh Kumar - NORTH REGION
-// │   ├── Rep 1: Rahul Sharma (Automotive OEM)
-// │   └── Rep 2: Priya Mehta (Manufacturing & Industrial)
-// │
-// └── MANAGER 2: Priya Sharma - SOUTH REGION
-//     ├── Rep 3: Amit Kumar (Technology & IT Services)
-//     └── Rep 4: Neha Singh (Pharma & Healthcare)
+// MANAGER: Rajesh Kumar - ALL REGIONS
+//   ↓
+// Rep: Rahul Sharma - ALL REGIONS (North, South, East, West)
 //
 // =============================================================================
 // DATA ACCESS RULES:
 // - Sales Head: Can view ALL data across all managers and reps
-// - Managers: Can ONLY view data of their assigned 2 representatives
-// - Sales Reps: Can ONLY view their own data
+// - Manager: Can view data of assigned representative
+// - Sales Rep: Can view their own data across all regions
 // =============================================================================
 // DATA FLOW: Rep Activities → Manager Dashboard → Head Regional View
-// All deals, activities, and recommendations are connected through repId
+// All KPIs, recommendations, and accounts are sourced from JSON tenant data
 // =============================================================================
+
+// Import tenant data from JSON files
+import tenantData1 from './tenant_P2SCSJ91BR52L8U.json';
+import tenantData2 from './tenant_3DNYQNWGZEGT6P.json';
+
+// Function to get current tenant ID from localStorage (set during login)
+export const getTenantId = () => {
+  return localStorage.getItem('tenantId') || 'P2SCSJ91BR52L8U'; // Default to first tenant
+};
+
+// Function to get tenant info dynamically based on stored tenant ID
+export const getTenantInfo = () => {
+  const currentTenantId = getTenantId();
+  
+  if (currentTenantId === 'P2SCSJ91BR52L8U') {
+    return tenantData1.tenant['P2SCSJ91BR52L8U'];
+  } else if (currentTenantId === '3DNYQNWGZEGT6PD') {
+    return tenantData2.tenant['3DNYQNWGZEGT6PD'];
+  }
+  
+  // Default to first tenant if invalid ID
+  return tenantData1.tenant['P2SCSJ91BR52L8U'];
+};
+
+// DO NOT create static tenantInfo - always call getTenantInfo() for fresh data
 
 // Sales Reps in the system
 export const salesReps = [
-  // Manager 1 Team
   {
     id: 1,
     name: 'Rahul Sharma',
     email: 'rahul.sharma@company.com',
-    region: 'North',
+    region: 'All Regions',
     manager: 'Rajesh Kumar',
     managerId: 1,
-    avatar: '👤'
-  },
-  {
-    id: 2,
-    name: 'Priya Mehta',
-    email: 'priya.mehta@company.com',
-    region: 'South',
-    manager: 'Rajesh Kumar',
-    managerId: 1,
-    avatar: '👤'
-  },
-  // Manager 2 Team
-  {
-    id: 3,
-    name: 'Amit Kumar',
-    email: 'amit.kumar@company.com',
-    region: 'East',
-    manager: 'Priya Sharma',
-    managerId: 2,
-    avatar: '👤'
-  },
-  {
-    id: 4,
-    name: 'Neha Singh',
-    email: 'neha.singh@company.com',
-    region: 'West',
-    manager: 'Priya Sharma',
-    managerId: 2,
     avatar: '👤'
   }
 ];
@@ -72,22 +79,20 @@ export const salesManagers = [
   {
     id: 1,
     name: 'Rajesh Kumar',
-    region: 'North & South',
-    teamSize: 2,
-    teamMembers: [1, 2], // Rep IDs
+    region: 'All Regions',
+    teamSize: 1,
+    teamMembers: [1], // Rep IDs
     email: 'rajesh.kumar@company.com'
-  },
-  {
-    id: 2,
-    name: 'Priya Sharma',
-    region: 'East & West',
-    teamSize: 2,
-    teamMembers: [3, 4], // Rep IDs
-    email: 'priya.sharma@company.com'
   }
 ];
 
 // All deals in the system (Sales Rep level)
+// ========================================
+// DEPRECATED: Old hardcoded deals array
+// ========================================
+// This array is no longer used in the tenant-based architecture.
+// All data now comes from tenant JSON files (tenant_*.json).
+// Kept for backward compatibility only - do not use in new code.
 // REAL DATA from data_tenant1.xlsx (199 deals)
 // Generated on 2026-03-13 11:09:07
 // Distribution: North (Rep 1), South (Rep 2), East+Central (Rep 3), West (Rep 4)
@@ -365,8 +370,8 @@ export const allDeals = [
     stage: 'Negotiation',
     closeDate: 'Feb 18, 2020',
     daysToClose: 0,
-    repId: 2,
-    repName: 'Priya Mehta',
+    repId: 1,
+    repName: 'Rahul Sharma',
     region: 'South',
     manager: 'Rajesh Kumar',
     status: 'high-risk',
@@ -387,8 +392,8 @@ export const allDeals = [
     stage: 'Negotiation',
     closeDate: 'Mar 21, 2021',
     daysToClose: 0,
-    repId: 2,
-    repName: 'Priya Mehta',
+    repId: 1,
+    repName: 'Rahul Sharma',
     region: 'South',
     manager: 'Rajesh Kumar',
     status: 'high-risk',
@@ -409,8 +414,8 @@ export const allDeals = [
     stage: 'Proposal',
     closeDate: 'Aug 16, 2022',
     daysToClose: 0,
-    repId: 2,
-    repName: 'Priya Mehta',
+    repId: 1,
+    repName: 'Rahul Sharma',
     region: 'South',
     manager: 'Rajesh Kumar',
     status: 'at-risk',
@@ -431,8 +436,8 @@ export const allDeals = [
     stage: 'Negotiation',
     closeDate: 'Dec 22, 2023',
     daysToClose: 0,
-    repId: 2,
-    repName: 'Priya Mehta',
+    repId: 1,
+    repName: 'Rahul Sharma',
     region: 'South',
     manager: 'Rajesh Kumar',
     status: 'critical',
@@ -453,8 +458,8 @@ export const allDeals = [
     stage: 'Negotiation',
     closeDate: 'Jul 09, 2023',
     daysToClose: 0,
-    repId: 2,
-    repName: 'Priya Mehta',
+    repId: 1,
+    repName: 'Rahul Sharma',
     region: 'South',
     manager: 'Rajesh Kumar',
     status: 'at-risk',
@@ -475,8 +480,8 @@ export const allDeals = [
     stage: 'Negotiation',
     closeDate: 'Feb 09, 2023',
     daysToClose: 0,
-    repId: 2,
-    repName: 'Priya Mehta',
+    repId: 1,
+    repName: 'Rahul Sharma',
     region: 'South',
     manager: 'Rajesh Kumar',
     status: 'at-risk',
@@ -497,8 +502,8 @@ export const allDeals = [
     stage: 'Negotiation',
     closeDate: 'Sep 09, 2020',
     daysToClose: 0,
-    repId: 2,
-    repName: 'Priya Mehta',
+    repId: 1,
+    repName: 'Rahul Sharma',
     region: 'South',
     manager: 'Rajesh Kumar',
     status: 'at-risk',
@@ -519,8 +524,8 @@ export const allDeals = [
     stage: 'Negotiation',
     closeDate: 'Nov 11, 2023',
     daysToClose: 0,
-    repId: 2,
-    repName: 'Priya Mehta',
+    repId: 1,
+    repName: 'Rahul Sharma',
     region: 'South',
     manager: 'Rajesh Kumar',
     status: 'at-risk',
@@ -541,8 +546,8 @@ export const allDeals = [
     stage: 'Negotiation',
     closeDate: 'Dec 27, 2020',
     daysToClose: 0,
-    repId: 2,
-    repName: 'Priya Mehta',
+    repId: 1,
+    repName: 'Rahul Sharma',
     region: 'South',
     manager: 'Rajesh Kumar',
     status: 'high-risk',
@@ -563,8 +568,8 @@ export const allDeals = [
     stage: 'Proposal',
     closeDate: 'Mar 21, 2024',
     daysToClose: 0,
-    repId: 2,
-    repName: 'Priya Mehta',
+    repId: 1,
+    repName: 'Rahul Sharma',
     region: 'South',
     manager: 'Rajesh Kumar',
     status: 'high-risk',
@@ -585,8 +590,8 @@ export const allDeals = [
     stage: 'Negotiation',
     closeDate: 'Apr 06, 2020',
     daysToClose: 0,
-    repId: 2,
-    repName: 'Priya Mehta',
+    repId: 1,
+    repName: 'Rahul Sharma',
     region: 'South',
     manager: 'Rajesh Kumar',
     status: 'at-risk',
@@ -607,8 +612,8 @@ export const allDeals = [
     stage: 'Negotiation',
     closeDate: 'Sep 29, 2020',
     daysToClose: 0,
-    repId: 2,
-    repName: 'Priya Mehta',
+    repId: 1,
+    repName: 'Rahul Sharma',
     region: 'South',
     manager: 'Rajesh Kumar',
     status: 'high-risk',
@@ -629,10 +634,10 @@ export const allDeals = [
     stage: 'Negotiation',
     closeDate: 'Oct 07, 2022',
     daysToClose: 0,
-    repId: 3,
-    repName: 'Amit Kumar',
+    repId: 1,
+    repName: 'Rahul Sharma',
     region: 'East',
-    manager: 'Priya Sharma',
+    manager: 'Rajesh Kumar',
     status: 'at-risk',
     margin: 24.32,
     industry: 'Computers - Software - Medium / Small',
@@ -651,10 +656,10 @@ export const allDeals = [
     stage: 'Negotiation',
     closeDate: 'Apr 26, 2023',
     daysToClose: 0,
-    repId: 3,
-    repName: 'Amit Kumar',
+    repId: 1,
+    repName: 'Rahul Sharma',
     region: 'East',
-    manager: 'Priya Sharma',
+    manager: 'Rajesh Kumar',
     status: 'high-risk',
     margin: 37.75,
     industry: 'Power Generation And Supply',
@@ -673,10 +678,10 @@ export const allDeals = [
     stage: 'Negotiation',
     closeDate: 'Dec 28, 2020',
     daysToClose: 0,
-    repId: 3,
-    repName: 'Amit Kumar',
+    repId: 1,
+    repName: 'Rahul Sharma',
     region: 'East',
-    manager: 'Priya Sharma',
+    manager: 'Rajesh Kumar',
     status: 'at-risk',
     margin: 15.11,
     industry: 'Solvent Extraction',
@@ -695,10 +700,10 @@ export const allDeals = [
     stage: 'Negotiation',
     closeDate: 'Mar 19, 2024',
     daysToClose: 0,
-    repId: 3,
-    repName: 'Amit Kumar',
+    repId: 1,
+    repName: 'Rahul Sharma',
     region: 'East',
-    manager: 'Priya Sharma',
+    manager: 'Rajesh Kumar',
     status: 'critical',
     margin: 9.22,
     industry: 'Power Generation And Supply',
@@ -717,10 +722,10 @@ export const allDeals = [
     stage: 'Negotiation',
     closeDate: 'Nov 04, 2020',
     daysToClose: 0,
-    repId: 3,
-    repName: 'Amit Kumar',
+    repId: 1,
+    repName: 'Rahul Sharma',
     region: 'East',
-    manager: 'Priya Sharma',
+    manager: 'Rajesh Kumar',
     status: 'high-risk',
     margin: 25.39,
     industry: 'Solvent Extraction',
@@ -739,10 +744,10 @@ export const allDeals = [
     stage: 'Negotiation',
     closeDate: 'Apr 02, 2021',
     daysToClose: 0,
-    repId: 3,
-    repName: 'Amit Kumar',
+    repId: 1,
+    repName: 'Rahul Sharma',
     region: 'East',
-    manager: 'Priya Sharma',
+    manager: 'Rajesh Kumar',
     status: 'at-risk',
     margin: 16.37,
     industry: 'Solvent Extraction',
@@ -761,10 +766,10 @@ export const allDeals = [
     stage: 'Negotiation',
     closeDate: 'Sep 11, 2022',
     daysToClose: 0,
-    repId: 3,
-    repName: 'Amit Kumar',
+    repId: 1,
+    repName: 'Rahul Sharma',
     region: 'East',
-    manager: 'Priya Sharma',
+    manager: 'Rajesh Kumar',
     status: 'at-risk',
     margin: 23.41,
     industry: 'Power Generation And Supply',
@@ -783,10 +788,10 @@ export const allDeals = [
     stage: 'Proposal',
     closeDate: 'Sep 06, 2023',
     daysToClose: 0,
-    repId: 3,
-    repName: 'Amit Kumar',
+    repId: 1,
+    repName: 'Rahul Sharma',
     region: 'East',
-    manager: 'Priya Sharma',
+    manager: 'Rajesh Kumar',
     status: 'high-risk',
     margin: 33.8,
     industry: 'Solvent Extraction',
@@ -805,10 +810,10 @@ export const allDeals = [
     stage: 'Negotiation',
     closeDate: 'Aug 01, 2024',
     daysToClose: 0,
-    repId: 3,
-    repName: 'Amit Kumar',
+    repId: 1,
+    repName: 'Rahul Sharma',
     region: 'East',
-    manager: 'Priya Sharma',
+    manager: 'Rajesh Kumar',
     status: 'high-risk',
     margin: 34.58,
     industry: 'Power Generation And Supply',
@@ -827,10 +832,10 @@ export const allDeals = [
     stage: 'Negotiation',
     closeDate: 'Sep 25, 2024',
     daysToClose: 0,
-    repId: 3,
-    repName: 'Amit Kumar',
+    repId: 1,
+    repName: 'Rahul Sharma',
     region: 'East',
-    manager: 'Priya Sharma',
+    manager: 'Rajesh Kumar',
     status: 'high-risk',
     margin: 36.12,
     industry: 'Power Generation And Supply',
@@ -849,10 +854,10 @@ export const allDeals = [
     stage: 'Negotiation',
     closeDate: 'Jun 24, 2023',
     daysToClose: 0,
-    repId: 3,
-    repName: 'Amit Kumar',
+    repId: 1,
+    repName: 'Rahul Sharma',
     region: 'East',
-    manager: 'Priya Sharma',
+    manager: 'Rajesh Kumar',
     status: 'high-risk',
     margin: 30.91,
     industry: 'Computers - Software - Medium / Small',
@@ -871,10 +876,10 @@ export const allDeals = [
     stage: 'Negotiation',
     closeDate: 'May 23, 2021',
     daysToClose: 0,
-    repId: 3,
-    repName: 'Amit Kumar',
+    repId: 1,
+    repName: 'Rahul Sharma',
     region: 'East',
-    manager: 'Priya Sharma',
+    manager: 'Rajesh Kumar',
     status: 'high-risk',
     margin: 39.53,
     industry: 'Power Generation And Supply',
@@ -893,10 +898,10 @@ export const allDeals = [
     stage: 'Negotiation',
     closeDate: 'May 04, 2024',
     daysToClose: 0,
-    repId: 4,
-    repName: 'Neha Singh',
+    repId: 1,
+    repName: 'Rahul Sharma',
     region: 'West',
-    manager: 'Priya Sharma',
+    manager: 'Rajesh Kumar',
     status: 'at-risk',
     margin: 23.69,
     industry: 'Power Generation And Supply',
@@ -915,10 +920,10 @@ export const allDeals = [
     stage: 'Negotiation',
     closeDate: 'Nov 14, 2023',
     daysToClose: 0,
-    repId: 4,
-    repName: 'Neha Singh',
+    repId: 1,
+    repName: 'Rahul Sharma',
     region: 'West',
-    manager: 'Priya Sharma',
+    manager: 'Rajesh Kumar',
     status: 'high-risk',
     margin: 29.93,
     industry: 'Power Generation And Supply',
@@ -937,10 +942,10 @@ export const allDeals = [
     stage: 'Negotiation',
     closeDate: 'Dec 25, 2022',
     daysToClose: 0,
-    repId: 4,
-    repName: 'Neha Singh',
+    repId: 1,
+    repName: 'Rahul Sharma',
     region: 'West',
-    manager: 'Priya Sharma',
+    manager: 'Rajesh Kumar',
     status: 'at-risk',
     margin: 17.8,
     industry: 'Computers - Software - Medium / Small',
@@ -959,10 +964,10 @@ export const allDeals = [
     stage: 'Negotiation',
     closeDate: 'Nov 11, 2020',
     daysToClose: 0,
-    repId: 4,
-    repName: 'Neha Singh',
+    repId: 1,
+    repName: 'Rahul Sharma',
     region: 'West',
-    manager: 'Priya Sharma',
+    manager: 'Rajesh Kumar',
     status: 'critical',
     margin: 13.26,
     industry: 'Power Generation And Supply',
@@ -981,10 +986,10 @@ export const allDeals = [
     stage: 'Negotiation',
     closeDate: 'Feb 18, 2024',
     daysToClose: 0,
-    repId: 4,
-    repName: 'Neha Singh',
+    repId: 1,
+    repName: 'Rahul Sharma',
     region: 'West',
-    manager: 'Priya Sharma',
+    manager: 'Rajesh Kumar',
     status: 'at-risk',
     margin: 21.73,
     industry: 'Computers - Software - Medium / Small',
@@ -1003,10 +1008,10 @@ export const allDeals = [
     stage: 'Negotiation',
     closeDate: 'Sep 25, 2023',
     daysToClose: 0,
-    repId: 4,
-    repName: 'Neha Singh',
+    repId: 1,
+    repName: 'Rahul Sharma',
     region: 'West',
-    manager: 'Priya Sharma',
+    manager: 'Rajesh Kumar',
     status: 'high-risk',
     margin: 38.55,
     industry: 'Power Generation And Supply',
@@ -1025,10 +1030,10 @@ export const allDeals = [
     stage: 'Negotiation',
     closeDate: 'Nov 24, 2020',
     daysToClose: 0,
-    repId: 4,
-    repName: 'Neha Singh',
+    repId: 1,
+    repName: 'Rahul Sharma',
     region: 'West',
-    manager: 'Priya Sharma',
+    manager: 'Rajesh Kumar',
     status: 'high-risk',
     margin: 30.37,
     industry: 'Power Generation And Supply',
@@ -1047,10 +1052,10 @@ export const allDeals = [
     stage: 'Negotiation',
     closeDate: 'Nov 07, 2021',
     daysToClose: 0,
-    repId: 4,
-    repName: 'Neha Singh',
+    repId: 1,
+    repName: 'Rahul Sharma',
     region: 'West',
-    manager: 'Priya Sharma',
+    manager: 'Rajesh Kumar',
     status: 'high-risk',
     margin: 29.25,
     industry: 'Power Generation And Supply',
@@ -1069,10 +1074,10 @@ export const allDeals = [
     stage: 'Negotiation',
     closeDate: 'Apr 13, 2021',
     daysToClose: 0,
-    repId: 4,
-    repName: 'Neha Singh',
+    repId: 1,
+    repName: 'Rahul Sharma',
     region: 'West',
-    manager: 'Priya Sharma',
+    manager: 'Rajesh Kumar',
     status: 'high-risk',
     margin: 38.17,
     industry: 'Solvent Extraction',
@@ -1091,10 +1096,10 @@ export const allDeals = [
     stage: 'Proposal',
     closeDate: 'Jul 19, 2024',
     daysToClose: 0,
-    repId: 4,
-    repName: 'Neha Singh',
+    repId: 1,
+    repName: 'Rahul Sharma',
     region: 'West',
-    manager: 'Priya Sharma',
+    manager: 'Rajesh Kumar',
     status: 'high-risk',
     margin: 32.69,
     industry: 'Computers - Software - Medium / Small',
@@ -1113,10 +1118,10 @@ export const allDeals = [
     stage: 'Proposal',
     closeDate: 'Feb 12, 2023',
     daysToClose: 0,
-    repId: 4,
-    repName: 'Neha Singh',
+    repId: 1,
+    repName: 'Rahul Sharma',
     region: 'West',
-    manager: 'Priya Sharma',
+    manager: 'Rajesh Kumar',
     status: 'at-risk',
     margin: 15.79,
     industry: 'Power Generation And Supply',
@@ -1135,10 +1140,10 @@ export const allDeals = [
     stage: 'Negotiation',
     closeDate: 'May 30, 2024',
     daysToClose: 0,
-    repId: 4,
-    repName: 'Neha Singh',
+    repId: 1,
+    repName: 'Rahul Sharma',
     region: 'West',
-    manager: 'Priya Sharma',
+    manager: 'Rajesh Kumar',
     status: 'critical',
     margin: 8.59,
     industry: 'Computers - Software - Medium / Small',
@@ -1445,6 +1450,11 @@ export const forecastAlertData = (() => {
 })();
 
 // Strategic KPIs for Sales Head dashboard
+// ========================================
+// DEPRECATED: Old strategic KPIs calculator
+// ========================================
+// This function is no longer used. Use calculateHeadKPIs() instead.
+// Uses the old allDeals array instead of tenant JSON data.
 export const calculateStrategicKPIs = () => {
   // Format currency in Crores
   const formatCrores = (value) => {
@@ -1507,129 +1517,98 @@ export const calculateStrategicKPIs = () => {
 
 // Calculate Sales Manager KPIs
 export const calculateManagerKPIs = () => {
+  // Get real KPIs from JSON backend data - dynamically from current tenant
+  const currentTenantInfo = getTenantInfo();
+  const kpiData = currentTenantInfo.KPI.SalesManager;
+  
   // Format currency in Crores
   const formatCrores = (value) => {
     const crores = value / 10000000;
     return `₹${crores.toFixed(2)} Cr`;
   };
 
-  // Calculate revenue by service line from actual deals
-  const serviceRevenueMap = {};
-  const productRevenueMap = {};
-  
-  allDeals.forEach(deal => {
-    // Extract service line (part before " - " in deal name)
-    const serviceLine = deal.name.split(' - ')[0] || 'Other';
-    
-    // Aggregate by service line
-    if (!serviceRevenueMap[serviceLine]) {
-      serviceRevenueMap[serviceLine] = 0;
+  return {
+    totalRevenue: formatCrores(kpiData.TotalRevenue),
+    totalRevenueRaw: kpiData.TotalRevenue,
+    avgDealVelocity: Math.round(kpiData.AvgDealVelocityDays),
+    avgDealVelocityDays: kpiData.AvgDealVelocityDays,
+    revenueAtRisk: formatCrores(kpiData.RevenueAtRisk),
+    revenueAtRiskRaw: kpiData.RevenueAtRisk,
+    topServiceLine: kpiData.TopServiceLine,
+    topTechnology: kpiData.TopTechnology,
+    topRegion: kpiData.TopRegion,
+    avgSalesCycle: Math.round(kpiData.AvgDealVelocityDays),
+    crossUpsellRate: ((currentTenantInfo.recommendation_count / currentTenantInfo.account_count) * 10).toFixed(1),
+    topProduct: {
+      name: kpiData.TopServiceLine || 'Cloud',
+      revenue: formatCrores(kpiData.TotalRevenue * 0.3) // Estimate 30% from top service line
     }
-    serviceRevenueMap[serviceLine] += deal.value * 10000000; // Convert Cr to rupees
-    
-    // Also aggregate by technology/product
-    const product = deal.technology ? deal.technology.split('(')[0].trim() : 'Other';
-    if (!productRevenueMap[product]) {
-      productRevenueMap[product] = 0;
-    }
-    productRevenueMap[product] += deal.value * 10000000;
-  });
+  };
+};
 
-  // Calculate revenue at risk (critical + high-risk deals)
-  const revenueAtRisk = allDeals
-    .filter(d => d.status === 'critical' || d.status === 'high-risk')
-    .reduce((sum, d) => sum + (d.value * 10000000), 0);
-
-  // Calculate average deal velocity from engagement scores
-  const avgEngagement = allDeals.reduce((sum, d) => sum + (d.engagementScore || 50), 0) / allDeals.length;
-  const avgDealVelocity = Math.round(avgEngagement * 0.5); // Convert engagement to approximate days
-
-  // Calculate cross/upsell rate (deals with high engagement as proxy)
-  const highEngagementDeals = allDeals.filter(d => d.engagementScore >= 65).length;
-  const crossUpsellRate = ((highEngagementDeals / allDeals.length) * 100).toFixed(1);
-
-  // Find top service line and top product
-  const sortedServices = Object.entries(serviceRevenueMap).sort((a, b) => b[1] - a[1]);
-  const sortedProducts = Object.entries(productRevenueMap).sort((a, b) => b[1] - a[1]);
+// Calculate Sales Head KPIs
+export const calculateHeadKPIs = () => {
+  // Get real KPIs from JSON backend data - dynamically from current tenant
+  const currentTenantInfo = getTenantInfo();
+  const kpiData = currentTenantInfo.KPI.SalesHead;
   
-  const topService = sortedServices[0] || ['Consulting', 0];
-  const topProduct = sortedProducts[0] || ['Technology Services', 0];
-
-  // Calculate totals
-  const totalServiceRevenue = Object.values(serviceRevenueMap).reduce((sum, val) => sum + val, 0);
-  const totalProductRevenue = Object.values(productRevenueMap).reduce((sum, val) => sum + val, 0);
-
-  // Build service revenue breakdown (top 3)
-  const serviceRevenue = {};
-  sortedServices.slice(0, 3).forEach(([name, value]) => {
-    serviceRevenue[name] = formatCrores(value);
-  });
-
-  // Build product revenue breakdown (top 3)
-  const productRevenue = {};
-  sortedProducts.slice(0, 3).forEach(([name, value]) => {
-    productRevenue[name] = formatCrores(value);
-  });
+  // Format currency in Crores
+  const formatCrores = (value) => {
+    const crores = value / 10000000;
+    return `₹${crores.toFixed(2)} Cr`;
+  };
 
   return {
-    avgSalesCycle: 36, // Default value
-    avgDealVelocity,
-    crossUpsellRate,
-    revenueAtRisk: formatCrores(revenueAtRisk),
-    revenueAtRiskRaw: revenueAtRisk,
-    totalProductRevenue: formatCrores(totalProductRevenue),
-    totalServiceRevenue: formatCrores(totalServiceRevenue),
-    topProduct: {
-      name: topProduct[0],
-      revenue: formatCrores(topProduct[1])
-    },
-    topService: {
-      name: topService[0],
-      revenue: formatCrores(topService[1])
-    },
-    productRevenue,
-    serviceRevenue
+    totalRevenue: formatCrores(kpiData.TotalRevenue),
+    totalRevenueRaw: kpiData.TotalRevenue,
+    avgDealVelocity: Math.round(kpiData.AvgDealVelocityDays),
+    avgDealVelocityDays: kpiData.AvgDealVelocityDays,
+    revenueAtRisk: formatCrores(kpiData.RevenueAtRisk),
+    revenueAtRiskRaw: kpiData.RevenueAtRisk,
+    renewalRevenueShare: kpiData.RenewalRevenueSharePct.toFixed(1),
+    renewalRevenueSharePct: kpiData.RenewalRevenueSharePct,
+    avgMargin: kpiData.AvgMarginPct.toFixed(1),
+    avgMarginPct: kpiData.AvgMarginPct,
+    avgContributionMargin: formatCrores(kpiData.AvgContributionMarginPct),
+    avgContributionMarginRaw: kpiData.AvgContributionMarginPct
   };
 };
 
 // Calculate Sales Rep KPIs
 export const calculateRepKPIs = () => {
-  // Real KPIs from backend data
-  const data = {
-    average_deal_velocity_days: 32.33,
-    revenue_at_risk: 467868710,
-    number_of_deals_closed: 48,
-    average_deal_size: 1250000,
-    renewal_rate_percent: 72.4,
-    cross_sell_revenue_potential: 95000000,
-    upsell_revenue_potential: 143000000
-  };
-
+  // Real KPIs from JSON backend data - get current tenant dynamically
+  const currentTenantInfo = getTenantInfo();
+  const kpiData = currentTenantInfo.KPI.SalesRep;
+  
   // Format currency in Crores
   const formatCrores = (value) => {
     const crores = value / 10000000;
     return `₹${crores.toFixed(2)} Cr`;
   };
 
-  // Format currency in Lakhs for smaller amounts
-  const formatLakhs = (value) => {
-    const lakhs = value / 100000;
-    return `₹${lakhs.toFixed(2)} L`;
-  };
+  // Count closed deals from allDeals
+  const closedDeals = allDeals.filter(deal => deal.stage === 'Closed Won').length;
+  
+  // Calculate average deal size from total revenue
+  const avgDealSize = kpiData.TotalRevenue / allDeals.length;
 
   return {
-    avgDealVelocity: Math.round(data.average_deal_velocity_days),
-    revenueAtRisk: formatCrores(data.revenue_at_risk),
-    revenueAtRiskRaw: data.revenue_at_risk,
-    dealsClosed: data.number_of_deals_closed,
-    avgDealSize: formatLakhs(data.average_deal_size),
-    avgDealSizeRaw: data.average_deal_size,
-    renewalRate: data.renewal_rate_percent.toFixed(1),
-    crossSellPotential: formatCrores(data.cross_sell_revenue_potential),
-    crossSellPotentialRaw: data.cross_sell_revenue_potential,
-    upsellPotential: formatCrores(data.upsell_revenue_potential),
-    upsellPotentialRaw: data.upsell_revenue_potential,
-    totalExpansionPotential: formatCrores(data.cross_sell_revenue_potential + data.upsell_revenue_potential)
+    avgDealVelocity: Math.round(kpiData.AvgDealVelocityDays),
+    revenueAtRisk: formatCrores(kpiData.RevenueAtRisk),
+    revenueAtRiskRaw: kpiData.RevenueAtRisk,
+    dealsClosed: closedDeals,
+    avgDealSize: formatCrores(avgDealSize),
+    avgDealSizeRaw: avgDealSize,
+    renewalRate: kpiData.RenewalRatePct.toFixed(1),
+    crossSellPotential: formatCrores(kpiData.RevenueAtRisk * 0.2), // Estimated
+    crossSellPotentialRaw: kpiData.RevenueAtRisk * 0.2,
+    upsellPotential: formatCrores(kpiData.RevenueAtRisk * 0.3), // Estimated
+    upsellPotentialRaw: kpiData.RevenueAtRisk * 0.3,
+    totalExpansionPotential: formatCrores(kpiData.RevenueAtRisk * 0.5),
+    totalRevenue: formatCrores(kpiData.TotalRevenue),
+    totalRevenueRaw: kpiData.TotalRevenue,
+    avgProjectDuration: Math.round(kpiData.AvgProjectDurationDays),
+    totalUsers: kpiData.TotalUsers
   };
 };
 
@@ -1665,677 +1644,57 @@ export const patternInsights = [
   }
 ];
 
-// AI Recommendations for Sales Rep - Based on real deals from data_tenant1.xlsx
-// Generated from actual ADANI GREEN ENERGY, ACCELYA SOLUTIONS, and ADANI WILMAR accounts
-export const aiRecommendations = [
-  // Rep 1 (Rahul Sharma - North) - Top Focus: ACCELYA SOLUTIONS
-  {
-    id: 1,
-    repId: 1,
-    type: 'cross-sell',
-    title: 'Advanced Analytics Platform for ACCELYA',
-    description: 'ACCELYA SOLUTIONS shows strong adoption of software solutions. Industry benchmarks indicate 40% efficiency gains with advanced analytics integration.',
-    confidence: 92,
-    reason: 'Based on current IT infrastructure and growth in software deployment, analytics platform would optimize their operations.',
-    product: 'Enterprise Analytics Suite',
-    estimatedValue: '₹12.5 Cr',
-    relatedDeal: 'CSD - Apps Development',
-    company: 'ACCELYA SOLUTIONS INDIA LIMITED',
-    region: 'North',
-    optionA: {
-      title: 'Full Enterprise Suite (Primary)',
-      product: 'Advanced Analytics Platform - Enterprise',
-      value: '₹12.5 Cr',
-      pros: ['Real-time insights', 'Predictive analytics', 'Integrated reporting'],
-      cons: ['Higher implementation cost', 'Requires training'],
-      confidence: 92
-    },
-    optionB: {
-      title: 'Business Intelligence Module (Alternative)',
-      product: 'BI Analytics Starter Pack',
-      value: '₹8.5 Cr',
-      pros: ['Quick deployment', 'Lower cost', 'Proven ROI'],
-      cons: ['Limited features', 'May need upgrade later'],
-      confidence: 85
-    }
-  },
-  {
-    id: 2,
-    repId: 1,
-    type: 'upsell',
-    title: 'Cloud Migration Services for ADANI GREEN',
-    description: 'Upgrade existing infrastructure to full cloud-native architecture for ADANI GREEN ENERGY operations.',
-    confidence: 88,
-    reason: 'Current hybrid setup shows bottlenecks. Full cloud migration would reduce operational costs by 30%.',
-    product: 'Cloud Transformation Package',
-    estimatedValue: '₹9.8 Cr',
-    relatedDeal: 'Digital - Data Engineering',
-    company: 'ADANI GREEN ENERGY LIMITED',
-    region: 'North',
-    optionA: {
-      title: 'Full Migration (Primary)',
-      product: 'Complete Cloud Transformation',
-      value: '₹9.8 Cr',
-      pros: ['Scalability', 'Cost efficiency', 'Modern architecture'],
-      cons: ['Migration complexity', 'Temporary disruption'],
-      confidence: 88
-    },
-    optionB: {
-      title: 'Phased Approach (Alternative)',
-      product: 'Incremental Cloud Migration',
-      value: '₹7.2 Cr',
-      pros: ['Lower risk', 'Gradual transition', 'Learn as you go'],
-      cons: ['Longer timeline', 'Interim dual costs'],
-      confidence: 82
-    }
-  },
+// AI Recommendations for Sales Rep - Based on real JSON backend data
+// Generated from tenant recommendation engine
+// This needs to be a function to react to tenant changes
+export const getAIRecommendations = () => {
+  const currentTenantInfo = getTenantInfo();
+  return currentTenantInfo.recommendations.map((rec, index) => {
+  // Calculate estimated value based on confidence (scaled for demo purposes)
+  const baseValue = 5 + (rec.Confidence * 10);
+  const estimatedValue = baseValue.toFixed(2);
   
-  // Rep 2 (Priya Mehta - South) - Top Focus: ADANI GREEN ENERGY
-  {
-    id: 3,
-    repId: 2,
-    type: 'cross-sell',
-    title: 'Smart Grid Integration for ADANI GREEN',
-    description: 'ADANI GREEN ENERGY shows expansion in renewable infrastructure. Smart grid technology would optimize energy distribution.',
-    confidence: 90,
-    reason: 'Renewable energy plants require intelligent grid management. Industry standard for facilities of this scale.',
-    product: 'Smart Grid Management System',
-    estimatedValue: '₹15.8 Cr',
-    relatedDeal: 'PBS - Customization',
-    company: 'ADANI GREEN ENERGY LIMITED',
-    region: 'South',
-    optionA: {
-      title: 'AI-Powered Grid (Primary)',
-      product: 'Intelligent Grid Management Platform',
-      value: '₹15.8 Cr',
-      pros: ['AI optimization', 'Predictive maintenance', 'Real-time load balancing'],
-      cons: ['Complex setup', 'Requires skilled operators'],
-      confidence: 90
-    },
-    optionB: {
-      title: 'Standard Grid System (Alternative)',
-      product: 'Essential Grid Management',
-      value: '₹10.5 Cr',
-      pros: ['Proven technology', 'Lower cost', 'Easier training'],
-      cons: ['Limited automation', 'Manual interventions needed'],
-      confidence: 83
-    }
-  },
-  {
-    id: 4,
-    repId: 2,
-    type: 'upsell',
-    title: 'Enterprise Security Suite for ACCELYA',
-    description: 'Enhance existing cybersecurity infrastructure with comprehensive enterprise protection for ACCELYA SOLUTIONS.',
-    confidence: 86,
-    reason: 'Recent industry breaches highlight need for advanced threat protection in IT services sector.',
-    product: 'Advanced Security Platform',
-    estimatedValue: '₹8.9 Cr',
-    relatedDeal: 'CSD - DevOps',
-    company: 'ACCELYA SOLUTIONS INDIA LIMITED',
-    region: 'South',
-    optionA: {
-      title: 'Full Security Suite (Primary)',
-      product: 'Enterprise Security Platform',
-      value: '₹8.9 Cr',
-      pros: ['Comprehensive protection', '24/7 monitoring', 'Compliance ready'],
-      cons: ['Higher cost', 'Complex management'],
-      confidence: 86
-    },
-    optionB: {
-      title: 'Core Security Package (Alternative)',
-      product: 'Essential Security Bundle',
-      value: '₹5.8 Cr',
-      pros: ['Cost effective', 'Core protection', 'Quick deployment'],
-      cons: ['Limited features', 'No advanced threat detection'],
-      confidence: 78
-    }
-  },
-
-  // Rep 3 (Amit Kumar - East) - Top Focus: ADANI GREEN ENERGY
-  {
-    id: 5,
-    repId: 3,
-    type: 'cross-sell',
-    title: 'Renewable Energy Monitoring for ADANI GREEN',
-    description: 'ADANI GREEN ENERGY operations in East region need advanced monitoring for distributed solar farms.',
-    confidence: 89,
-    reason: 'Multiple site operations require centralized monitoring. Critical for maintaining 99.5% uptime SLA.',
-    product: 'Renewable Energy Monitoring Suite',
-    estimatedValue: '₹11.2 Cr',
-    relatedDeal: 'Digital - Data Management',
-    company: 'ADANI GREEN ENERGY LIMITED',
-    region: 'East',
-    optionA: {
-      title: 'Advanced Monitoring (Primary)',
-      product: 'Enterprise Energy Monitoring Platform',
-      value: '₹11.2 Cr',
-      pros: ['Multi-site visibility', 'Predictive analytics', 'Mobile access'],
-      cons: ['Implementation time', 'Training required'],
-      confidence: 89
-    },
-    optionB: {
-      title: 'Basic Monitoring (Alternative)',
-      product: 'Standard Energy Dashboard',
-      value: '₹7.5 Cr',
-      pros: ['Quick setup', 'Lower cost', 'Proven system'],
-      cons: ['Limited sites', 'Basic reporting only'],
-      confidence: 81
-    }
-  },
-  {
-    id: 6,
-    repId: 3,
-    type: 'upsell',
-    title: 'Automated Logistics for ADANI WILMAR',
-    description: 'Upgrade supply chain operations with AI-powered logistics management for ADANI WILMAR edible oil distribution.',
-    confidence: 84,
-    reason: 'Current manual processes creating bottlenecks. Automation would reduce delivery times by 35%.',
-    product: 'Smart Logistics Platform',
-    estimatedValue: '₹6.8 Cr',
-    relatedDeal: 'Digital - AI & Analytics',
-    company: 'ADANI WILMAR LIMITED',
-    region: 'East',
-    optionA: {
-      title: 'AI Logistics Suite (Primary)',
-      product: 'Intelligent Supply Chain Platform',
-      value: '₹6.8 Cr',
-      pros: ['Route optimization', 'Real-time tracking', 'Cost reduction'],
-      cons: ['Integration complexity', 'Change management needed'],
-      confidence: 84
-    },
-    optionB: {
-      title: 'Standard Tracking (Alternative)',
-      product: 'Basic Logistics Management',
-      value: '₹4.2 Cr',
-      pros: ['Simple implementation', 'Lower cost', 'Minimal training'],
-      cons: ['No AI features', 'Manual planning required'],
-      confidence: 76
-    }
-  },
-
-  // Rep 4 (Neha Singh - West) - Top Focus: ADANI GREEN ENERGY
-  {
-    id: 7,
-    repId: 4,
-    type: 'cross-sell',
-    title: 'Energy Storage Solutions for ADANI GREEN',
-    description: 'ADANI GREEN ENERGY West operations show peak demand management challenges. Battery storage would optimize grid stability.',
-    confidence: 91,
-    reason: 'West region has highest solar capacity. Storage systems critical for managing evening peak loads.',
-    product: 'Grid-Scale Battery Storage',
-    estimatedValue: '₹18.5 Cr',
-    relatedDeal: 'CSD - Apps Management',
-    company: 'ADANI GREEN ENERGY LIMITED',
-    region: 'West',
-    optionA: {
-      title: 'Advanced Battery System (Primary)',
-      product: 'Lithium-Ion Grid Storage - 50 MWh',
-      value: '₹18.5 Cr',
-      pros: ['High efficiency', 'Fast response', '15-year lifespan'],
-      cons: ['Higher upfront cost', 'Requires cooling system'],
-      confidence: 91
-    },
-    optionB: {
-      title: 'Flow Battery System (Alternative)',
-      product: 'Vanadium Flow Battery - 40 MWh',
-      value: '₹14.2 Cr',
-      pros: ['Longer lifespan', 'Safer technology', 'Scalable'],
-      cons: ['Lower energy density', 'Larger footprint required'],
-      confidence: 84
-    }
-  },
-  {
-    id: 8,
-    repId: 4,
-    type: 'upsell',
-    title: 'Premium IT Support for ACCELYA',
-    description: 'Upgrade to 24/7 mission-critical support for ACCELYA SOLUTIONS software operations in West region.',
-    confidence: 87,
-    reason: 'Growing client base requires enhanced SLAs. Premium support reduces incident resolution time by 60%.',
-    product: 'Platinum Support Package',
-    estimatedValue: '₹9.2 Cr',
-    relatedDeal: 'Consulting - AI Management',
-    company: 'ACCELYA SOLUTIONS INDIA LIMITED',
-    region: 'West',
-    optionA: {
-      title: 'Platinum 24/7 Support (Primary)',
-      product: 'Mission-Critical Support Suite',
-      value: '₹9.2 Cr',
-      pros: ['24/7 availability', '1-hour SLA', 'Dedicated team'],
-      cons: ['Premium pricing', 'Requires resource allocation'],
-      confidence: 87
-    },
-    optionB: {
-      title: 'Gold Business Hours (Alternative)',
-      product: 'Enhanced Business Support',
-      value: '₹6.5 Cr',
-      pros: ['Cost effective', 'Business hours coverage', 'On-call backup'],
-      cons: ['Limited night support', '4-hour SLA'],
-      confidence: 79
-    }
-  },
+  // Use Opportunity_Type from JSON data (CROSS-SELL, UP-SELL, etc.)
+  // Format: Convert "CROSS-SELL" to "cross-sell" for consistency
+  const type = rec.Opportunity_Type ? rec.Opportunity_Type.toLowerCase() : 'cross-sell';
   
-  // Additional 3rd recommendation for Rep 1 (Rahul Sharma - North)
-  {
-    id: 9,
-    repId: 1,
-    type: 'cross-sell',
-    title: 'DevOps Platform for ACCELYA',
-    description: 'ACCELYA SOLUTIONS software development can benefit from integrated DevOps automation platform.',
-    confidence: 85,
-    reason: 'Development cycle analysis shows 40% time spent on manual deployment. DevOps automation would accelerate releases.',
-    product: 'Enterprise DevOps Suite',
-    estimatedValue: '₹7.8 Cr',
-    relatedDeal: 'Digital - Automation',
-    company: 'ACCELYA SOLUTIONS INDIA LIMITED',
-    region: 'North',
-    optionA: {
-      title: 'Complete DevOps Platform (Primary)',
-      product: 'Full-Stack DevOps Suite',
-      value: '₹7.8 Cr',
-      pros: ['CI/CD automation', 'Container orchestration', 'Integrated monitoring'],
-      cons: ['Learning curve', 'Migration effort'],
-      confidence: 85
-    },
-    optionB: {
-      title: 'Basic CI/CD Tools (Alternative)',
-      product: 'Essential DevOps Toolkit',
-      value: '₹5.2 Cr',
-      pros: ['Quick setup', 'Lower cost', 'Easy adoption'],
-      cons: ['Limited features', 'Manual steps remain'],
-      confidence: 77
-    }
-  },
+  // Generate description based on product and technology
+  const description = `Leverage ${rec.Technology} to implement ${rec.Recommended_Product} solution with ${rec.Partner} partnership.`;
   
-  // Additional 3rd recommendation for Rep 2 (Priya Mehta - South)
-  {
-    id: 10,
-    repId: 2,
-    type: 'cross-sell',
-    title: 'Quality Management for ADANI WILMAR',
-    description: 'ADANI WILMAR edible oil production needs comprehensive quality tracking system for regulatory compliance.',
-    confidence: 83,
-    reason: 'Food safety regulations require end-to-end traceability. QMS would ensure compliance and reduce audit risks.',
-    product: 'Food Safety QMS Platform',
-    estimatedValue: '₹6.9 Cr',
-    relatedDeal: 'PBS - Migrations',
-    company: 'ADANI WILMAR LIMITED',
-    region: 'South',
-    optionA: {
-      title: 'Enterprise QMS (Primary)',
-      product: 'Comprehensive Quality Management System',
-      value: '₹6.9 Cr',
-      pros: ['Full traceability', 'Compliance automation', 'Real-time alerts'],
-      cons: ['Implementation complexity', 'Training required'],
-      confidence: 83
-    },
-    optionB: {
-      title: 'Basic Quality Tracking (Alternative)',
-      product: 'Essential QMS Module',
-      value: '₹4.5 Cr',
-      pros: ['Lower cost', 'Quick deployment', 'Core compliance'],
-      cons: ['Limited automation', 'Manual reporting'],
-      confidence: 75
-    }
-  },
+  // Generate reason based on confidence
+  const confidenceLevel = rec.Confidence >= 0.9 ? 'High' : rec.Confidence >= 0.8 ? 'Strong' : 'Good';
+  const reason = `${confidenceLevel} confidence (${(rec.Confidence * 100).toFixed(0)}%) based on ${rec.Method} analysis. Technology stack aligns with ${rec.Technology}.`;
   
-  // Additional 3rd recommendation for Rep 3 (Amit Kumar - East)
-  {
-    id: 11,
-    repId: 3,
-    type: 'cross-sell',
-    title: 'Testing Automation for ACCELYA',
-    description: 'ACCELYA SOLUTIONS IT software projects show high manual testing overhead. Automation would improve quality and speed.',
-    confidence: 81,
-    reason: 'Current testing cycles take 3 weeks. Automation platform would reduce to 5 days while improving coverage.',
-    product: 'Test Automation Platform',
-    estimatedValue: '₹5.5 Cr',
-    relatedDeal: 'CSD - Apps Development',
-    company: 'ACCELYA SOLUTIONS INDIA LIMITED',
-    region: 'East',
-    optionA: {
-      title: 'AI-Powered Testing (Primary)',
-      product: 'Intelligent Test Automation Suite',
-      value: '₹5.5 Cr',
-      pros: ['Self-healing tests', 'Visual AI validation', 'Cross-platform'],
-      cons: ['Initial setup time', 'Maintenance learning'],
-      confidence: 81
-    },
-    optionB: {
-      title: 'Script-Based Testing (Alternative)',
-      product: 'Standard Test Automation',
-      value: '₹3.8 Cr',
-      pros: ['Proven approach', 'Lower cost', 'Good ROI'],
-      cons: ['Manual script maintenance', 'No AI features'],
-      confidence: 73
-    }
-  },
+  // Scale confidence to percentage
+  const confidencePct = Math.round(rec.Confidence * 100);
   
-  // Additional 3rd recommendation for Rep 4 (Neha Singh - West)
-  {
-    id: 12,
-    repId: 4,
-    type: 'cross-sell',
-    title: 'Supply Chain Visibility for ADANI WILMAR',
-    description: 'ADANI WILMAR distribution network needs real-time tracking for oil shipments across West region.',
-    confidence: 86,
-    reason: 'Current blind spots in logistics cause delays. End-to-end visibility would reduce delivery time by 25%.',
-    product: 'Supply Chain Control Tower',
-    estimatedValue: '₹8.3 Cr',
-    relatedDeal: 'ERD - Smart Services',
-    company: 'ADANI WILMAR LIMITED',
-    region: 'West',
-    optionA: {
-      title: 'Control Tower Platform (Primary)',
-      product: 'Complete Supply Chain Visibility',
-      value: '₹8.3 Cr',
-      pros: ['Real-time tracking', 'Predictive alerts', 'Multi-modal visibility'],
-      cons: ['Integration complexity', 'Change management'],
-      confidence: 86
-    },
-    optionB: {
-      title: 'Basic Tracking Dashboard (Alternative)',
-      product: 'Essential Logistics Monitor',
-      value: '₹5.7 Cr',
-      pros: ['Quick implementation', 'Lower cost', 'Core tracking'],
-      cons: ['Limited predictive features', 'Manual interventions'],
-      confidence: 78
-    }
-  },
-
-  // ========== MORE RECOMMENDATIONS - 5 per Rep ==========
-
-  // Rep 1 (Rahul Sharma - North) - More Recommendations
-  {
-    id: 13,
+  return {
+    id: index + 1,
     repId: 1,
-    type: 'upsell',
-    title: 'Advanced Security for ADANI GREEN',
-    description: 'Upgrade security infrastructure for ADANI GREEN ENERGY power generation facilities in North region.',
-    confidence: 79,
-    reason: 'Critical infrastructure requires enhanced security. Recent industry attacks show need for advanced protection.',
-    product: 'Industrial Security Suite',
-    estimatedValue: '₹6.5 Cr',
-    relatedDeal: 'ERD - Engg OS Services',
-    company: 'ADANI GREEN ENERGY LIMITED',
-    region: 'North'
-  },
-  {
-    id: 14,
-    repId: 1,
-    type: 'cross-sell',
-    title: 'Mobile Workforce Management for ACCELYA',
-    description: 'ACCELYA SOLUTIONS field teams need mobile-first tools for remote client support and deployment.',
-    confidence: 76,
-    reason: '60% of client engagements require on-site work. Mobile platform would improve efficiency by 45%.',
-    product: 'Field Service Management Platform',
-    estimatedValue: '₹5.8 Cr',
-    relatedDeal: 'Consulting - Compliance',
-    company: 'ACCELYA SOLUTIONS INDIA LIMITED',
-    region: 'North'
-  },
-  {
-    id: 15,
-    repId: 1,
-    type: 'upsell',
-    title: 'Disaster Recovery for ADANI WILMAR',
-    description: 'Implement comprehensive DR solution for ADANI WILMAR production data and systems.',
-    confidence: 74,
-    reason: 'Single data center creates risk. DR solution ensures business continuity with 99.99% uptime.',
-    product: 'Enterprise Disaster Recovery',
-    estimatedValue: '₹7.2 Cr',
-    relatedDeal: 'Infra - Workplace Services',
-    company: 'ADANI WILMAR LIMITED',
-    region: 'North'
-  },
-  {
-    id: 16,
-    repId: 1,
-    type: 'cross-sell',
-    title: 'Customer Portal for ACCELYA',
-    description: 'ACCELYA SOLUTIONS clients requesting self-service portal for ticket management and documentation.',
-    confidence: 71,
-    reason: 'Customer surveys show 80% prefer self-service. Portal would reduce support calls by 40%.',
-    product: 'Customer Experience Portal',
-    estimatedValue: '₹4.9 Cr',
-    relatedDeal: 'CSD - Apps Development',
-    company: 'ACCELYA SOLUTIONS INDIA LIMITED',
-    region: 'North'
-  },
-  {
-    id: 17,
-    repId: 1,
-    type: 'upsell',
-    title: 'Performance Optimization for ADANI GREEN',
-    description: 'Optimize application performance and database queries for ADANI GREEN ENERGY systems.',
-    confidence: 68,
-    reason: 'System response times degrading. Optimization would improve user satisfaction by 50%.',
-    product: 'Performance Tuning Services',
-    estimatedValue: '₹3.8 Cr',
-    relatedDeal: 'Consulting - Enterprise Planning',
-    company: 'ADANI GREEN ENERGY LIMITED',
-    region: 'North'
-  },
+    company: rec.AccountName,
+    type: type,
+    opportunityType: rec.Opportunity_Type, // Raw value from JSON for filtering
+    title: rec.Recommended_Product,
+    description: description,
+    confidence: confidencePct,
+    reason: reason,
+    product: rec.Recommended_Product,
+    productName: rec.Recommended_Product,
+    estimatedValue: `₹${estimatedValue} Cr`,
+    technology: rec.Technology,
+    partner: rec.Partner,
+    status: confidencePct >= 90 ? 'high-opportunity' : confidencePct >= 80 ? 'medium-opportunity' : 'standard',
+    priority: confidencePct >= 90 ? 'High' : confidencePct >= 80 ? 'Medium' : 'Low',
+    targetCompanies: [rec.AccountName],
+    method: rec.Method
+  };
+  });
+};
 
-  // Rep 2 (Priya Mehta - South) - More Recommendations
-  {
-    id: 18,
-    repId: 2,
-    type: 'cross-sell',
-    title: 'Asset Tracking for ADANI GREEN',
-    description: 'ADANI GREEN ENERGY needs RFID-based asset management for equipment across South region solar farms.',
-    confidence: 80,
-    reason: 'Manual asset tracking causing inventory discrepancies. RFID solution would provide 99% accuracy.',
-    product: 'RFID Asset Management System',
-    estimatedValue: '₹6.8 Cr',
-    relatedDeal: 'Digital - Automation',
-    company: 'ADANI GREEN ENERGY LIMITED',
-    region: 'South'
-  },
-  {
-    id: 19,
-    repId: 2,
-    type: 'upsell',
-    title: 'Data Warehouse for ACCELYA',
-    description: 'Upgrade to enterprise data warehouse for ACCELYA SOLUTIONS analytics and reporting needs.',
-    confidence: 77,
-    reason: 'Current databases struggling with reporting. Data warehouse would enable real-time business insights.',
-    product: 'Enterprise Data Warehouse',
-    estimatedValue: '₹8.5 Cr',
-    relatedDeal: 'Digital - Data Engineering',
-    company: 'ACCELYA SOLUTIONS INDIA LIMITED',
-    region: 'South'
-  },
-  {
-    id: 20,
-    repId: 2,
-    type: 'cross-sell',
-    title: 'Predictive Analytics for ADANI WILMAR',
-    description: 'ADANI WILMAR production planning can benefit from AI-powered demand forecasting platform.',
-    confidence: 75,
-    reason: 'Current forecasting accuracy 65%. AI platform would increase to 90% and reduce waste by 30%.',
-    product: 'AI Demand Forecasting Platform',
-    estimatedValue: '₹5.9 Cr',
-    relatedDeal: 'ERD - Embedded Systems',
-    company: 'ADANI WILMAR LIMITED',
-    region: 'South'
-  },
-  {
-    id: 21,
-    repId: 2,
-    type: 'upsell',
-    title: 'Compliance Automation for ADANI GREEN',
-    description: 'Automate regulatory compliance reporting for ADANI GREEN ENERGY renewable energy certifications.',
-    confidence: 72,
-    reason: 'Manual compliance reporting takes 200 hours/month. Automation would reduce to 20 hours.',
-    product: 'Regulatory Compliance Platform',
-    estimatedValue: '₹4.7 Cr',
-    relatedDeal: 'CySec - CySec-Architecture',
-    company: 'ADANI GREEN ENERGY LIMITED',
-    region: 'South'
-  },
-  {
-    id: 22,
-    repId: 2,
-    type: 'cross-sell',
-    title: 'Vendor Management for ACCELYA',
-    description: 'ACCELYA SOLUTIONS needs centralized vendor and procurement management system.',
-    confidence: 69,
-    reason: 'Managing 500+ vendors manually. System would streamline procurement and save 25% costs.',
-    product: 'Vendor Management System',
-    estimatedValue: '₹3.9 Cr',
-    relatedDeal: 'PBS - Migrations',
-    company: 'ACCELYA SOLUTIONS INDIA LIMITED',
-    region: 'South'
-  },
+// DEPRECATED: For backward compatibility only - use getAIRecommendations() instead
+// This will not update when tenant changes - kept only for gradual migration
+export const aiRecommendations = getAIRecommendations();
 
-  // Rep 3 (Amit Kumar - East) - More Recommendations
-  {
-    id: 23,
-    repId: 3,
-    type: 'upsell',
-    title: 'Advanced Reporting for ADANI GREEN',
-    description: 'Upgrade to executive dashboard with real-time KPIs for ADANI GREEN ENERGY East operations.',
-    confidence: 78,
-    reason: 'Leadership requires faster insights. Advanced reporting would enable data-driven decisions.',
-    product: 'Executive Intelligence Dashboard',
-    estimatedValue: '₹5.2 Cr',
-    relatedDeal: 'ERD - PLM Services',
-    company: 'ADANI GREEN ENERGY LIMITED',
-    region: 'East'
-  },
-  {
-    id: 24,
-    repId: 3,
-    type: 'cross-sell',
-    title: 'Document Management for ADANI WILMAR',
-    description: 'ADANI WILMAR operations need centralized document management for compliance and quality records.',
-    confidence: 76,
-    reason: 'Paper-based processes causing delays. Digital document system would improve retrieval by 80%.',
-    product: 'Enterprise Document Management',
-    estimatedValue: '₹4.8 Cr',
-    relatedDeal: 'PBS - Customization',
-    company: 'ADANI WILMAR LIMITED',
-    region: 'East'
-  },
-  {
-    id: 25,
-    repId: 3,
-    type: 'upsell',
-    title: 'API Management for ACCELYA',
-    description: 'ACCELYA SOLUTIONS requires API gateway for secure third-party integrations.',
-    confidence: 73,
-    reason: 'Growing partner ecosystem needs secure API access. Gateway would enable scalable integrations.',
-    product: 'API Management Platform',
-    estimatedValue: '₹6.1 Cr',
-    relatedDeal: 'Digital - AI & Analytics',
-    company: 'ACCELYA SOLUTIONS INDIA LIMITED',
-    region: 'East'
-  },
-  {
-    id: 26,
-    repId: 3,
-    type: 'cross-sell',
-    title: 'Maintenance Scheduling for ADANI GREEN',
-    description: 'ADANI GREEN ENERGY needs automated maintenance scheduling for wind and solar assets.',
-    confidence: 70,
-    reason: 'Manual scheduling creating downtime. Automation would increase asset availability by 15%.',
-    product: 'Maintenance Automation System',
-    estimatedValue: '₹5.5 Cr',
-    relatedDeal: 'Digital - Data Management',
-    company: 'ADANI GREEN ENERGY LIMITED',
-    region: 'East'
-  },
-  {
-    id: 27,
-    repId: 3,
-    type: 'upsell',
-    title: 'Collaboration Tools for ADANI WILMAR',
-    description: 'Upgrade to enterprise collaboration platform for ADANI WILMAR distributed teams.',
-    confidence: 67,
-    reason: 'Remote teams struggling with coordination. Modern tools would improve productivity by 30%.',
-    product: 'Enterprise Collaboration Suite',
-    estimatedValue: '₹4.2 Cr',
-    relatedDeal: 'Digital - AI & Analytics',
-    company: 'ADANI WILMAR LIMITED',
-    region: 'East'
-  },
-
-  // Rep 4 (Neha Singh - West) - More Recommendations
-  {
-    id: 28,
-    repId: 4,
-    type: 'cross-sell',
-    title: 'Workforce Analytics for ADANI GREEN',
-    description: 'ADANI GREEN ENERGY West operations need HR analytics for workforce optimization.',
-    confidence: 77,
-    reason: 'High turnover in field operations. Analytics would identify retention strategies and reduce costs.',
-    product: 'HR Analytics Platform',
-    estimatedValue: '₹5.6 Cr',
-    relatedDeal: 'CSD - Apps Management',
-    company: 'ADANI GREEN ENERGY LIMITED',
-    region: 'West'
-  },
-  {
-    id: 29,
-    repId: 4,
-    type: 'upsell',
-    title: 'Enhanced Monitoring for ACCELYA',
-    description: 'Upgrade to AI-powered application monitoring for ACCELYA SOLUTIONS production systems.',
-    confidence: 74,
-    reason: 'Current monitoring reactive. AI monitoring predicts issues before impact, reducing downtime 70%.',
-    product: 'AI Application Monitoring',
-    estimatedValue: '₹6.9 Cr',
-    relatedDeal: 'Digital - Data Engineering',
-    company: 'ACCELYA SOLUTIONS INDIA LIMITED',
-    region: 'West'
-  },
-  {
-    id: 30,
-    repId: 4,
-    type: 'cross-sell',
-    title: 'Training Platform for ADANI WILMAR',
-    description: 'ADANI WILMAR needs e-learning platform for employee training and compliance in West facilities.',
-    confidence: 72,
-    reason: 'Manual training inefficient and costly. Digital platform would reduce training time by 50%.',
-    product: 'Corporate Learning Management System',
-    estimatedValue: '₹4.3 Cr',
-    relatedDeal: 'ERD - Smart Services',
-    company: 'ADANI WILMAR LIMITED',
-    region: 'West'
-  },
-  {
-    id: 31,
-    repId: 4,
-    type: 'upsell',
-    title: 'Network Optimization for ACCELYA',
-    description: 'Optimize network infrastructure for ACCELYA SOLUTIONS cloud and hybrid deployments.',
-    confidence: 69,
-    reason: 'Network latency affecting performance. Optimization would improve response times by 60%.',
-    product: 'Network Performance Optimization',
-    estimatedValue: '₹5.8 Cr',
-    relatedDeal: 'CSD - Apps Management',
-    company: 'ACCELYA SOLUTIONS INDIA LIMITED',
-    region: 'West'
-  },
-  {
-    id: 32,
-    repId: 4,
-    type: 'cross-sell',
-    title: 'Environmental Monitoring for ADANI GREEN',
-    description: 'ADANI GREEN ENERGY requires environmental impact tracking for renewable energy projects.',
-    confidence: 66,
-    reason: 'ESG reporting requirements increasing. Monitoring system ensures compliance and transparency.',
-    product: 'Environmental Impact Management',
-    estimatedValue: '₹3.7 Cr',
-    relatedDeal: 'Digital - Data Engineering',
-    company: 'ADANI GREEN ENERGY LIMITED',
-    region: 'West'
-  }
-];
-
-// Activity Types
 export const activityTypes = {
   CALL: 'call',
   MEETING: 'meeting',
@@ -2414,8 +1773,8 @@ export const dailyActivities = [
   // Priya Mehta's activities
   {
     id: 5,
-    repId: 2,
-    repName: 'Priya Mehta',
+    repId: 1,
+    repName: 'Rahul Sharma',
     date: '2026-02-20',
     time: '09:30 AM',
     type: activityTypes.EMAIL,
@@ -2430,8 +1789,8 @@ export const dailyActivities = [
   },
   {
     id: 6,
-    repId: 2,
-    repName: 'Priya Mehta',
+    repId: 1,
+    repName: 'Rahul Sharma',
     date: '2026-02-20',
     time: '11:00 AM',
     type: activityTypes.PROPOSAL,
@@ -2446,8 +1805,8 @@ export const dailyActivities = [
   },
   {
     id: 7,
-    repId: 2,
-    repName: 'Priya Mehta',
+    repId: 1,
+    repName: 'Rahul Sharma',
     date: '2026-02-20',
     time: '03:00 PM',
     type: activityTypes.MEETING,
@@ -2463,8 +1822,8 @@ export const dailyActivities = [
   // Amit Kumar's activities
   {
     id: 8,
-    repId: 3,
-    repName: 'Amit Kumar',
+    repId: 1,
+    repName: 'Rahul Sharma',
     date: '2026-02-20',
     time: '10:30 AM',
     type: activityTypes.CALL,
@@ -2479,8 +1838,8 @@ export const dailyActivities = [
   },
   {
     id: 9,
-    repId: 3,
-    repName: 'Amit Kumar',
+    repId: 1,
+    repName: 'Rahul Sharma',
     date: '2026-02-20',
     time: '02:30 PM',
     type: activityTypes.FOLLOWUP,
@@ -2496,8 +1855,8 @@ export const dailyActivities = [
   // Neha Singh's activities
   {
     id: 10,
-    repId: 4,
-    repName: 'Neha Singh',
+    repId: 1,
+    repName: 'Rahul Sharma',
     date: '2026-02-20',
     time: '01:00 PM',
     type: activityTypes.CALL,
@@ -2613,8 +1972,8 @@ export const targetCompanies = [
     ]
   },
   {
-    repId: 2,
-    repName: 'Priya Mehta',
+    repId: 1,
+    repName: 'Rahul Sharma',
     targets: [
       {
         company: 'ADANI GREEN ENERGY LIMITED',
@@ -2646,8 +2005,8 @@ export const targetCompanies = [
     ]
   },
   {
-    repId: 3,
-    repName: 'Amit Kumar',
+    repId: 1,
+    repName: 'Rahul Sharma',
     targets: [
       {
         company: 'ADANI GREEN ENERGY LIMITED',
@@ -2679,8 +2038,8 @@ export const targetCompanies = [
     ]
   },
   {
-    repId: 4,
-    repName: 'Neha Singh',
+    repId: 1,
+    repName: 'Rahul Sharma',
     targets: [
       {
         company: 'ADANI GREEN ENERGY LIMITED',
@@ -2713,23 +2072,125 @@ export const targetCompanies = [
   }
 ];
 
+// Generate daily activities from tenant recommendations
+const generateActivitiesFromTenant = () => {
+  const currentTenantInfo = getTenantInfo();
+  const recommendations = currentTenantInfo.recommendations || [];
+  
+  // Get today's date
+  const today = new Date();
+  const dateStr = today.toISOString().split('T')[0];
+  
+  // Activity types rotation
+  const activityTypesArray = [
+    { type: activityTypes.CALL, prefix: 'Follow-up call:' },
+    { type: activityTypes.DEMO, prefix: 'Product demo:' },
+    { type: activityTypes.PROPOSAL, prefix: 'Send pricing proposal:' },
+    { type: activityTypes.MEETING, prefix: 'Client meeting:' },
+    { type: activityTypes.EMAIL, prefix: 'Send proposal:' }
+  ];
+  
+  // Status rotation
+  const statuses = ['completed', 'in-progress', 'pending', 'pending'];
+  
+  // Time slots starting from 09:00 AM
+  const generateTimeSlot = (index) => {
+    const hour = 9 + Math.floor(index * 1.5);
+    const minute = (index % 2) * 30;
+    const ampm = hour >= 12 ? 'PM' : 'AM';
+    const displayHour = hour > 12 ? hour - 12 : hour;
+    return `${String(displayHour).padStart(2, '0')}:${String(minute).padStart(2, '0')} ${ampm}`;
+  };
+  
+  // Take first 10 recommendations and create activities
+  return recommendations.slice(0, 10).map((rec, index) => {
+    const activityType = activityTypesArray[index % activityTypesArray.length];
+    const status = statuses[index % statuses.length];
+    
+    return {
+      id: index + 1,
+      repId: 1,
+      repName: 'Rahul Sharma',
+      date: dateStr,
+      time: generateTimeSlot(index),
+      type: activityType.type,
+      title: `${activityType.prefix} ${rec.Recommended_Product}`,
+      company: rec.AccountName,
+      dealId: index + 1,
+      dealName: `${rec.Recommended_Product} - ${rec.Technology}`,
+      status: status,
+      source: rec.Method === 'hybrid' ? 'ai-suggested' : 'manual',
+      outcome: status === 'completed' ? 'Scheduled demo for next week' : undefined,
+      duration: activityType.type === activityTypes.DEMO ? '60 min' : activityType.type === activityTypes.MEETING ? '45 min' : '30 min'
+    };
+  });
+};
+
 // Get activities for a specific rep
-export const getRepActivities = (repId, date = '2026-02-20') => {
-  return dailyActivities.filter(activity => 
+export const getRepActivities = (repId, date = new Date().toISOString().split('T')[0]) => {
+  const activities = generateActivitiesFromTenant();
+  return activities.filter(activity => 
     activity.repId === repId && activity.date === date
   );
 };
 
-// Get AI suggestions for a rep
+// Get AI suggestions for a rep - Generated from tenant recommendations
 export const getAISuggestions = (repId) => {
-  const suggestions = aiSuggestedAgenda.find(agenda => agenda.repId === repId);
-  return suggestions ? suggestions.suggestions : [];
+  const currentTenantInfo = getTenantInfo();
+  const recommendations = currentTenantInfo.recommendations || [];
+  
+  // Generate AI suggestions from high-confidence recommendations
+  const highConfidenceRecs = recommendations
+    .filter(rec => rec.Confidence >= 7)
+    .slice(0, 3);
+  
+  return highConfidenceRecs.map((rec, index) => {
+    const priorities = ['critical', 'high', 'medium'];
+    const timings = ['Morning', 'Afternoon', 'End of day'];
+    
+    return {
+      priority: priorities[index % priorities.length],
+      activity: `Schedule demo for ${rec.Recommended_Product} at ${rec.AccountName}`,
+      reason: `High confidence (${(rec.Confidence * 10).toFixed(0)}%) recommendation - ${rec.Technology} stack aligns with customer needs`,
+      recommendedTime: timings[index % timings.length],
+      estimatedDuration: '45 min',
+      linkedDealId: index + 1
+    };
+  });
 };
 
-// Get target companies for a rep
+// Get target companies for a rep - Generated from tenant recommendations
 export const getTargetCompanies = (repId) => {
-  const targets = targetCompanies.find(t => t.repId === repId);
-  return targets ? targets.targets : [];
+  const currentTenantInfo = getTenantInfo();
+  const recommendations = currentTenantInfo.recommendations || [];
+  
+  // Group recommendations by account
+  const accountGroups = recommendations.reduce((acc, rec) => {
+    if (!acc[rec.AccountName]) {
+      acc[rec.AccountName] = [];
+    }
+    acc[rec.AccountName].push(rec);
+    return acc;
+  }, {});
+  
+  // Create target companies from account groups
+  return Object.entries(accountGroups)
+    .slice(0, 5) // Top 5 target companies
+    .map(([accountName, recs], index) => {
+      const totalConfidence = recs.reduce((sum, r) => sum + r.Confidence, 0);
+      const avgConfidence = totalConfidence / recs.length;
+      const pipelineValue = (totalConfidence * 2).toFixed(2);
+      
+      return {
+        company: accountName,
+        status: index === 0 ? 'active' : index < 3 ? 'active' : 'warm-prospect',
+        priority: avgConfidence >= 8 ? 'high' : 'medium',
+        activeDeals: recs.length,
+        pipelineValue: `₹${pipelineValue} Cr`,
+        nextAction: index < 2 ? 'Close pending deals this quarter' : 'Schedule executive alignment call',
+        industry: recs[0].Technology || 'Technology'
+      };
+    });
 };
 
 // Get all team activities for a manager (by region)
@@ -2878,13 +2339,73 @@ export const getAccessibleRepsData = (currentUser) => {
   return [];
 };
 
-// Generate accounts from real deals data
+// Generate accounts from tenant JSON data (primary method)
+export const generateAccountsFromTenant = () => {
+  const currentTenantInfo = getTenantInfo();
+  const totalRevenueFromKPI = currentTenantInfo.KPI.SalesRep.TotalRevenue;
+  const recommendations = currentTenantInfo.recommendations;
+  
+  // Group recommendations by account to get unique accounts
+  const accountsMap = {};
+  
+  recommendations.forEach(rec => {
+    const accountName = rec.AccountName;
+    
+    if (!accountsMap[accountName]) {
+      accountsMap[accountName] = {
+        id: accountName.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, ''),
+        name: accountName,
+        recommendations: [],
+        technologies: new Set(),
+        partners: new Set()
+      };
+    }
+    
+    accountsMap[accountName].recommendations.push(rec);
+    accountsMap[accountName].technologies.add(rec.Technology);
+    accountsMap[accountName].partners.add(rec.Partner);
+  });
+  
+  // Convert to array and distribute revenue proportionally
+  const accountCount = Object.keys(accountsMap).length;
+  const accounts = Object.values(accountsMap).map((account, index) => {
+    // Distribute revenue proportionally based on recommendation count
+    const revenueShare = account.recommendations.length / recommendations.length;
+    const accountRevenue = totalRevenueFromKPI * revenueShare;
+    
+    // Estimate employees based on revenue (rough heuristic)
+    const employeeCount = Math.floor(10000 + (accountRevenue / 100000000) * 1000);
+    
+    return {
+      id: account.id,
+      name: account.name,
+      industry: account.recommendations[0]?.Technology || 'Technology',
+      revenue: `₹${(accountRevenue / 10000000).toFixed(0)} Cr`,
+      revenueRaw: accountRevenue,
+      employees: employeeCount.toLocaleString(),
+      location: 'India', // Generic location
+      status: 'Active',
+      opportunities: account.recommendations.length,
+      technologies: Array.from(account.technologies).join(', '),
+      partners: Array.from(account.partners).join(', ')
+    };
+  });
+  
+  return accounts.sort((a, b) => b.revenueRaw - a.revenueRaw);
+};
+
+// Generate accounts from real deals data (fallback/legacy method)
 export const generateAccountsFromDeals = (repId = null) => {
   // Filter deals by rep if repId is provided
   const relevantDeals = repId ? allDeals.filter(d => d.repId === repId) : allDeals;
   
+  // Get total revenue from JSON KPI data - dynamically from current tenant
+  const currentTenantInfo = getTenantInfo();
+  const totalRevenueFromKPI = currentTenantInfo.KPI.SalesRep.TotalRevenue;
+  
   // Group deals by company
   const accountsMap = {};
+  let totalDealValue = 0;
   
   relevantDeals.forEach(deal => {
     const companyKey = deal.company;
@@ -2896,6 +2417,7 @@ export const generateAccountsFromDeals = (repId = null) => {
         name: deal.company,
         industry: deal.sector || deal.industry || 'Technology',
         revenue: 0,
+        dealValue: 0,
         employees: deal.industry === 'Power Generation And Supply' ? '15,000' : 
                    deal.industry === 'Computers - Software - Medium / Small' ? '8,500' :
                    deal.industry === 'Solvent Extraction' ? '12,000' : '10,000',
@@ -2909,72 +2431,67 @@ export const generateAccountsFromDeals = (repId = null) => {
       };
     }
     
-    // Aggregate data
-    accountsMap[companyKey].revenue += deal.value * 10000000; // Convert Cr to rupees
+    // Aggregate deal values for proportional distribution
+    accountsMap[companyKey].dealValue += deal.value * 10000000; // Convert Cr to rupees
     accountsMap[companyKey].opportunities += 1;
     accountsMap[companyKey].deals.push(deal);
+    totalDealValue += deal.value * 10000000;
   });
   
-  // Convert to array and format
-  const accounts = Object.values(accountsMap).map(account => ({
-    ...account,
-    revenue: `₹${(account.revenue / 10000000).toFixed(0)} Cr`,
-    deals: undefined // Remove deals array from final output
-  }));
+  // Distribute total revenue from KPI proportionally based on deal values
+  const accounts = Object.values(accountsMap).map(account => {
+    const proportion = totalDealValue > 0 ? account.dealValue / totalDealValue : 1 / Object.keys(accountsMap).length;
+    const accountRevenue = totalRevenueFromKPI * proportion;
+    
+    return {
+      ...account,
+      revenue: `₹${(accountRevenue / 10000000).toFixed(0)} Cr`,
+      dealValue: undefined, // Remove temporary field
+      deals: undefined // Remove deals array from final output
+    };
+  });
   
   return accounts;
 };
 
 // Get accounts by rep ID
 export const getAccountsByRepId = (repId) => {
-  return generateAccountsFromDeals(repId);
+  // Use tenant-based account generation instead of deals
+  return generateAccountsFromTenant();
 };
 
 // Get all accounts (for Sales Head)
 export const getAllAccounts = () => {
-  return generateAccountsFromDeals();
+  // Use tenant-based account generation
+  return generateAccountsFromTenant();
 };
 
 // Get accounts by manager ID (aggregates accounts from team members)
 export const getAccountsByManagerId = (managerId) => {
-  const teamMembers = getTeamMembersByManagerId(managerId);
-  const teamRepIds = teamMembers.map(rep => rep.id);
+  // Use tenant-based account generation instead of manager-filtered deals
+  // For multi-tenancy, all users see the same tenant's accounts
+  return generateAccountsFromTenant();
+};
+
+// Get account by ID
+export const getAccountById = (accountId) => {
+  const allAccounts = getAllAccounts();
+  const account = allAccounts.find(acc => acc.id === accountId);
   
-  // Get deals from all team members
-  const teamDeals = allDeals.filter(deal => teamRepIds.includes(deal.repId));
+  if (!account) return null;
   
-  // Use the same aggregation logic but with filtered deals
-  const accountsMap = {};
-  
-  teamDeals.forEach(deal => {
-    const companyKey = deal.company;
-    
-    if (!accountsMap[companyKey]) {
-      accountsMap[companyKey] = {
-        id: companyKey.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, ''),
-        name: deal.company,
-        industry: deal.sector || deal.industry || 'General',
-        revenue: 0,
-        employees: deal.companySize ? `${deal.companySize}+` : 'Not Available',
-        location: deal.location || 'India',
-        status: 'Active',
-        opportunities: 0,
-        deals: []
-      };
-    }
-    
-    // Sum up revenue (deal.value is in Cr, convert to actual value for summing)
-    accountsMap[companyKey].revenue += deal.value * 10000000; // Convert Cr to actual value
-    accountsMap[companyKey].opportunities += 1;
-    accountsMap[companyKey].deals.push(deal);
+  // Get detailed information including deals
+  const accountDeals = allDeals.filter(deal => {
+    const dealAccountId = deal.company.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+    return dealAccountId === accountId;
   });
   
-  // Format and return
-  const accounts = Object.values(accountsMap).map(account => ({
+  // Return account with full details
+  return {
     ...account,
-    revenue: `₹${(account.revenue / 10000000).toFixed(0)} Cr`,
-    deals: undefined // Remove deals array from final output
-  }));
-  
-  return accounts;
+    deals: accountDeals,
+    phone: '+91 22 0000-0000',
+    email: `contact@${account.name.toLowerCase().replace(/[^a-z0-9]/g, '')}.com`,
+    since: 'January 2022'
+  };
 };

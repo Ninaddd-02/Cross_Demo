@@ -25,7 +25,7 @@ export const allUsers = [
     regions: ['North', 'South', 'East', 'West']
   },
   
-  // Sales Managers
+  // Sales Manager
   {
     id: 'manager-1',
     name: 'Rajesh Kumar',
@@ -33,30 +33,15 @@ export const allUsers = [
     password: 'manager123',
     securityToken: 'MGR2026TOKEN',
     role: 'sales-manager',
-    title: 'Sales Manager - North & South',
-    region: 'North & South',
+    title: 'Sales Manager - All Regions',
+    region: 'All Regions',
     managerId: 1,
-    teamSize: 2,
-    teamMembers: ['rep-1', 'rep-2'],
-    avatar: '👤'
-  },
-  {
-    id: 'manager-2',
-    name: 'Priya Sharma',
-    email: 'priya.sharma@company.com',
-    password: 'manager123',
-    securityToken: 'MGR2026TOKEN',
-    role: 'sales-manager',
-    title: 'Sales Manager - East & West',
-    region: 'East & West',
-    managerId: 2,
-    teamSize: 2,
-    teamMembers: ['rep-3', 'rep-4'],
+    teamSize: 1,
+    teamMembers: ['rep-1'],
     avatar: '👤'
   },
   
-  // Sales Reps
-  // Manager 1 Team (Rajesh Kumar - North Region)
+  // Sales Representative
   {
     id: 'rep-1',
     name: 'Rahul Sharma',
@@ -64,85 +49,45 @@ export const allUsers = [
     password: 'sales123',
     securityToken: 'REP2026TOKEN',
     role: 'sales-rep',
-    title: 'Sales Representative - North Region',
-    region: 'North',
+    title: 'Sales Representative - All Regions',
+    region: 'All Regions',
     manager: 'Rajesh Kumar',
     managerId: 1,
     repId: 1,
     avatar: '👤',
     industry: 'Automotive OEM'
-  },
-  {
-    id: 'rep-2',
-    name: 'Priya Mehta',
-    email: 'priya.mehta@company.com',
-    password: 'sales123',
-    securityToken: 'REP2026TOKEN',
-    role: 'sales-rep',
-    title: 'Sales Representative - South Region',
-    region: 'South',
-    manager: 'Rajesh Kumar',
-    managerId: 1,
-    repId: 2,
-    avatar: '👤',
-    industry: 'Manufacturing & Industrial'
-  },
-  // Manager 2 Team
-  {
-    id: 'rep-3',
-    name: 'Amit Kumar',
-    email: 'amit.kumar@company.com',
-    password: 'sales123',
-    securityToken: 'REP2026TOKEN',
-    role: 'sales-rep',
-    title: 'Sales Representative - East Region',
-    region: 'East',
-    manager: 'Priya Sharma',
-    managerId: 2,
-    repId: 3,
-    avatar: '👤',
-    industry: 'Technology & IT Services'
-  },
-  {
-    id: 'rep-4',
-    name: 'Neha Singh',
-    email: 'neha.singh@company.com',
-    password: 'sales123',
-    securityToken: 'REP2026TOKEN',
-    role: 'sales-rep',
-    title: 'Sales Representative - West Region',
-    region: 'West',
-    manager: 'Priya Sharma',
-    managerId: 2,
-    repId: 4,
-    avatar: '👤',
-    industry: 'Pharma & Healthcare'
   }
 ];
 
 export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
+  const [tenantId, setTenantId] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Load user from localStorage on mount
+  // Load user and tenant from localStorage on mount
   useEffect(() => {
     const storedUser = localStorage.getItem('currentUser');
+    const storedTenantId = localStorage.getItem('tenantId');
     if (storedUser) {
       try {
         setCurrentUser(JSON.parse(storedUser));
+        setTenantId(storedTenantId);
       } catch (error) {
         console.error('Error loading user from localStorage:', error);
         localStorage.removeItem('currentUser');
+        localStorage.removeItem('tenantId');
       }
     }
     setIsLoading(false);
   }, []);
 
-  const login = (userId) => {
+  const login = (userId, orgId) => {
     const user = allUsers.find(u => u.id === userId);
     if (user) {
       setCurrentUser(user);
+      setTenantId(orgId);
       localStorage.setItem('currentUser', JSON.stringify(user));
+      localStorage.setItem('tenantId', orgId);
       return user;
     }
     return null;
@@ -150,7 +95,13 @@ export const AuthProvider = ({ children }) => {
 
   const logout = () => {
     setCurrentUser(null);
+    setTenantId(null);
     localStorage.removeItem('currentUser');
+    localStorage.removeItem('tenantId');
+  };
+
+  const getTenantId = () => {
+    return tenantId || localStorage.getItem('tenantId');
   };
 
   const isAuthenticated = () => {
@@ -167,7 +118,10 @@ export const AuthProvider = ({ children }) => {
     // Sales Head can access all regions
     if (currentUser.role === 'sales-head') return true;
     
-    // Sales Manager and Sales Rep can only access their own region
+    // Users with "All Regions" can access any region
+    if (currentUser.region === 'All Regions') return true;
+    
+    // Otherwise, can only access their own specific region
     return currentUser.region === region;
   };
 
@@ -208,7 +162,7 @@ export const AuthProvider = ({ children }) => {
       case 'sales-manager':
         return '/sales-manager/dashboard';
       case 'sales-rep':
-        return '/sales/dashboard';
+        return '/sales/accounts';
       default:
         return '/login';
     }
@@ -315,6 +269,7 @@ export const AuthProvider = ({ children }) => {
 
   const value = {
     currentUser,
+    tenantId,
     login,
     logout,
     isAuthenticated,
@@ -323,6 +278,7 @@ export const AuthProvider = ({ children }) => {
     canAccessManager,
     canAccessRep,
     getDefaultRoute,
+    getTenantId,
     isLoading,
     allUsers,
     getTeamMembers,

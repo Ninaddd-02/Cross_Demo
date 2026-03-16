@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth, allUsers } from '../../context/AuthContext';
-import { Users, TrendingUp, Award, Mail, Lock, Eye, EyeOff, Shield } from 'lucide-react';
+import { Users, TrendingUp, Award, Mail, Lock, Eye, EyeOff, Shield, Building2 } from 'lucide-react';
 import './Login.css';
 
 const Login = () => {
   const navigate = useNavigate();
   const { login, getDefaultRoute } = useAuth();
   const [selectedRole, setSelectedRole] = useState('sales-head');
+  const [orgId, setOrgId] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [securityToken, setSecurityToken] = useState('');
@@ -19,6 +20,13 @@ const Login = () => {
     e.preventDefault();
     setError('');
 
+    // Validate Org ID
+    const validOrgIds = ['P2SCSJ91BR52L8U', '3DNYQNWGZEGT6PD'];
+    if (!orgId || !validOrgIds.includes(orgId)) {
+      setError('Invalid Organization ID. Please enter P2SCSJ91BR52L8U or 3DNYQNWGZEGT6PD');
+      return;
+    }
+
     // Find user by email, password, and security token
     const user = allUsers.find(u => 
       u.email.toLowerCase() === email.toLowerCase() && 
@@ -27,7 +35,7 @@ const Login = () => {
     );
 
     if (user) {
-      const loggedInUser = login(user.id);
+      const loggedInUser = login(user.id, orgId);
       if (loggedInUser) {
         const route = getDefaultRoute();
         navigate(route);
@@ -41,18 +49,19 @@ const Login = () => {
   const getDemoCredentials = () => {
     switch(selectedRole) {
       case 'sales-head':
-        return { email: 'vikram.singh@company.com', password: 'vp123', securityToken: 'VP2026TOKEN' };
+        return { orgId: 'P2SCSJ91BR52L8U', email: 'vikram.singh@company.com', password: 'vp123', securityToken: 'VP2026TOKEN' };
       case 'sales-manager':
-        return { email: 'rajesh.kumar@company.com', password: 'manager123', securityToken: 'MGR2026TOKEN' };
+        return { orgId: 'P2SCSJ91BR52L8U', email: 'rajesh.kumar@company.com', password: 'manager123', securityToken: 'MGR2026TOKEN' };
       case 'sales-rep':
-        return { email: 'rahul.sharma@company.com', password: 'sales123', securityToken: 'REP2026TOKEN' };
+        return { orgId: 'P2SCSJ91BR52L8U', email: 'rahul.sharma@company.com', password: 'sales123', securityToken: 'REP2026TOKEN' };
       default:
-        return { email: '', password: '', securityToken: '' };
+        return { orgId: '', email: '', password: '', securityToken: '' };
     }
   };
 
   const fillDemoCredentials = () => {
     const credentials = getDemoCredentials();
+    setOrgId(credentials.orgId);
     setEmail(credentials.email);
     setPassword(credentials.password);
     setSecurityToken(credentials.securityToken);
@@ -113,6 +122,23 @@ const Login = () => {
           </div>
 
           <form className="login-form" onSubmit={handleSubmit}>
+            <div className="form-group">
+              <label className="form-label" htmlFor="org-id-input">
+                <Building2 size={16} />
+                Organization ID
+              </label>
+              <input
+                id="org-id-input"
+                type="text"
+                className="form-input"
+                placeholder="Enter Org ID (e.g., P2SCSJ91BR52L8U)"
+                value={orgId}
+                onChange={(e) => setOrgId(e.target.value)}
+                autoComplete="off"
+                required
+              />
+            </div>
+
             <div className="form-group">
               <label className="form-label" htmlFor="email-input">
                 <Mail size={16} />
@@ -211,6 +237,7 @@ const Login = () => {
               {selectedRole === 'sales-head' && (
                 <div className="credential-info">
                   <p><strong>Role:</strong> VP Of Sales</p>
+                  <p><strong>Org ID:</strong> P2SCSJ91BR52L8U</p>
                   <p><strong>Email:</strong> vikram.singh@company.com</p>
                   <p><strong>Password:</strong> vp123</p>
                   <p><strong>Security Token:</strong> VP2026TOKEN</p>
@@ -219,25 +246,22 @@ const Login = () => {
               {selectedRole === 'sales-manager' && (
                 <div className="credential-info">
                   <p><strong>Role:</strong> Manager</p>
-                  <p><strong>Available managers:</strong></p>
-                  <ul className="credentials-list">
-                    <li>rajesh.kumar@company.com (North & South) - manager123 - MGR2026TOKEN</li>
-                    <li>priya.sharma@company.com (East & West) - manager123 - MGR2026TOKEN</li>
-                  </ul>
-                  <p className="token-note"><strong>Security Token:</strong> MGR2026TOKEN (same for all managers)</p>
+                  <p><strong>Org ID:</strong> P2SCSJ91BR52L8U</p>
+                  <p><strong>Email:</strong> rajesh.kumar@company.com</p>
+                  <p><strong>Region:</strong> All Regions</p>
+                  <p><strong>Password:</strong> manager123</p>
+                  <p><strong>Security Token:</strong> MGR2026TOKEN</p>
                 </div>
               )}
               {selectedRole === 'sales-rep' && (
                 <div className="credential-info">
                   <p><strong>Role:</strong> Sales Rep</p>
-                  <p><strong>Available reps:</strong></p>
-                  <ul className="credentials-list">
-                    <li>rahul.sharma@company.com (North - Manager: Rajesh Kumar) - sales123 - REP2026TOKEN</li>
-                    <li>priya.mehta@company.com (South - Manager: Rajesh Kumar) - sales123 - REP2026TOKEN</li>
-                    <li>amit.kumar@company.com (East - Manager: Priya Sharma) - sales123 - REP2026TOKEN</li>
-                    <li>neha.singh@company.com (West - Manager: Priya Sharma) - sales123 - REP2026TOKEN</li>
-                  </ul>
-                  <p className="token-note"><strong>Security Token:</strong> REP2026TOKEN (same for all reps)</p>
+                  <p><strong>Org ID:</strong> P2SCSJ91BR52L8U</p>
+                  <p><strong>Email:</strong> rahul.sharma@company.com</p>
+                  <p><strong>Region:</strong> All Regions</p>
+                  <p><strong>Manager:</strong> Rajesh Kumar</p>
+                  <p><strong>Password:</strong> sales123</p>
+                  <p><strong>Security Token:</strong> REP2026TOKEN</p>
                 </div>
               )}
             </div>

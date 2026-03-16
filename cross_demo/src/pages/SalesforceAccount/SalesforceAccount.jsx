@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import SidebarNavigation from '../../components/SidebarNavigation/SidebarNavigation';
 import TopNavbar from '../../components/TopNavbar/TopNavbar';
@@ -7,11 +7,12 @@ import GlassCard from '../../components/GlassCard/GlassCard';
 import GradientButton from '../../components/GradientButton/GradientButton';
 import StatusBadge from '../../components/StatusBadge/StatusBadge';
 import { Building, MapPin, DollarSign, Users, Phone, Mail, Calendar, Sparkles, Activity, AlertTriangle, Target, TrendingUp, RefreshCw, ArrowUp, ArrowDown } from 'lucide-react';
-import { allDeals, calculateRepKPIs } from '../../data/sharedData';
+import { allDeals, calculateRepKPIs, getAccountById } from '../../data/sharedData';
 import './SalesforceAccount.css';
 
 const SalesforceAccount = () => {
   const navigate = useNavigate();
+  const { accountId } = useParams();
   const { currentUser } = useAuth();
 
   // Calculate Rep KPIs from connected data
@@ -20,39 +21,21 @@ const SalesforceAccount = () => {
   // Sales Rep KPIs - Real Data from Backend
   const repKPIs = [
     {
-      title: 'Deals Closed',
-      value: kpiData.dealsClosed.toString(),
-      change: '+12 this month',
+      title: 'Total Revenue',
+      value: kpiData.totalRevenue,
+      change: '+12.3%',
       trend: 'up',
-      subtitle: 'Total closed deals',
-      icon: <Target size={24} />,
-      status: 'success'
-    },
-    {
-      title: 'Avg Deal Size',
-      value: kpiData.avgDealSize,
-      change: '+18%',
-      trend: 'up',
-      subtitle: 'Per deal value',
+      subtitle: 'Overall revenue',
       icon: <DollarSign size={24} />,
       status: 'success'
     },
     {
-      title: 'Deal Velocity',
+      title: 'Avg Deal Velocity',
       value: `${kpiData.avgDealVelocity} days`,
-      change: '-5 days',
+      change: '-8 days',
       trend: 'up',
-      subtitle: 'Avg time to close',
+      subtitle: 'Time to close',
       icon: <Activity size={24} />,
-      status: 'success'
-    },
-    {
-      title: 'Renewal Rate',
-      value: `${kpiData.renewalRate}%`,
-      change: '+4.2%',
-      trend: 'up',
-      subtitle: 'Customer retention',
-      icon: <RefreshCw size={24} />,
       status: 'success'
     },
     {
@@ -65,21 +48,30 @@ const SalesforceAccount = () => {
       status: 'warning'
     },
     {
-      title: 'Cross-Sell Potential',
-      value: kpiData.crossSellPotential,
-      change: '23 opportunities',
-      trend: 'up',
-      subtitle: 'Additional products',
-      icon: <TrendingUp size={24} />,
+      title: 'Avg Project Duration',
+      value: `${kpiData.avgProjectDuration} days`,
+      change: '+15 days',
+      trend: 'down',
+      subtitle: 'Project timeline',
+      icon: <Target size={24} />,
       status: 'success'
     },
     {
-      title: 'Upsell Potential',
-      value: kpiData.upsellPotential,
-      change: '18 accounts',
+      title: 'Renewal Rate',
+      value: `${kpiData.renewalRate}%`,
+      change: '+4.2%',
       trend: 'up',
-      subtitle: 'Upgrade revenue',
-      icon: <Sparkles size={24} />,
+      subtitle: 'Customer retention',
+      icon: <RefreshCw size={24} />,
+      status: 'success'
+    },
+    {
+      title: 'Total Users',
+      value: kpiData.totalUsers,
+      change: '+25 users',
+      trend: 'up',
+      subtitle: 'Active users',
+      icon: <Users size={24} />,
       status: 'success'
     }
   ];
@@ -142,18 +134,27 @@ const SalesforceAccount = () => {
     };
   };
 
-  // Get account data based on current user's repId
-  const accountData = getAccountDataFromDeals(currentUser?.repId || 1);
+  // Get account data - either specific account from URL or rep's top account
+  const accountData = accountId 
+    ? getAccountById(accountId) || getAccountDataFromDeals(currentUser?.repId || 1)
+    : getAccountDataFromDeals(currentUser?.repId || 1);
 
   // Get opportunities for this account from shared data
-  const recentOpportunities = allDeals
-    .filter(deal => deal.repId === currentUser?.repId && deal.company === accountData.name)
-    .map(deal => ({
-      name: deal.name,
-      amount: deal.valueFormatted,
-      stage: deal.stage,
-      closeDate: deal.closeDate
-    }));
+  const recentOpportunities = accountId && accountData.deals
+    ? accountData.deals.map(deal => ({
+        name: deal.name,
+        amount: deal.valueFormatted,
+        stage: deal.stage,
+        closeDate: deal.closeDate
+      }))
+    : allDeals
+        .filter(deal => deal.repId === currentUser?.repId && deal.company === accountData.name)
+        .map(deal => ({
+          name: deal.name,
+          amount: deal.valueFormatted,
+          stage: deal.stage,
+          closeDate: deal.closeDate
+        }));
 
   // Count recommendation types
   const crossSellCount = 2;
@@ -164,8 +165,8 @@ const SalesforceAccount = () => {
       <SidebarNavigation role="sales" />
       <div className="admin-content">
         <TopNavbar 
-          title={accountData.name}
-          subtitle="Account Details"
+          title="My Accounts"
+          subtitle="Account Overview"
           user="Sales User"
         />
         

@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { v4 as uuidv4 } from 'uuid';
 import { broadcastSync, SYNC_EVENTS } from '../utils/syncManager';
+import useActivitiesStore from './useActivitiesStore';
 
 const useRecommendationsStore = create(
   persist(
@@ -44,24 +45,47 @@ const useRecommendationsStore = create(
         const recommendation = get().getRecommendationById(recId);
         if (!recommendation) return null;
         
+        const timestamp = new Date().toISOString();
+        
         set((state) => ({
           recommendations: state.recommendations.map(r =>
             r.id === recId
-              ? { ...r, status: 'accepted', acceptedAt: new Date().toISOString(), notes }
+              ? { ...r, status: 'accepted', acceptedAt: timestamp, notes }
               : r
           ),
           acceptedRecommendations: [
             ...state.acceptedRecommendations,
-            { ...recommendation, status: 'accepted', acceptedAt: new Date().toISOString(), notes }
+            { ...recommendation, status: 'accepted', acceptedAt: timestamp, notes }
           ]
         }));
         
-        // Broadcast to other tabs
+        // Log activity
+        useActivitiesStore.getState().logRecommendationActivity(
+          recId,
+          recommendation.repId,
+          'accepted',
+          {
+            productName: recommendation.title || recommendation.productName,
+            accountName: recommendation.accountName || recommendation.company,
+            confidence: recommendation.confidence,
+            notes,
+            timestamp
+          }
+        );
+        
+        // Broadcast to other tabs (including activity)
         broadcastSync(SYNC_EVENTS.RECOMMENDATION_ACCEPTED, {
           recId,
           repId: recommendation.repId,
           notes,
-          timestamp: new Date().toISOString()
+          timestamp
+        });
+        
+        broadcastSync(SYNC_EVENTS.ACTIVITY_UPDATED, {
+          type: 'recommendation',
+          action: 'accepted',
+          repId: recommendation.repId,
+          timestamp
         });
         
         return recommendation;
@@ -72,24 +96,47 @@ const useRecommendationsStore = create(
         const recommendation = get().getRecommendationById(recId);
         if (!recommendation) return null;
         
+        const timestamp = new Date().toISOString();
+        
         set((state) => ({
           recommendations: state.recommendations.map(r =>
             r.id === recId
-              ? { ...r, status: 'rejected', rejectedAt: new Date().toISOString(), reason }
+              ? { ...r, status: 'rejected', rejectedAt: timestamp, reason }
               : r
           ),
           rejectedRecommendations: [
             ...state.rejectedRecommendations,
-            { ...recommendation, status: 'rejected', rejectedAt: new Date().toISOString(), reason }
+            { ...recommendation, status: 'rejected', rejectedAt: timestamp, reason }
           ]
         }));
         
-        // Broadcast to other tabs
+        // Log activity
+        useActivitiesStore.getState().logRecommendationActivity(
+          recId,
+          recommendation.repId,
+          'rejected',
+          {
+            productName: recommendation.title || recommendation.productName,
+            accountName: recommendation.accountName || recommendation.company,
+            confidence: recommendation.confidence,
+            reason,
+            timestamp
+          }
+        );
+        
+        // Broadcast to other tabs (including activity)
         broadcastSync(SYNC_EVENTS.RECOMMENDATION_REJECTED, {
           recId,
           repId: recommendation.repId,
           reason,
-          timestamp: new Date().toISOString()
+          timestamp
+        });
+        
+        broadcastSync(SYNC_EVENTS.ACTIVITY_UPDATED, {
+          type: 'recommendation',
+          action: 'rejected',
+          repId: recommendation.repId,
+          timestamp
         });
         
         return recommendation;

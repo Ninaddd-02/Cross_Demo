@@ -8,14 +8,6 @@ import {
   LogOut,
   Menu,
   X,
-  TrendingUp,
-  Target,
-  BarChart3,
-  Award,
-  AlertTriangle,
-  UserCheck,
-  Zap,
-  TrendingDown,
   Calendar,
   Eye,
   FileText,
@@ -57,21 +49,16 @@ const SidebarNavigation = ({ role }) => {
   const salesHeadNavItems = [
     { path: '/sales-head/dashboard', icon: <LayoutDashboard size={20} />, label: 'Dashboard' },
     { path: '/sales-head/accounts', icon: <Users size={20} />, label: 'All Accounts' },
+    { path: '/sales-head/team-recommendations', icon: <Eye size={20} />, label: 'Team Recommendations' },
     { path: '/sales-head/organization-plan', icon: <FileText size={20} />, label: 'Organization Plan' },
     { path: '/sales-head/all-recommendations', icon: <Sparkles size={20} />, label: 'All Recommendations' },
-    { path: '/sales-head/pipeline-risk', icon: <Target size={20} />, label: 'Pipeline Risk' },
-    { path: '/sales-head/manager-analytics', icon: <Award size={20} />, label: 'Manager Analytics' },
-    { path: '/sales-head/insights', icon: <BarChart3 size={20} />, label: 'Pattern Insights' },
-    { path: '/sales-head/team-recommendations', icon: <Eye size={20} />, label: 'Team Recommendations' },
   ];
 
   const salesManagerNavItems = [
     { path: '/sales-manager/dashboard', icon: <LayoutDashboard size={20} />, label: 'Dashboard' },
+    { path: '/sales-manager/accounts', icon: <Users size={20} />, label: 'All Accounts' },
     { path: '/sales-manager/team-plan', icon: <Calendar size={20} />, label: 'Team Plan' },
     { path: '/sales-manager/team-activity', icon: <Activity size={20} />, label: 'Team Activity' },
-    { path: '/sales-manager/team-performance', icon: <UserCheck size={20} />, label: 'Team Performance' },
-    { path: '/sales-manager/deal-risk', icon: <AlertTriangle size={20} />, label: 'Deal Risk' },
-    { path: '/sales-manager/coaching', icon: <Zap size={20} />, label: 'Rep Coaching' },
     { path: '/sales-manager/team-recommendations', icon: <Eye size={20} />, label: 'Team Recommendations' },
   ];
 

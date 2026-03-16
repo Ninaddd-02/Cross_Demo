@@ -1,0 +1,119 @@
+{
+  "generated_at_utc": "2026-03-16T09:54:27.295890+00:00",
+  "source_file": "tenant_exports/tenant_P2SCSJ91BR52L8U.csv",
+  "tenant": {
+    "P2SCSJ91BR52L8U": {
+      "recommendation_count": 9,
+      "account_count": 3,
+      "KPI": {
+        "SalesHead": {
+          "TotalRevenue": 10178548953.64,
+          "AvgDealVelocityDays": 78.86,
+          "RevenueAtRisk": 467868710.0,
+          "RenewalRevenueSharePct": 39.58,
+          "AvgMarginPct": 23.92,
+          "AvgContributionMarginPct": 12207827.38
+        },
+        "SalesManager": {
+          "TotalRevenue": 10178548953.64,
+          "AvgDealVelocityDays": 78.86,
+          "RevenueAtRisk": 467868710.0,
+          "TopServiceLine": "Digital",
+          "TopTechnology": "Project Management",
+          "TopRegion": "West"
+        },
+        "SalesRep": {
+          "TotalRevenue": 10178548953.64,
+          "AvgDealVelocityDays": 78.86,
+          "RevenueAtRisk": 467868710.0,
+          "AvgProjectDurationDays": 228.56,
+          "RenewalRatePct": 18.09,
+          "TotalUsers": 3
+        }
+      },
+      "recommendations": [
+        {
+          "AccountName": "ACCELYA SOLUTIONS INDIA LIMITED",
+          "Recommended_Product": "Data Engineering",
+          "Opportunity_Type": "CROSS-SELL",
+          "Technology": "Project Management",
+          "Partner": "SNC-Lavalin",
+          "Confidence": 1.0,
+          "Method": "popularity_fallback"
+        },
+        {
+          "AccountName": "ACCELYA SOLUTIONS INDIA LIMITED",
+          "Recommended_Product": "Connectivity & Comms",
+          "Opportunity_Type": "CROSS-SELL",
+          "Technology": "Water Resources Management",
+          "Partner": "Tetra Tech",
+          "Confidence": 0.879,
+          "Method": "popularity_fallback"
+        },
+        {
+          "AccountName": "ACCELYA SOLUTIONS INDIA LIMITED",
+          "Recommended_Product": "Migrations",
+          "Opportunity_Type": "CROSS-SELL",
+          "Technology": "Rapid PLM Services",
+          "Partner": "Rapid PLM",
+          "Confidence": 0.862,
+          "Method": "popularity_fallback"
+        },
+        {
+          "AccountName": "ADANI WILMAR LIMITED",
+          "Recommended_Product": "Data Engineering",
+          "Opportunity_Type": "CROSS-SELL",
+          "Technology": "Project Management",
+          "Partner": "SNC-Lavalin",
+          "Confidence": 1.0,
+          "Method": "popularity_fallback"
+        },
+        {
+          "AccountName": "ADANI WILMAR LIMITED",
+          "Recommended_Product": "Connectivity & Comms",
+          "Opportunity_Type": "CROSS-SELL",
+          "Technology": "Water Resources Management",
+          "Partner": "Tetra Tech",
+          "Confidence": 0.879,
+          "Method": "popularity_fallback"
+        },
+        {
+          "AccountName": "ADANI WILMAR LIMITED",
+          "Recommended_Product": "Migrations",
+          "Opportunity_Type": "CROSS-SELL",
+          "Technology": "Rapid PLM Services",
+          "Partner": "Rapid PLM",
+          "Confidence": 0.862,
+          "Method": "popularity_fallback"
+        },
+        {
+          "AccountName": "ADANI GREEN ENERGY LIMITED",
+          "Recommended_Product": "Data Engineering",
+          "Opportunity_Type": "CROSS-SELL",
+          "Technology": "Project Management",
+          "Partner": "SNC-Lavalin",
+          "Confidence": 1.0,
+          "Method": "popularity_fallback"
+        },
+        {
+          "AccountName": "ADANI GREEN ENERGY LIMITED",
+          "Recommended_Product": "Connectivity & Comms",
+          "Opportunity_Type": "CROSS-SELL",
+          "Technology": "Water Resources Management",
+          "Partner": "Tetra Tech",
+          "Confidence": 0.879,
+          "Method": "popularity_fallback"
+        },
+        {
+          "AccountName": "ADANI GREEN ENERGY LIMITED",
+          "Recommended_Product": "Migrations",
+          "Opportunity_Type": "CROSS-SELL",
+          "Technology": "Rapid PLM Services",
+          "Partner": "Rapid PLM",
+          "Confidence": 0.862,
+          "Method": "popularity_fallback"
+        }
+      ]
+    }
+  }
+}

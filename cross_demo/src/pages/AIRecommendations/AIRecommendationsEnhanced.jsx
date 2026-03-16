@@ -210,7 +210,7 @@ const AIRecommendationsEnhanced = () => {
                       <div className="rec-badges">
                         <StatusBadge 
                           status={rec.type === 'cross-sell' ? 'info' : 'active'} 
-                          label={rec.type === 'cross-sell' ? 'Cross-Sell' : 'Upsell'} 
+                          label={rec.type ? rec.type.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join('-') : 'Unknown'} 
                         />
                         <StatusBadge 
                           status={rec.confidence >= 85 ? 'success' : 'warning'} 

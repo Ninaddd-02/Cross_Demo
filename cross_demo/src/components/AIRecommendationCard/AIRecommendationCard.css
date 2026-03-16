@@ -153,37 +153,6 @@
   font-weight: 700;
 }
 
-.recommendation-reason {
-  margin-top: 1rem;
-  padding: 1rem;
-  background: #EFF6FF;
-  border-left: 3px solid var(--salesforce-blue);
-  border-radius: 0 var(--radius-md) var(--radius-md) 0;
-  width: 100%;
-  box-sizing: border-box;
-  overflow-wrap: break-word;
-  word-break: break-word;
-}
-
-.reason-label {
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: var(--salesforce-blue);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  display: block;
-  margin-bottom: 0.5rem;
-}
-
-.reason-text {
-  font-size: 0.875rem;
-  color: var(--text-secondary);
-  line-height: 1.5;
-  margin: 0;
-  overflow-wrap: break-word;
-  word-break: break-word;
-}
-
 .recommendation-actions {
   display: flex;
   flex-wrap: wrap;
