@@ -1,5 +1,5 @@
 // Backend Authentication API Implementation Example
-// Node.js + Express + MongoDB/PostgreSQL
+// Node.js + Express + PostgreSQL
 // This is a complete example implementation of the authentication endpoints
 
 const express = require('express');
@@ -7,6 +7,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const rateLimit = require('express-rate-limit');
+const { Pool } = require('pg');
 const router = express.Router();
 
 // ============================================
@@ -18,6 +19,11 @@ const JWT_EXPIRES_IN = '1h';
 const SALT_ROUNDS = 12;
 const MAX_FAILED_ATTEMPTS = 5;
 const LOCK_DURATION = 30 * 60 * 1000; // 30 minutes
+
+// PostgreSQL connection pool
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL
+});
 
 // ============================================
 // Rate Limiting Middleware
@@ -36,79 +42,87 @@ const loginLimiter = rateLimit({
 });
 
 // ============================================
-// Database Models (Mongoose/Sequelize Examples)
+// Database Schema Creation
 // ============================================
 
-// For MongoDB (Mongoose)
-const mongoose = require('mongoose');
+async function createTables(db) {
+  const client = db || pool;
+  
+  try {
+    // Create users table
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS users (
+        id VARCHAR(50) PRIMARY KEY,
+        name VARCHAR(255) NOT NULL,
+        email VARCHAR(255) UNIQUE NOT NULL,
+        password_hash VARCHAR(255) NOT NULL,
+        security_token_hash VARCHAR(255) NOT NULL,
+        role VARCHAR(50) NOT NULL CHECK (role IN ('sales-head', 'sales-manager', 'sales-rep')),
+        title VARCHAR(255),
+        avatar VARCHAR(255),
+        region VARCHAR(100),
+        regions TEXT[],
+        manager VARCHAR(255),
+        manager_id INTEGER,
+        rep_id INTEGER,
+        team_size INTEGER,
+        team_members TEXT[],
+        is_active BOOLEAN DEFAULT true,
+        failed_login_attempts INTEGER DEFAULT 0,
+        locked_until TIMESTAMP,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+      
+      CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
+      CREATE INDEX IF NOT EXISTS idx_users_role ON users(role);
+    `);
 
-const userSchema = new mongoose.Schema({
-  id: { type: String, required: true, unique: true },
-  name: { type: String, required: true },
-  email: { type: String, required: true, unique: true, lowercase: true },
-  passwordHash: { type: String, required: true },
-  securityTokenHash: { type: String, required: true },
-  role: { 
-    type: String, 
-    enum: ['sales-head', 'sales-manager', 'sales-rep'], 
-    required: true 
-  },
-  title: String,
-  avatar: String,
-  region: String,
-  regions: [String],
-  manager: String,
-  managerId: Number,
-  repId: Number,
-  teamSize: Number,
-  teamMembers: [String],
-  isActive: { type: Boolean, default: true },
-  failedLoginAttempts: { type: Number, default: 0 },
-  lockedUntil: Date,
-  createdAt: { type: Date, default: Date.now },
-  updatedAt: { type: Date, default: Date.now }
-});
+    // Create tenants table
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS tenants (
+        id VARCHAR(50) PRIMARY KEY,
+        name VARCHAR(255) NOT NULL,
+        is_active BOOLEAN DEFAULT true,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
 
-userSchema.index({ email: 1 });
-userSchema.index({ role: 1 });
+    // Create user_tenants junction table
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS user_tenants (
+        user_id VARCHAR(50) REFERENCES users(id),
+        tenant_id VARCHAR(50) REFERENCES tenants(id),
+        is_active BOOLEAN DEFAULT true,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        PRIMARY KEY (user_id, tenant_id)
+      );
+    `);
 
-const User = mongoose.model('User', userSchema);
+    // Create login_attempts table
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS login_attempts (
+        id SERIAL PRIMARY KEY,
+        user_id VARCHAR(50),
+        email VARCHAR(255),
+        ip_address VARCHAR(45),
+        user_agent TEXT,
+        success BOOLEAN,
+        error_message TEXT,
+        timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+      
+      CREATE INDEX IF NOT EXISTS idx_login_attempts_user_id ON login_attempts(user_id, timestamp DESC);
+      CREATE INDEX IF NOT EXISTS idx_login_attempts_email ON login_attempts(email, timestamp DESC);
+    `);
 
-const tenantSchema = new mongoose.Schema({
-  id: { type: String, required: true, unique: true },
-  name: { type: String, required: true },
-  isActive: { type: Boolean, default: true },
-  createdAt: { type: Date, default: Date.now },
-  updatedAt: { type: Date, default: Date.now }
-});
-
-const Tenant = mongoose.model('Tenant', tenantSchema);
-
-const userTenantSchema = new mongoose.Schema({
-  userId: { type: String, required: true },
-  tenantId: { type: String, required: true },
-  isActive: { type: Boolean, default: true },
-  createdAt: { type: Date, default: Date.now }
-});
-
-userTenantSchema.index({ userId: 1, tenantId: 1 }, { unique: true });
-
-const UserTenant = mongoose.model('UserTenant', userTenantSchema);
-
-const loginAttemptSchema = new mongoose.Schema({
-  userId: String,
-  email: String,
-  ipAddress: String,
-  userAgent: String,
-  success: Boolean,
-  errorMessage: String,
-  timestamp: { type: Date, default: Date.now }
-});
-
-loginAttemptSchema.index({ userId: 1, timestamp: -1 });
-loginAttemptSchema.index({ email: 1, timestamp: -1 });
-
-const LoginAttempt = mongoose.model('LoginAttempt', loginAttemptSchema);
+    console.log('✅ Database tables created/verified');
+  } catch (error) {
+    console.error('❌ Error creating tables:', error);
+    throw error;
+  }
+}
 
 // ============================================
 // Helper Functions
@@ -126,14 +140,11 @@ function hashSecurityToken(token) {
  */
 async function logLoginAttempt(userId, email, ipAddress, userAgent, success, errorMessage = null) {
   try {
-    await LoginAttempt.create({
-      userId,
-      email,
-      ipAddress,
-      userAgent,
-      success,
-      errorMessage
-    });
+    await pool.query(
+      `INSERT INTO login_attempts (user_id, email, ip_address, user_agent, success, error_message)
+       VALUES ($1, $2, $3, $4, $5, $6)`,
+      [userId, email, ipAddress, userAgent, success, errorMessage]
+    );
   } catch (error) {
     console.error('Error logging login attempt:', error);
   }
@@ -142,26 +153,42 @@ async function logLoginAttempt(userId, email, ipAddress, userAgent, success, err
 /**
  * Increment failed login attempts and lock account if necessary
  */
-async function incrementFailedAttempts(user) {
-  user.failedLoginAttempts += 1;
+async function incrementFailedAttempts(userId) {
+  const attempts = await pool.query(
+    'SELECT failed_login_attempts FROM users WHERE id = $1',
+    [userId]
+  );
   
-  // Lock account after max failed attempts
-  if (user.failedLoginAttempts >= MAX_FAILED_ATTEMPTS) {
-    user.lockedUntil = new Date(Date.now() + LOCK_DURATION);
+  const newAttempts = (attempts.rows[0]?.failed_login_attempts || 0) + 1;
+  
+  if (newAttempts >= MAX_FAILED_ATTEMPTS) {
+    const lockUntil = new Date(Date.now() + LOCK_DURATION);
+    await pool.query(
+      `UPDATE users 
+       SET failed_login_attempts = $1, locked_until = $2, updated_at = CURRENT_TIMESTAMP
+       WHERE id = $3`,
+      [newAttempts, lockUntil, userId]
+    );
+  } else {
+    await pool.query(
+      `UPDATE users 
+       SET failed_login_attempts = $1, updated_at = CURRENT_TIMESTAMP
+       WHERE id = $2`,
+      [newAttempts, userId]
+    );
   }
-  
-  user.updatedAt = new Date();
-  await user.save();
 }
 
 /**
  * Reset failed login attempts
  */
-async function resetFailedAttempts(user) {
-  user.failedLoginAttempts = 0;
-  user.lockedUntil = null;
-  user.updatedAt = new Date();
-  await user.save();
+async function resetFailedAttempts(userId) {
+  await pool.query(
+    `UPDATE users 
+     SET failed_login_attempts = 0, locked_until = NULL, updated_at = CURRENT_TIMESTAMP
+     WHERE id = $1`,
+    [userId]
+  );
 }
 
 /**
@@ -197,10 +224,10 @@ function formatUserResponse(user) {
     region: user.region,
     regions: user.regions,
     manager: user.manager,
-    managerId: user.managerId,
-    repId: user.repId,
-    teamSize: user.teamSize,
-    teamMembers: user.teamMembers
+    managerId: user.manager_id,
+    repId: user.rep_id,
+    teamSize: user.team_size,
+    teamMembers: user.team_members
   };
 }
 
@@ -288,8 +315,12 @@ router.post('/login', loginLimiter, async (req, res) => {
     }
 
     // Check if tenant exists and is active
-    const tenant = await Tenant.findOne({ id: orgId, isActive: true });
-    if (!tenant) {
+    const tenantResult = await pool.query(
+      'SELECT * FROM tenants WHERE id = $1 AND is_active = true',
+      [orgId]
+    );
+    
+    if (tenantResult.rows.length === 0) {
       await logLoginAttempt(null, email, ipAddress, userAgent, false, 'Invalid organization ID');
       return res.status(401).json({
         success: false,
@@ -299,8 +330,12 @@ router.post('/login', loginLimiter, async (req, res) => {
     }
 
     // Find user by email
-    const user = await User.findOne({ email: email.toLowerCase(), isActive: true });
-    if (!user) {
+    const userResult = await pool.query(
+      'SELECT * FROM users WHERE LOWER(email) = LOWER($1) AND is_active = true',
+      [email]
+    );
+    
+    if (userResult.rows.length === 0) {
       await logLoginAttempt(null, email, ipAddress, userAgent, false, 'User not found');
       return res.status(401).json({
         success: false,
@@ -309,9 +344,11 @@ router.post('/login', loginLimiter, async (req, res) => {
       });
     }
 
+    const user = userResult.rows[0];
+
     // Check if account is locked
-    if (user.lockedUntil && user.lockedUntil > new Date()) {
-      const minutesRemaining = Math.ceil((user.lockedUntil - new Date()) / 60000);
+    if (user.locked_until && new Date(user.locked_until) > new Date()) {
+      const minutesRemaining = Math.ceil((new Date(user.locked_until) - new Date()) / 60000);
       await logLoginAttempt(user.id, email, ipAddress, userAgent, false, 'Account locked');
       return res.status(403).json({
         success: false,
@@ -321,14 +358,13 @@ router.post('/login', loginLimiter, async (req, res) => {
     }
 
     // Verify user-tenant relationship
-    const userTenant = await UserTenant.findOne({
-      userId: user.id,
-      tenantId: orgId,
-      isActive: true
-    });
+    const userTenantResult = await pool.query(
+      'SELECT * FROM user_tenants WHERE user_id = $1 AND tenant_id = $2 AND is_active = true',
+      [user.id, orgId]
+    );
 
-    if (!userTenant) {
-      await incrementFailedAttempts(user);
+    if (userTenantResult.rows.length === 0) {
+      await incrementFailedAttempts(user.id);
       await logLoginAttempt(user.id, email, ipAddress, userAgent, false, 'User not associated with tenant');
       return res.status(401).json({
         success: false,
@@ -338,9 +374,9 @@ router.post('/login', loginLimiter, async (req, res) => {
     }
 
     // Verify password
-    const isPasswordValid = await bcrypt.compare(password, user.passwordHash);
+    const isPasswordValid = await bcrypt.compare(password, user.password_hash);
     if (!isPasswordValid) {
-      await incrementFailedAttempts(user);
+      await incrementFailedAttempts(user.id);
       await logLoginAttempt(user.id, email, ipAddress, userAgent, false, 'Invalid password');
       return res.status(401).json({
         success: false,
@@ -351,8 +387,8 @@ router.post('/login', loginLimiter, async (req, res) => {
 
     // Verify security token
     const tokenHash = hashSecurityToken(securityToken);
-    if (tokenHash !== user.securityTokenHash) {
-      await incrementFailedAttempts(user);
+    if (tokenHash !== user.security_token_hash) {
+      await incrementFailedAttempts(user.id);
       await logLoginAttempt(user.id, email, ipAddress, userAgent, false, 'Invalid security token');
       return res.status(401).json({
         success: false,
@@ -362,7 +398,7 @@ router.post('/login', loginLimiter, async (req, res) => {
     }
 
     // Reset failed login attempts on successful login
-    await resetFailedAttempts(user);
+    await resetFailedAttempts(user.id);
 
     // Generate JWT token
     const token = generateToken(user, orgId);
@@ -399,9 +435,12 @@ router.post('/login', loginLimiter, async (req, res) => {
  */
 router.post('/validate', authenticateToken, async (req, res) => {
   try {
-    const user = await User.findOne({ id: req.user.userId, isActive: true });
+    const userResult = await pool.query(
+      'SELECT * FROM users WHERE id = $1 AND is_active = true',
+      [req.user.userId]
+    );
     
-    if (!user) {
+    if (userResult.rows.length === 0) {
       return res.status(401).json({
         success: false,
         error: 'USER_NOT_FOUND',
@@ -412,7 +451,7 @@ router.post('/validate', authenticateToken, async (req, res) => {
     res.json({
       success: true,
       data: {
-        user: formatUserResponse(user),
+        user: formatUserResponse(userResult.rows[0]),
         tenantId: req.user.tenantId
       }
     });
@@ -458,9 +497,12 @@ router.post('/logout', authenticateToken, async (req, res) => {
  */
 router.post('/refresh', authenticateToken, async (req, res) => {
   try {
-    const user = await User.findOne({ id: req.user.userId, isActive: true });
+    const userResult = await pool.query(
+      'SELECT * FROM users WHERE id = $1 AND is_active = true',
+      [req.user.userId]
+    );
     
-    if (!user) {
+    if (userResult.rows.length === 0) {
       return res.status(401).json({
         success: false,
         error: 'USER_NOT_FOUND',
@@ -469,7 +511,7 @@ router.post('/refresh', authenticateToken, async (req, res) => {
     }
 
     // Generate new token
-    const newToken = generateToken(user, req.user.tenantId);
+    const newToken = generateToken(userResult.rows[0], req.user.tenantId);
 
     res.json({
       success: true,
@@ -500,9 +542,12 @@ router.post('/refresh', authenticateToken, async (req, res) => {
  */
 router.get('/user/profile', authenticateToken, async (req, res) => {
   try {
-    const user = await User.findOne({ id: req.user.userId, isActive: true });
+    const userResult = await pool.query(
+      'SELECT * FROM users WHERE id = $1 AND is_active = true',
+      [req.user.userId]
+    );
     
-    if (!user) {
+    if (userResult.rows.length === 0) {
       return res.status(404).json({
         success: false,
         error: 'USER_NOT_FOUND',
@@ -512,7 +557,7 @@ router.get('/user/profile', authenticateToken, async (req, res) => {
 
     res.json({
       success: true,
-      data: formatUserResponse(user)
+      data: formatUserResponse(userResult.rows[0])
     });
 
   } catch (error) {
@@ -552,17 +597,19 @@ router.get('/sales-head/dashboard',
  * Seed database with demo users
  * Call this once to populate the database with test users
  */
-async function seedDemoUsers() {
+async function seedDemoUsers(db) {
+  const client = db || pool;
+  
   try {
+    // Create tables first
+    await createTables(client);
+
     // Create tenant
-    await Tenant.findOneAndUpdate(
-      { id: 'P2SCSJ91BR52L8U' },
-      {
-        id: 'P2SCSJ91BR52L8U',
-        name: 'Demo Organization',
-        isActive: true
-      },
-      { upsert: true, new: true }
+    await client.query(
+      `INSERT INTO tenants (id, name, is_active)
+       VALUES ($1, $2, $3)
+       ON CONFLICT (id) DO UPDATE SET name = $2, is_active = $3`,
+      ['P2SCSJ91BR52L8U', 'Demo Organization', true]
     );
 
     // Demo users
@@ -614,27 +661,32 @@ async function seedDemoUsers() {
       const securityTokenHash = hashSecurityToken(userData.securityToken);
 
       // Create or update user
-      await User.findOneAndUpdate(
-        { id: userData.id },
-        {
-          ...userData,
-          passwordHash,
-          securityTokenHash,
-          isActive: true,
-          failedLoginAttempts: 0
-        },
-        { upsert: true, new: true }
+      await client.query(
+        `INSERT INTO users (
+          id, name, email, password_hash, security_token_hash, role, title, 
+          avatar, region, regions, manager, manager_id, rep_id, team_size, 
+          team_members, is_active, failed_login_attempts
+        )
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
+        ON CONFLICT (id) DO UPDATE SET
+          name = $2, email = $3, password_hash = $4, security_token_hash = $5,
+          role = $6, title = $7, avatar = $8, region = $9, regions = $10,
+          manager = $11, manager_id = $12, rep_id = $13, team_size = $14,
+          team_members = $15, is_active = $16, failed_login_attempts = $17`,
+        [
+          userData.id, userData.name, userData.email, passwordHash, securityTokenHash,
+          userData.role, userData.title, userData.avatar, userData.region, userData.regions,
+          userData.manager, userData.managerId, userData.repId, userData.teamSize,
+          userData.teamMembers, true, 0
+        ]
       );
 
       // Create user-tenant relationship
-      await UserTenant.findOneAndUpdate(
-        { userId: userData.id, tenantId: 'P2SCSJ91BR52L8U' },
-        {
-          userId: userData.id,
-          tenantId: 'P2SCSJ91BR52L8U',
-          isActive: true
-        },
-        { upsert: true, new: true }
+      await client.query(
+        `INSERT INTO user_tenants (user_id, tenant_id, is_active)
+         VALUES ($1, $2, $3)
+         ON CONFLICT (user_id, tenant_id) DO UPDATE SET is_active = $3`,
+        [userData.id, 'P2SCSJ91BR52L8U', true]
       );
     }
 
@@ -652,7 +704,8 @@ module.exports = {
   router,
   authenticateToken,
   authorizeRole,
-  seedDemoUsers
+  seedDemoUsers,
+  createTables
 };
 
 // ============================================
@@ -661,27 +714,26 @@ module.exports = {
 
 /*
 const express = require('express');
-const mongoose = require('mongoose');
+const { Pool } = require('pg');
 const cors = require('cors');
 const { router: authRouter, seedDemoUsers } = require('./auth');
 
 const app = express();
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL
+});
 
 // Middleware
 app.use(cors());
 app.use(express.json());
 
-// Connect to MongoDB
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/sales-app', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
-.then(() => {
-  console.log('✅ Connected to MongoDB');
-  // Seed demo users on first run
-  seedDemoUsers();
-})
-.catch(err => console.error('❌ MongoDB connection error:', err));
+// Test database connection and seed
+pool.query('SELECT NOW()')
+  .then(() => {
+    console.log('✅ Connected to PostgreSQL');
+    return seedDemoUsers(pool);
+  })
+  .catch(err => console.error('❌ PostgreSQL connection error:', err));
 
 // Routes
 app.use('/api/auth', authRouter);
