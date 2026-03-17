@@ -2,7 +2,7 @@
 // server.js
 
 const express = require('express');
-const mongoose = require('mongoose');
+const { Pool } = require('pg');
 const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
@@ -12,6 +12,14 @@ require('dotenv').config();
 const { router: authRouter, seedDemoUsers } = require('./auth');
 
 const app = express();
+
+// PostgreSQL connection pool
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL
+});
+
+// Make pool available to routes
+app.locals.db = pool;
 
 // ============================================
 // Middleware
@@ -46,22 +54,16 @@ if (process.env.NODE_ENV !== 'production') {
 
 const connectDB = async () => {
   try {
-    const mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/sales-app';
-    
-    await mongoose.connect(mongoURI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true
-    });
-    
-    console.log('✅ Connected to MongoDB');
+    await pool.query('SELECT NOW()');
+    console.log('✅ Connected to PostgreSQL');
     
     // Seed demo users on first run (only in development)
     if (process.env.NODE_ENV !== 'production') {
       console.log('🌱 Seeding demo users...');
-      await seedDemoUsers();
+      await seedDemoUsers(pool);
     }
   } catch (error) {
-    console.error('❌ MongoDB connection error:', error);
+    console.error('❌ PostgreSQL connection error:', error);
     process.exit(1);
   }
 };
@@ -123,16 +125,16 @@ const startServer = async () => {
 // Graceful shutdown
 process.on('SIGTERM', () => {
   console.log('👋 SIGTERM received. Closing server gracefully...');
-  mongoose.connection.close(false, () => {
-    console.log('✅ MongoDB connection closed');
+  pool.end(() => {
+    console.log('✅ PostgreSQL connection pool closed');
     process.exit(0);
   });
 });
 
 process.on('SIGINT', () => {
   console.log('👋 SIGINT received. Closing server gracefully...');
-  mongoose.connection.close(false, () => {
-    console.log('✅ MongoDB connection closed');
+  pool.end(() => {
+    console.log('✅ PostgreSQL connection pool closed');
     process.exit(0);
   });
 });
