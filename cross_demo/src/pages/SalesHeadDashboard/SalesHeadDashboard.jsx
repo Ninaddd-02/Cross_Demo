@@ -73,7 +73,7 @@ const SalesHeadDashboard = () => {
     },
     {
       title: 'Avg Contribution Margin',
-      value: kpiData.avgContribution,
+      value: kpiData.avgContributionMargin,
       change: '+5.4%',
       trend: 'up',
       subtitle: 'Per deal margin',
@@ -109,10 +109,6 @@ const SalesHeadDashboard = () => {
                 <div className="kpi-header">
                   <div className="kpi-icon" style={{ background: `linear-gradient(135deg, ${getStatusColor(kpi.status)}, var(--cyan))` }}>
                     {kpi.icon}
-                  </div>
-                  <div className={`kpi-trend kpi-trend-${kpi.trend}`}>
-                    {kpi.trend === 'up' ? <ArrowUp size={16} /> : <ArrowDown size={16} />}
-                    {kpi.change}
                   </div>
                 </div>
                 <h3 className="kpi-title">{kpi.title}</h3>

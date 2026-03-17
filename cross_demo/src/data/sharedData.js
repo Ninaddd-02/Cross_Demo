@@ -1569,8 +1569,8 @@ export const calculateHeadKPIs = () => {
     renewalRevenueSharePct: kpiData.RenewalRevenueSharePct,
     avgMargin: kpiData.AvgMarginPct.toFixed(1),
     avgMarginPct: kpiData.AvgMarginPct,
-    avgContributionMargin: formatCrores(kpiData.AvgContributionMarginPct),
-    avgContributionMarginRaw: kpiData.AvgContributionMarginPct
+    avgContributionMargin: formatCrores(kpiData.AvgContributionMargin),
+    avgContributionMarginRaw: kpiData.AvgContributionMargin
   };
 };
 

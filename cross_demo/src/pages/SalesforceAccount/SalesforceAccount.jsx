@@ -183,10 +183,6 @@ const SalesforceAccount = () => {
                   }}>
                     {kpi.icon}
                   </div>
-                  <div className={`kpi-trend kpi-trend-${kpi.trend}`}>
-                    {kpi.trend === 'up' ? <ArrowUp size={16} /> : <ArrowDown size={16} />}
-                    {kpi.change}
-                  </div>
                 </div>
                 <h3 className="kpi-title">{kpi.title}</h3>
                 <div className="kpi-value">{kpi.value}</div>

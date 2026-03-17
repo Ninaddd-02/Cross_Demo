@@ -54,7 +54,18 @@
   height: 48px;
   background: linear-gradient(135deg, var(--salesforce-blue), var(--cyan));
   border-radius: var(--radius-md);
+}
+
+.kpi-icon svg {
   color: white;
+  stroke: white;
+}
+
+/* Warning status icon should use warning color */
+.kpi-card .kpi-icon[style*="--warning"] svg,
+.kpi-card .kpi-icon[style*="orange"] svg {
+  color: var(--warning);
+  stroke: var(--warning);
 }
 
 .kpi-title {

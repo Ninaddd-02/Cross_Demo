@@ -65,8 +65,19 @@
   align-items: center;
   justify-content: center;
   background: linear-gradient(135deg, var(--salesforce-blue), var(--cyan));
-  color: white;
   box-shadow: 0 4px 12px rgba(27, 150, 255, 0.3);
+}
+
+.kpi-icon svg {
+  color: white;
+  stroke: white;
+}
+
+/* Warning status icon should use warning color */
+.kpi-card .kpi-icon[style*="--warning"] svg,
+.kpi-card .kpi-icon[style*="orange"] svg {
+  color: var(--warning);
+  stroke: var(--warning);
 }
 
 .kpi-trend {
