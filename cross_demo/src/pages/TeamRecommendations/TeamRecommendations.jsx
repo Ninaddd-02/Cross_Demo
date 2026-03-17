@@ -65,7 +65,9 @@ const TeamRecommendations = () => {
         estimatedValue: rec.estimatedValue,
         impact: rec.confidence >= 85 ? 'High' : rec.confidence >= 75 ? 'Medium' : 'Low',
         region: rec.region,
-        product: rec.product
+        product: rec.product,
+        technology: rec.technology,
+        partner: rec.partner
       }));
   };
 
@@ -370,7 +372,6 @@ const TeamRecommendations = () => {
                       {rec.accountName && (
                         <div className="rec-account-name">{rec.accountName}</div>
                       )}
-                      <h3>{rec.title}</h3>
                       <div className="rec-badges">
                         <StatusBadge 
                           status={rec.type === 'cross-sell' ? 'info' : 'active'} 
@@ -396,10 +397,18 @@ const TeamRecommendations = () => {
                       <span className="rec-time">• {formatRelativeTime(rec.createdAt)}</span>
                     </div>
                   </div>
-
-                  <p className="rec-description">{rec.description}</p>
                   
                   <div className="rec-details-grid">
+                    <div className="detail-item">
+                      <span className="detail-label">Technology</span>
+                      <span className="detail-value">{rec.technology}</span>
+                    </div>
+                    
+                    <div className="detail-item">
+                      <span className="detail-label">Partner</span>
+                      <span className="detail-value">{rec.partner}</span>
+                    </div>
+                    
                     <div className="detail-item">
                       <span className="detail-label">Estimated Value</span>
                       <span className="detail-value value-highlight">

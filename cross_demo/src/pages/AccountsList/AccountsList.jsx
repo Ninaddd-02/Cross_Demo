@@ -186,13 +186,6 @@ const AccountsList = () => {
                         <div className="metric-value">{account.revenue}</div>
                       </div>
                     </div>
-                    <div className="metric">
-                      <Users size={16} />
-                      <div>
-                        <div className="metric-label">Employees</div>
-                        <div className="metric-value">{account.employees}</div>
-                      </div>
-                    </div>
                   </div>
 
                   <div className="account-footer">

@@ -206,7 +206,6 @@ const AIRecommendationsEnhanced = () => {
                 <GlassCard key={rec.id} className="recommendation-card" glow={rec.confidence >= 85}>
                   <div className="rec-header">
                     <div className="rec-title-section">
-                      <h3>{rec.title}</h3>
                       <div className="rec-badges">
                         <StatusBadge 
                           status={rec.type === 'cross-sell' ? 'info' : 'active'} 
@@ -219,10 +218,16 @@ const AIRecommendationsEnhanced = () => {
                       </div>
                     </div>
                   </div>
-
-                  <p className="rec-description">{rec.description}</p>
                   
                   <div className="rec-details">
+                    <div className="detail-row">
+                      <span className="detail-label">Technology:</span>
+                      <span className="detail-value">{rec.technology}</span>
+                    </div>
+                    <div className="detail-row">
+                      <span className="detail-label">Partner:</span>
+                      <span className="detail-value">{rec.partner}</span>
+                    </div>
                     <div className="detail-row">
                       <span className="detail-label">Estimated Value:</span>
                       <span className="detail-value highlight">{rec.estimatedValue || formatCurrency(rec.estimatedValue)}</span>

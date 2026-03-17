@@ -220,13 +220,6 @@ const SalesforceAccount = () => {
                     </div>
                   </div>
                   <div className="detail-item">
-                    <Users size={18} className="detail-icon" />
-                    <div>
-                      <div className="detail-label">Employees</div>
-                      <div className="detail-value">{accountData.employees}</div>
-                    </div>
-                  </div>
-                  <div className="detail-item">
                     <MapPin size={18} className="detail-icon" />
                     <div>
                       <div className="detail-label">Location</div>

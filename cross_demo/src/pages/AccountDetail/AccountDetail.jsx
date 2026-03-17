@@ -173,13 +173,6 @@ const AccountDetail = () => {
                 </div>
               </div>
               <div className="metric-card">
-                <Users size={24} className="metric-icon" />
-                <div className="metric-content">
-                  <div className="metric-label">Employees</div>
-                  <div className="metric-value">{account.employees}</div>
-                </div>
-              </div>
-              <div className="metric-card">
                 <MapPin size={24} className="metric-icon" />
                 <div className="metric-content">
                   <div className="metric-label">Location</div>
@@ -335,8 +328,15 @@ const AccountDetail = () => {
                         />
                         <div className="rec-priority">Priority: {rec.priority}</div>
                       </div>
-                      <h3 className="rec-title">{rec.productName}</h3>
                       <div className="rec-metrics">
+                        <div className="rec-metric">
+                          <span className="rec-metric-label">Technology</span>
+                          <span className="rec-metric-value">{rec.technology}</span>
+                        </div>
+                        <div className="rec-metric">
+                          <span className="rec-metric-label">Partner</span>
+                          <span className="rec-metric-value">{rec.partner}</span>
+                        </div>
                         <div className="rec-metric">
                           <span className="rec-metric-label">Est. Value</span>
                           <span className="rec-metric-value">{rec.estimatedValue}</span>

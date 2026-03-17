@@ -14,6 +14,8 @@ const AIRecommendationCard = ({
   reason = '',
   product = '',
   estimatedValue = '',
+  technology = '',
+  partner = '',
   optionA = null,
   optionB = null,
   onAccept,
@@ -56,13 +58,25 @@ const AIRecommendationCard = ({
         {accountName && (
           <div className="recommendation-account-name">{accountName}</div>
         )}
-        <h3 className="recommendation-title">{title}</h3>
-        <p className="recommendation-description">{description}</p>
         
         {product && !hasOptions && (
           <div className="recommendation-detail">
             <span className="detail-label">Recommended Product:</span>
             <span className="detail-value">{product}</span>
+          </div>
+        )}
+        
+        {technology && !hasOptions && (
+          <div className="recommendation-detail">
+            <span className="detail-label">Technology:</span>
+            <span className="detail-value">{technology}</span>
+          </div>
+        )}
+        
+        {partner && !hasOptions && (
+          <div className="recommendation-detail">
+            <span className="detail-label">Partner:</span>
+            <span className="detail-value">{partner}</span>
           </div>
         )}
         

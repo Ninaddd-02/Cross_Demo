@@ -428,6 +428,8 @@ const AIRecommendations = () => {
                   confidence={reco.confidence}
                   reason={reco.reason}
                   product={reco.product}
+                  technology={reco.technology}
+                  partner={reco.partner}
                   estimatedValue={reco.estimatedValue}
                   optionA={reco.optionA}
                   optionB={reco.optionB}
@@ -454,6 +456,8 @@ const AIRecommendations = () => {
                   confidence={reco.confidence}
                   reason={reco.reason}
                   product={reco.product}
+                  technology={reco.technology}
+                  partner={reco.partner}
                   estimatedValue={reco.estimatedValue}
                   onAccept={() => handleAccept(reco.id)}
                   onReject={() => handleReject(reco.id)}

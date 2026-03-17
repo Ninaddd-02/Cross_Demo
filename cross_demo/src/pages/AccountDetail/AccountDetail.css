@@ -363,11 +363,17 @@
 
 .rec-metrics {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
   padding: 16px 0;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+@media (max-width: 768px) {
+  .rec-metrics {
+    grid-template-columns: 1fr;
+  }
 }
 
 .rec-metric {
