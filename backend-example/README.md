@@ -6,37 +6,50 @@ This directory contains a complete backend implementation example for the Cross 
 ## Prerequisites
 
 - Node.js (v16 or higher)
-- MongoDB (v5 or higher) installed and running
+- PostgreSQL (v12 or higher) installed and running
 - npm or yarn package manager
 
 ## Quick Start
 
-### 1. Install MongoDB
+### 1. Install PostgreSQL
 
 **On Windows:**
 ```powershell
-# Download from https://www.mongodb.com/try/download/community
+# Download from https://www.postgresql.org/download/windows/
 # Or use Chocolatey
-choco install mongodb
+choco install postgresql
 
-# Start MongoDB service
-net start MongoDB
+# Start PostgreSQL service
+net start postgresql-x64-14
 ```
 
 **On macOS:**
 ```bash
-brew tap mongodb/brew
-brew install mongodb-community
-brew services start mongodb-community
+brew install postgresql@14
+brew services start postgresql@14
 ```
 
 **On Linux:**
 ```bash
-sudo apt-get install mongodb
-sudo systemctl start mongodb
+sudo apt-get install postgresql postgresql-contrib
+sudo systemctl start postgresql
+sudo systemctl enable postgresql
 ```
 
-### 2. Setup Backend
+### 2. Create Database
+
+```bash
+# Connect to PostgreSQL
+psql -U postgres
+
+# Create database
+CREATE DATABASE sales_app;
+
+# Exit psql
+\q
+```
+
+### 3. Setup Backend
 
 ```bash
 # Navigate to backend directory
@@ -49,19 +62,20 @@ npm install
 cp .env.example .env
 
 # Edit .env file with your configuration
-# At minimum, update JWT_SECRET with a secure random string
+# Update DATABASE_URL with your PostgreSQL connection string
 ```
 
-### 3. Generate JWT Secret
+### 4. Configure Database Connection
 
-```bash
-# Run this command to generate a secure JWT secret
-node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"
+Edit `.env` file and update the DATABASE_URL:
 
-# Copy the output and paste it as JWT_SECRET in your .env file
+```env
+DATABASE_URL=postgresql://postgres:yourpassword@localhost:5432/sales_app
 ```
 
-### 4. Start the Server
+Replace `yourpassword` with your PostgreSQL password.
+
+### 5. Start the Server
 
 ```bash
 # Development mode with auto-restart
@@ -72,11 +86,12 @@ npm start
 ```
 
 The server will:
-- Connect to MongoDB
+- Connect to PostgreSQL
+- Create database tables automatically
 - Seed demo users automatically (in development mode)
 - Start listening on port 3000 (or PORT from .env)
 
-### 5. Test the API
+### 6. Test the API
 
 **Health Check:**
 ```bash
@@ -299,20 +314,20 @@ All demo users use Organization ID: **P2SCSJ91BR52L8U**
 
 ## Troubleshooting
 
-### MongoDB Connection Error
+### PostgreSQL Connection Error
 ```bash
-# Check if MongoDB is running
-mongosh
-
-# Or check service status
+# Check if PostgreSQL is running
 # Windows:
-net start MongoDB
+net start postgresql-x64-14
 
 # macOS:
 brew services list
 
 # Linux:
-sudo systemctl status mongodb
+sudo systemctl status postgresql
+
+# Test connection
+psql -U postgres -d sales_app
 ```
 
 ### Port Already in Use
@@ -329,13 +344,28 @@ lsof -ti:3000 | xargs kill
 
 ### Demo Users Not Seeding
 ```bash
-# Manually run seed script
-npm run seed
+# Check if tables exist
+psql -U postgres -d sales_app
+\dt
 
-# Or check MongoDB
-mongosh
-use sales-app
-db.users.find()
+# Check if users exist
+SELECT * FROM users;
+
+# Manually run seed (if needed)
+npm run seed
+```
+
+### Database Connection Issues
+```bash
+# Check DATABASE_URL format
+# Should be: postgresql://username:password@host:port/database
+
+# Verify database exists
+psql -U postgres -l
+
+# Create database if missing
+psql -U postgres
+CREATE DATABASE sales_app;
 ```
 
 ## Production Deployment
@@ -350,8 +380,10 @@ Before deploying to production:
 6. ✅ Set up proper logging (Winston, Morgan)
 7. ✅ Use environment-specific database
 8. ✅ Enable monitoring (New Relic, DataDog)
-9. ✅ Set up SSL/TLS for MongoDB connection
+9. ✅ Set up SSL/TLS for PostgreSQL connection
 10. ✅ Implement refresh token mechanism
+11. ✅ Enable PostgreSQL connection pooling
+12. ✅ Configure PostgreSQL for production (max_connections, shared_buffers)
 
 ## Next Steps
 
@@ -370,8 +402,9 @@ For issues or questions:
 - Check the main `BACKEND_API_DOCUMENTATION.md`
 - Review error logs in the console
 - Verify environment variables in `.env`
-- Ensure MongoDB is running
+- Ensure PostgreSQL is running
 - Check network/firewall settings
+- Verify DATABASE_URL connection string format
 
 ## License
 
