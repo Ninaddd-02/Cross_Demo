@@ -7,7 +7,6 @@ import './Login.css';
 const Login = () => {
   const navigate = useNavigate();
   const { login, getDefaultRoute } = useAuth();
-  const [selectedRole, setSelectedRole] = useState('sales-head');
   const [orgId, setOrgId] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -15,6 +14,7 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showSecurityToken, setShowSecurityToken] = useState(false);
   const [error, setError] = useState('');
+  const [selectedDemoUser, setSelectedDemoUser] = useState(null);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -35,37 +35,41 @@ const Login = () => {
     );
 
     if (user) {
+      // Role is automatically determined from the user object
       const loggedInUser = login(user.id, orgId);
       if (loggedInUser) {
+        // Automatically redirect based on detected role
         const route = getDefaultRoute();
         navigate(route);
       }
     } else {
-      setError('Invalid email, password, or security token');
+      setError('Invalid credentials. Please check your Organization ID, Email, Password, and Security Token.');
     }
   };
 
-  // Get demo credentials based on selected role
-  const getDemoCredentials = () => {
-    switch(selectedRole) {
-      case 'sales-head':
-        return { orgId: 'P2SCSJ91BR52L8U', email: 'vikram.singh@company.com', password: 'vp123', securityToken: 'VP2026TOKEN' };
-      case 'sales-manager':
-        return { orgId: 'P2SCSJ91BR52L8U', email: 'rajesh.kumar@company.com', password: 'manager123', securityToken: 'MGR2026TOKEN' };
-      case 'sales-rep':
-        return { orgId: 'P2SCSJ91BR52L8U', email: 'rahul.sharma@company.com', password: 'sales123', securityToken: 'REP2026TOKEN' };
-      default:
-        return { orgId: '', email: '', password: '', securityToken: '' };
+  // Handle demo user selection from dropdown
+  const handleDemoUserChange = (e) => {
+    const userEmail = e.target.value;
+    
+    if (!userEmail) {
+      // Clear form if no user selected
+      setOrgId('');
+      setEmail('');
+      setPassword('');
+      setSecurityToken('');
+      setSelectedDemoUser('');
+      return;
     }
-  };
-
-  const fillDemoCredentials = () => {
-    const credentials = getDemoCredentials();
-    setOrgId(credentials.orgId);
-    setEmail(credentials.email);
-    setPassword(credentials.password);
-    setSecurityToken(credentials.securityToken);
-    setError('');
+    
+    const user = allUsers.find(u => u.email === userEmail);
+    if (user) {
+      setOrgId('P2SCSJ91BR52L8U');
+      setEmail(user.email);
+      setPassword(user.password);
+      setSecurityToken(user.securityToken);
+      setSelectedDemoUser(userEmail);
+      setError('');
+    }
   };
 
   return (
@@ -84,41 +88,8 @@ const Login = () => {
               <img src="/salesforce_demo.png" alt="Salesforce" className="logo-image" />
             </div>
             <h1 className="text-gradient">Cross Sync</h1>
-            <p className="login-subtitle">AI-Powered Automotive Industry Sales Intelligence</p>
-            <p className="login-description">Select your profile to continue</p>
-          </div>
-
-          <div className="role-tabs">
-            <button 
-              className={`role-tab ${selectedRole === 'sales-head' ? 'active' : ''}`}
-              onClick={() => {
-                setSelectedRole('sales-head');
-                setError('');
-              }}
-            >
-              <Award size={20} />
-              <span>Sales Head</span>
-            </button>
-            <button 
-              className={`role-tab ${selectedRole === 'sales-manager' ? 'active' : ''}`}
-              onClick={() => {
-                setSelectedRole('sales-manager');
-                setError('');
-              }}
-            >
-              <Users size={20} />
-              <span>Managers</span>
-            </button>
-            <button 
-              className={`role-tab ${selectedRole === 'sales-rep' ? 'active' : ''}`}
-              onClick={() => {
-                setSelectedRole('sales-rep');
-                setError('');
-              }}
-            >
-              <TrendingUp size={20} />
-              <span>Sales Reps</span>
-            </button>
+            <p className="login-subtitle">Sales Intelligence Platform</p>
+            <p className="login-description">Enter your credentials to continue</p>
           </div>
 
           <form className="login-form" onSubmit={handleSubmit}>
@@ -221,50 +192,25 @@ const Login = () => {
             <button type="submit" className="login-button">
               Sign In
             </button>
-
-            <button 
-              type="button" 
-              className="demo-button"
-              onClick={fillDemoCredentials}
-            >
-              Use Demo Credentials
-            </button>
           </form>
 
-          <div className="login-info">
-            <div className="info-section">
-              <h4>Demo Credentials</h4>
-              {selectedRole === 'sales-head' && (
-                <div className="credential-info">
-                  <p><strong>Role:</strong> VP Of Sales</p>
-                  <p><strong>Org ID:</strong> P2SCSJ91BR52L8U</p>
-                  <p><strong>Email:</strong> vikram.singh@company.com</p>
-                  <p><strong>Password:</strong> vp123</p>
-                  <p><strong>Security Token:</strong> VP2026TOKEN</p>
-                </div>
-              )}
-              {selectedRole === 'sales-manager' && (
-                <div className="credential-info">
-                  <p><strong>Role:</strong> Manager</p>
-                  <p><strong>Org ID:</strong> P2SCSJ91BR52L8U</p>
-                  <p><strong>Email:</strong> rajesh.kumar@company.com</p>
-                  <p><strong>Region:</strong> All Regions</p>
-                  <p><strong>Password:</strong> manager123</p>
-                  <p><strong>Security Token:</strong> MGR2026TOKEN</p>
-                </div>
-              )}
-              {selectedRole === 'sales-rep' && (
-                <div className="credential-info">
-                  <p><strong>Role:</strong> Sales Rep</p>
-                  <p><strong>Org ID:</strong> P2SCSJ91BR52L8U</p>
-                  <p><strong>Email:</strong> rahul.sharma@company.com</p>
-                  <p><strong>Region:</strong> All Regions</p>
-                  <p><strong>Manager:</strong> Rajesh Kumar</p>
-                  <p><strong>Password:</strong> sales123</p>
-                  <p><strong>Security Token:</strong> REP2026TOKEN</p>
-                </div>
-              )}
-            </div>
+          {/* Demo Credentials Dropdown Selector */}
+          <div className="demo-selector-section">
+            <label className="form-label" htmlFor="demo-user-select">
+              <Users size={16} />
+              Demo Credentials - Select a User
+            </label>
+            <select
+              id="demo-user-select"
+              className="form-select demo-select"
+              value={selectedDemoUser || ''}
+              onChange={handleDemoUserChange}
+            >
+              <option value="">-- Select a demo user --</option>
+              <option value="vikram.singh@company.com">👤 Sales Head - Vikram Singh</option>
+              <option value="rajesh.kumar@company.com">👥 Sales Manager - Rajesh Kumar</option>
+              <option value="rahul.sharma@company.com">📈 Sales Rep - Rahul Sharma</option>
+            </select>
           </div>
         </div>
       </div>
