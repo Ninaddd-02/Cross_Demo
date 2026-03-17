@@ -86,7 +86,7 @@ The login flow has been successfully refactored to remove manual role selection 
 The routing is automatically handled based on the authenticated user's role:
 
 | Role | Default Route |
-|------|---------------|
+|------|--------------|
 | sales-head | `/sales-head/dashboard` |
 | sales-manager | `/sales-manager/dashboard` |
 | sales-rep | `/sales/accounts` |
@@ -203,7 +203,7 @@ Follow the testing procedures in `BACKEND_API_DOCUMENTATION.md`:
 
 ### Short Term (Backend Integration)
 1. Create Node.js/Express backend server
-2. Set up MongoDB or PostgreSQL database
+2. Set up PostgreSQL database
 3. Implement authentication endpoints as per API documentation
 4. Implement JWT token generation and validation
 5. Add password hashing with bcrypt

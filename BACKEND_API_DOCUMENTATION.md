@@ -1,7 +1,7 @@
 # Backend API Documentation - Authentication with Role-Based Access Control
 
 ## Overview
-This document describes the backend API requirements for the refactored login flow that implements automatic role detection and role-based routing.
+This document describes the backend API requirements for the refactored login flow that implements automatic role detection and role-based routing using PostgreSQL as the database.
 
 ## Authentication Flow
 
@@ -242,13 +242,18 @@ CREATE TABLE user_tenants (
 - Track role-based access patterns for security analysis
 - Implement audit trail for sensitive operations
 
-## Example Implementation (Node.js/Express)
+## Example Implementation (Node.js/Express + PostgreSQL)
 
 ```javascript
 // Login Controller
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
+const { Pool } = require('pg');
+
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL
+});
 
 exports.login = async (req, res) => {
   try {
@@ -264,8 +269,11 @@ exports.login = async (req, res) => {
     }
 
     // Check if tenant exists
-    const tenant = await Tenant.findById(orgId);
-    if (!tenant || !tenant.is_active) {
+    const tenantResult = await pool.query(
+      'SELECT * FROM tenants WHERE id = $1 AND is_active = true',
+      [orgId]
+    );
+    if (tenantResult.rows.length === 0) {
       return res.status(401).json({
         success: false,
         error: 'INVALID_CREDENTIALS',
@@ -274,8 +282,11 @@ exports.login = async (req, res) => {
     }
 
     // Find user by email
-    const user = await User.findOne({ email: email.toLowerCase() });
-    if (!user) {
+    const userResult = await pool.query(
+      'SELECT * FROM users WHERE LOWER(email) = LOWER($1) AND is_active = true',
+      [email]
+    );
+    if (userResult.rows.length === 0) {
       return res.status(401).json({
         success: false,
         error: 'INVALID_CREDENTIALS',
@@ -283,8 +294,10 @@ exports.login = async (req, res) => {
       });
     }
 
+    const user = userResult.rows[0];
+
     // Check if account is locked
-    if (user.locked_until && user.locked_until > new Date()) {
+    if (user.locked_until && new Date(user.locked_until) > new Date()) {
       return res.status(403).json({
         success: false,
         error: 'ACCOUNT_LOCKED',
@@ -293,13 +306,12 @@ exports.login = async (req, res) => {
     }
 
     // Verify user-tenant relationship
-    const userTenant = await UserTenant.findOne({
-      user_id: user.id,
-      tenant_id: orgId,
-      is_active: true
-    });
-    if (!userTenant) {
-      await incrementFailedAttempts(user);
+    const userTenantResult = await pool.query(
+      'SELECT * FROM user_tenants WHERE user_id = $1 AND tenant_id = $2 AND is_active = true',
+      [user.id, orgId]
+    );
+    if (userTenantResult.rows.length === 0) {
+      await incrementFailedAttempts(user.id);
       return res.status(401).json({
         success: false,
         error: 'INVALID_CREDENTIALS',
@@ -310,7 +322,7 @@ exports.login = async (req, res) => {
     // Verify password
     const isPasswordValid = await bcrypt.compare(password, user.password_hash);
     if (!isPasswordValid) {
-      await incrementFailedAttempts(user);
+      await incrementFailedAttempts(user.id);
       return res.status(401).json({
         success: false,
         error: 'INVALID_CREDENTIALS',
@@ -321,7 +333,7 @@ exports.login = async (req, res) => {
     // Verify security token
     const tokenHash = crypto.createHash('sha256').update(securityToken).digest('hex');
     if (tokenHash !== user.security_token_hash) {
-      await incrementFailedAttempts(user);
+      await incrementFailedAttempts(user.id);
       return res.status(401).json({
         success: false,
         error: 'INVALID_CREDENTIALS',
@@ -330,10 +342,10 @@ exports.login = async (req, res) => {
     }
 
     // Reset failed login attempts on successful login
-    await user.update({
-      failed_login_attempts: 0,
-      locked_until: null
-    });
+    await pool.query(
+      'UPDATE users SET failed_login_attempts = 0, locked_until = NULL, updated_at = CURRENT_TIMESTAMP WHERE id = $1',
+      [user.id]
+    );
 
     // Generate JWT token
     const token = jwt.sign(
@@ -382,17 +394,29 @@ exports.login = async (req, res) => {
 };
 
 // Helper function to increment failed attempts
-async function incrementFailedAttempts(user) {
-  const attempts = user.failed_login_attempts + 1;
-  const updates = { failed_login_attempts: attempts };
+async function incrementFailedAttempts(userId) {
+  const attempts = await pool.query(
+    'SELECT failed_login_attempts FROM users WHERE id = $1',
+    [userId]
+  );
+  
+  const newAttempts = (attempts.rows[0]?.failed_login_attempts || 0) + 1;
   
   // Lock account after 5 failed attempts
-  if (attempts >= 5) {
-    updates.locked_until = new Date(Date.now() + 30 * 60 * 1000); // 30 minutes
+  if (newAttempts >= 5) {
+    const lockUntil = new Date(Date.now() + 30 * 60 * 1000); // 30 minutes
+    await pool.query(
+      'UPDATE users SET failed_login_attempts = $1, locked_until = $2, updated_at = CURRENT_TIMESTAMP WHERE id = $3',
+      [newAttempts, lockUntil, userId]
+    );
+  } else {
+    await pool.query(
+      'UPDATE users SET failed_login_attempts = $1, updated_at = CURRENT_TIMESTAMP WHERE id = $2',
+      [newAttempts, userId]
+    );
   }
   
-  await user.update(updates);
-  await logLoginAttempt(user.id, null, false);
+  await logLoginAttempt(userId, null, false);
 }
 ```
 
