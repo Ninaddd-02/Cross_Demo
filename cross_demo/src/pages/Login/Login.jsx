@@ -14,7 +14,6 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showSecurityToken, setShowSecurityToken] = useState(false);
   const [error, setError] = useState('');
-  const [selectedDemoUser, setSelectedDemoUser] = useState(null);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -57,7 +56,6 @@ const Login = () => {
       setEmail('');
       setPassword('');
       setSecurityToken('');
-      setSelectedDemoUser('');
       return;
     }
     
@@ -67,7 +65,6 @@ const Login = () => {
       setEmail(user.email);
       setPassword(user.password);
       setSecurityToken(user.securityToken);
-      setSelectedDemoUser(userEmail);
       setError('');
     }
   };
@@ -194,17 +191,16 @@ const Login = () => {
             </button>
           </form>
 
-          {/* Demo Credentials Dropdown Selector */}
+          {/* Demo Credentials Dropdown */}
           <div className="demo-selector-section">
-            <label className="form-label" htmlFor="demo-user-select">
-              <Users size={16} />
-              Demo Credentials - Select a User
+            <label className="demo-section-label" htmlFor="demo-user-select">
+              Demo Credentials
             </label>
             <select
               id="demo-user-select"
               className="form-select demo-select"
-              value={selectedDemoUser || ''}
               onChange={handleDemoUserChange}
+              defaultValue=""
             >
               <option value="">-- Select a demo user --</option>
               <option value="vikram.singh@company.com">👤 Sales Head - Vikram Singh</option>
