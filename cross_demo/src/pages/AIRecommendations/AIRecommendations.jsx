@@ -185,10 +185,21 @@ const AIRecommendations = () => {
     });
   }, [repRecommendations, filters]);
   
-  const topRecommendations = filteredRecommendations.slice(0, 3); // First 3 as top recommendations
-  const moreRecommendations = filteredRecommendations.slice(3); // Rest as more recommendations
+  // Sort by confidence and get top 3 across ALL accounts
+  const topRecommendations = useMemo(() => {
+    return [...filteredRecommendations]
+      .sort((a, b) => (b.confidence || 0) - (a.confidence || 0)) // Sort by confidence descending
+      .slice(0, 3); // Take top 3 highest confidence
+  }, [filteredRecommendations]);
   
-  // Get unique account names from recommendations
+  // More recommendations: remaining items after top 3, sorted by confidence
+  const moreRecommendations = useMemo(() => {
+    return [...filteredRecommendations]
+      .sort((a, b) => (b.confidence || 0) - (a.confidence || 0))
+      .slice(3); // Skip top 3, take the rest
+  }, [filteredRecommendations]);
+  
+  // Get unique account names from ALL recommendations
   const uniqueAccountNames = [...new Set(filteredRecommendations.map(rec => rec.company).filter(Boolean))];
   const accountName = uniqueAccountNames.length === 1 
     ? uniqueAccountNames[0] 
@@ -437,7 +448,7 @@ const AIRecommendations = () => {
           <div className="recommendations-section">
             <div className="section-header">
               <h3 className="section-title">Top 3 Recommendations</h3>
-              <p className="section-subtitle">Highest confidence opportunities for {accountName}</p>
+              <p className="section-subtitle">Highest confidence opportunities across {accountName}</p>
             </div>
             <div className="recommendations-grid">
               {topRecommendations.map((reco) => (
