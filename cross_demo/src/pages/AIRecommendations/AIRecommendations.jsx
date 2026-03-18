@@ -21,7 +21,8 @@ const AIRecommendations = () => {
   const [filters, setFilters] = useState({
     technology: '',
     partner: '',
-    opportunityType: ''
+    opportunityType: '',
+    accountName: ''
   });
   
   // Get fresh recommendations based on current tenant
@@ -168,7 +169,8 @@ const AIRecommendations = () => {
     return {
       technologies: [...new Set(repRecommendations.map(rec => rec.technology).filter(Boolean))].sort(),
       partners: [...new Set(repRecommendations.map(rec => rec.partner).filter(Boolean))].sort(),
-      opportunityTypes: [...new Set(repRecommendations.map(rec => rec.opportunityType).filter(Boolean))].sort()
+      opportunityTypes: [...new Set(repRecommendations.map(rec => rec.opportunityType).filter(Boolean))].sort(),
+      accountNames: [...new Set(repRecommendations.map(rec => rec.company).filter(Boolean))].sort()
     };
   }, [repRecommendations]);
   
@@ -178,6 +180,7 @@ const AIRecommendations = () => {
       if (filters.technology && rec.technology !== filters.technology) return false;
       if (filters.partner && rec.partner !== filters.partner) return false;
       if (filters.opportunityType && rec.opportunityType !== filters.opportunityType) return false;
+      if (filters.accountName && rec.company !== filters.accountName) return false;
       return true;
     });
   }, [repRecommendations, filters]);
@@ -200,12 +203,13 @@ const AIRecommendations = () => {
     setFilters({
       technology: '',
       partner: '',
-      opportunityType: ''
+      opportunityType: '',
+      accountName: ''
     });
   };
   
   // Check if any filters are active
-  const hasActiveFilters = filters.technology || filters.partner || filters.opportunityType;
+  const hasActiveFilters = filters.technology || filters.partner || filters.opportunityType || filters.accountName;
 
   // Calculate dynamic stats from actual recommendations
   const recommendationStats = useMemo(() => {
@@ -399,6 +403,24 @@ const AIRecommendations = () => {
                       <option value="">All Types</option>
                       {filterOptions.opportunityTypes.map(type => (
                         <option key={type} value={type}>{type}</option>
+                      ))}
+                    </select>
+                    <ChevronDown size={18} className="select-icon" />
+                  </div>
+                </div>
+
+                {/* Account Name Filter */}
+                <div className="filter-group">
+                  <label className="filter-label">Account Name</label>
+                  <div className="filter-select-wrapper">
+                    <select 
+                      className="filter-select"
+                      value={filters.accountName}
+                      onChange={(e) => setFilters({...filters, accountName: e.target.value})}
+                    >
+                      <option value="">All Accounts</option>
+                      {filterOptions.accountNames.map(account => (
+                        <option key={account} value={account}>{account}</option>
                       ))}
                     </select>
                     <ChevronDown size={18} className="select-icon" />
