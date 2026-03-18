@@ -80,16 +80,25 @@ const Login = () => {
 
       <div className="login-container">
         <div className="login-card glass-effect">
-          <div className="login-header">
-            <div className="login-icon">
-              <img src="/salesforce_demo.png" alt="Salesforce" className="logo-image" />
+          {/* Left Side - Branding */}
+          <div className="login-branding">
+            <div className="branding-content">
+              <div className="login-icon">
+                <img src="/salesforce_demo.png" alt="Salesforce" className="logo-image" />
+              </div>
+              <h1 className="branding-title">Cross Sync</h1>
+              <p className="branding-subtitle">Sales Intelligence Platform</p>
             </div>
-            <h1 className="text-gradient">Cross Sync</h1>
-            <p className="login-subtitle">Sales Intelligence Platform</p>
-            <p className="login-description">Enter your credentials to continue</p>
           </div>
 
-          <form className="login-form" onSubmit={handleSubmit}>
+          {/* Right Side - Login Form */}
+          <div className="login-form-section">
+            <div className="form-header">
+              <h2>Welcome Back</h2>
+              <p className="login-description">Enter your credentials to continue</p>
+            </div>
+
+            <form className="login-form" onSubmit={handleSubmit}>
             <div className="form-group">
               <label className="form-label" htmlFor="org-id-input">
                 <Building2 size={16} />
@@ -207,6 +216,7 @@ const Login = () => {
               <option value="rajesh.kumar@company.com">👥 Sales Manager - Rajesh Kumar</option>
               <option value="rahul.sharma@company.com">📈 Sales Rep - Rahul Sharma</option>
             </select>
+          </div>
           </div>
         </div>
       </div>
