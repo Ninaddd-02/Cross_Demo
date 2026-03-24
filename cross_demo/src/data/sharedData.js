@@ -1592,6 +1592,22 @@ export const calculateRepKPIs = () => {
   // Calculate average deal size from total revenue
   const avgDealSize = kpiData.TotalRevenue / allDeals.length;
 
+  // Calculate cross-sell and upsell renewal rates
+  // Get recommendations to calculate opportunity-specific rates
+  const recommendations = currentTenantInfo.recommendations || [];
+  const crossSellOpportunities = recommendations.filter(rec => rec.Opportunity_Type === 'CROSS-SELL');
+  const upSellOpportunities = recommendations.filter(rec => rec.Opportunity_Type === 'UP-SELL' || rec.Opportunity_Type === 'UPSELL');
+  
+  // Calculate cross-sell renewal rate based on confidence scores
+  const crossSellRenewalRate = crossSellOpportunities.length > 0
+    ? (crossSellOpportunities.reduce((sum, rec) => sum + (rec.Confidence || 0.8), 0) / crossSellOpportunities.length * 100).toFixed(1)
+    : (kpiData.RenewalRatePct * 0.85).toFixed(1); // Slightly lower than overall renewal rate
+  
+  // Calculate upsell renewal rate (estimated higher since upsell to existing customers)
+  const upSellRenewalRate = upSellOpportunities.length > 0
+    ? (upSellOpportunities.reduce((sum, rec) => sum + (rec.Confidence || 0.9), 0) / upSellOpportunities.length * 100).toFixed(1)
+    : (kpiData.RenewalRatePct * 1.15).toFixed(1); // Slightly higher than overall renewal rate
+
   return {
     avgDealVelocity: Math.round(kpiData.AvgDealVelocityDays),
     revenueAtRisk: formatCrores(kpiData.RevenueAtRisk),
@@ -1600,6 +1616,8 @@ export const calculateRepKPIs = () => {
     avgDealSize: formatCrores(avgDealSize),
     avgDealSizeRaw: avgDealSize,
     renewalRate: kpiData.RenewalRatePct.toFixed(1),
+    crossSellRenewalRate: crossSellRenewalRate,
+    upSellRenewalRate: upSellRenewalRate,
     crossSellPotential: formatCrores(kpiData.RevenueAtRisk * 0.2), // Estimated
     crossSellPotentialRaw: kpiData.RevenueAtRisk * 0.2,
     upsellPotential: formatCrores(kpiData.RevenueAtRisk * 0.3), // Estimated

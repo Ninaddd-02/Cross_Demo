@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Bell, Search, User, LogOut, ChevronDown } from 'lucide-react';
+import { Bell, User, LogOut, ChevronDown } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import './TopNavbar.css';
 
@@ -40,15 +40,6 @@ const TopNavbar = ({ title = '', subtitle = '' }) => {
       </div>
       
       <div className="navbar-right">
-        <div className="search-container">
-          <Search size={18} />
-          <input 
-            type="text" 
-            placeholder="Search..." 
-            className="search-input"
-          />
-        </div>
-        
         <button className="icon-button">
           <Bell size={20} />
           <span className="notification-badge">3</span>

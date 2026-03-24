@@ -66,12 +66,21 @@ const SalesforceAccount = () => {
       status: 'success'
     },
     {
-      title: 'Total Users',
-      value: kpiData.totalUsers,
-      change: '+25 users',
+      title: 'Cross Sell Renewal Rate',
+      value: `${kpiData.crossSellRenewalRate}%`,
+      change: '+3.1%',
       trend: 'up',
-      subtitle: 'Active users',
-      icon: <Users size={24} />,
+      subtitle: 'Cross-sell success',
+      icon: <TrendingUp size={24} />,
+      status: 'success'
+    },
+    {
+      title: 'Up Sell Renewal Rate',
+      value: `${kpiData.upSellRenewalRate}%`,
+      change: '+5.7%',
+      trend: 'up',
+      subtitle: 'Upsell success',
+      icon: <ArrowUp size={24} />,
       status: 'success'
     }
   ];
