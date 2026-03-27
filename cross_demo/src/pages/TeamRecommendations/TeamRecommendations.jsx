@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import SidebarNavigation from '../../components/SidebarNavigation/SidebarNavigation';
 import TopNavbar from '../../components/TopNavbar/TopNavbar';
@@ -12,6 +13,7 @@ import { Users, TrendingUp, Sparkles, Filter, Search, Eye, CheckCircle, XCircle,
 import './TeamRecommendations.css';
 
 const TeamRecommendations = () => {
+  const location = useLocation();
   const { currentUser } = useAuth();
   const { 
     getAllRecommendationsWithRepInfo,
@@ -19,13 +21,23 @@ const TeamRecommendations = () => {
     initRecommendations 
   } = useRecommendationsStore();
   
-  const [searchQuery, setSearchQuery] = useState('');
+  // Get account from navigation state if coming from Accounts page
+  const selectedAccount = location.state?.accountName || '';
+  
+  const [searchQuery, setSearchQuery] = useState(selectedAccount);
   const [regionFilter, setRegionFilter] = useState('all');
   const [repFilter, setRepFilter] = useState('all');
   const [typeFilter, setTypeFilter] = useState('all');
   const [statusFilter, setStatusFilter] = useState('all');
   const [sortBy, setSortBy] = useState('createdAt');
   const [refreshKey, setRefreshKey] = useState(0); // Force re-render on sync
+
+  // Update search when coming from account selection
+  useEffect(() => {
+    if (selectedAccount) {
+      setSearchQuery(selectedAccount);
+    }
+  }, [selectedAccount]);
 
   // Get fresh recommendations based on current tenant
   const aiRecommendations = useMemo(() => getAIRecommendations(), [refreshKey]);
@@ -228,29 +240,11 @@ const TeamRecommendations = () => {
           title={currentUser.role === 'sales-head' ? 'All Recommendations' : 'Team Recommendations'}
           subtitle={currentUser.role === 'sales-head' 
             ? 'View recommendations across all regions'
-            : `Monitor your team's AI recommendations`}
+            : `Monitor your team's recommendations`}
           user={currentUser?.name}
         />
         
         <div className="page-body team-recommendations-page">
-          {/* Header Banner */}
-          <GlassCard className="header-banner" glow={true} glowColor="blue">
-            <div className="banner-content">
-              <div className="banner-icon">
-                <Eye size={32} />
-              </div>
-              <div>
-                <h1>
-                  {currentUser.role === 'sales-head' ? 'Organization-Wide' : 'Team'} Recommendations
-                </h1>
-                <p className="view-only-note">
-                  <Eye size={16} />
-                  View-Only Access • {visibleReps.length} Rep{visibleReps.length !== 1 ? 's' : ''} ({visibleReps.map(r => r.name).join(', ')}) • For Coaching & Oversight
-                </p>
-              </div>
-            </div>
-          </GlassCard>
-
           {/* Stats Grid */}
           <div className="stats-grid">
             <GlassCard>
@@ -361,8 +355,20 @@ const TeamRecommendations = () => {
             {filteredRecommendations.length === 0 ? (
               <GlassCard className="empty-state">
                 <Sparkles size={48} opacity={0.3} />
-                <h3>No recommendations found</h3>
+                <h3>No recommendations found{selectedAccount && ` for ${selectedAccount}`}</h3>
                 <p>Try adjusting your filters or check back later</p>
+                {selectedAccount && (
+                  <button 
+                    className="refresh-button"
+                    onClick={() => {
+                      setSearchQuery('');
+                      window.history.replaceState({}, document.title);
+                    }}
+                    style={{marginTop: '1rem', background: 'var(--salesforce-blue)', color: 'white', border: 'none'}}
+                  >
+                    View All Recommendations
+                  </button>
+                )}
               </GlassCard>
             ) : (
               filteredRecommendations.map((rec) => (
