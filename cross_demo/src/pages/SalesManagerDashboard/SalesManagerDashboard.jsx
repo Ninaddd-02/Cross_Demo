@@ -23,6 +23,7 @@ import {
 } from 'lucide-react';
 import {
   LineChart, Line, BarChart, Bar, PieChart, Pie,
+  ComposedChart, Scatter,
   RadialBarChart, RadialBar, Cell, XAxis, YAxis,
   CartesianGrid, Tooltip, Legend, ResponsiveContainer
 } from 'recharts';
@@ -103,6 +104,44 @@ const SalesManagerDashboard = () => {
           { month: 'Nov', days: 32 },
           { month: 'Dec', days: 32.4 }
         ];
+    }
+  }, [timePeriod]);
+
+  // Top Recommended Account data by time period
+  const getAccountEngagementData = useMemo(() => {
+    switch (timePeriod) {
+      case '3M': return [
+        { month: 'Oct', revenue: 52.4 },
+        { month: 'Nov', revenue: 60.1 },
+        { month: 'Dec', revenue: 74.3 },
+      ];
+      case '6M': return [
+        { month: 'Jul', revenue: 28.5 },
+        { month: 'Aug', revenue: 36.2 },
+        { month: 'Sep', revenue: 44.8 },
+        { month: 'Oct', revenue: 52.4 },
+        { month: 'Nov', revenue: 60.1 },
+        { month: 'Dec', revenue: 74.3 },
+      ];
+      case '1Y': return [
+        { month: 'Jan', revenue: 12.1 }, { month: 'Feb', revenue: 16.3 },
+        { month: 'Mar', revenue: 20.5 }, { month: 'Apr', revenue: 24.8 },
+        { month: 'May', revenue: 28.5 }, { month: 'Jun', revenue: 36.2 },
+        { month: 'Jul', revenue: 40.1 }, { month: 'Aug', revenue: 44.8 },
+        { month: 'Sep', revenue: 50.2 }, { month: 'Oct', revenue: 52.4 },
+        { month: 'Nov', revenue: 60.1 }, { month: 'Dec', revenue: 74.3 },
+      ];
+      case 'All': return [
+        { month: "Q1'24", revenue: 8.2  }, { month: "Q2'24", revenue: 14.5 },
+        { month: "Q3'24", revenue: 22.3 }, { month: "Q4'24", revenue: 31.8 },
+        { month: "Q1'25", revenue: 42.1 }, { month: "Q2'25", revenue: 52.4 },
+        { month: "Q3'25", revenue: 62.8 }, { month: "Q4'25", revenue: 74.3 },
+      ];
+      default: return [
+        { month: 'Jul', revenue: 28.5 }, { month: 'Aug', revenue: 36.2 },
+        { month: 'Sep', revenue: 44.8 }, { month: 'Oct', revenue: 52.4 },
+        { month: 'Nov', revenue: 60.1 }, { month: 'Dec', revenue: 74.3 },
+      ];
     }
   }, [timePeriod]);
 
@@ -344,26 +383,53 @@ const SalesManagerDashboard = () => {
               </div>
             </GlassCard>
 
-            {/* 6. Top Recommended Account */}
+            {/* 6. Top Recommended Account - Scatter + Line */}
             <GlassCard className="chart-card">
               <div className="chart-header">
                 <div className="chart-title-group">
-                  <BarChart3 size={24} className="chart-icon" style={{ color: '#f43f5e' }} />
+                  <BarChart3 size={24} className="chart-icon" style={{ color: '#a855f7' }} />
                   <div>
                     <h3 className="chart-title">Top Recommended Account</h3>
-                    <p className="chart-subtitle">Account with highest recommendation activity</p>
+                    <p className="chart-subtitle">Revenue over time</p>
                   </div>
                 </div>
                 <div className="chart-value-badge">
-                  <span className="badge-value">🏅</span>
+                  <span className="badge-value" style={{ fontSize: '0.65rem', maxWidth: '110px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>🏅 {kpiData.topRecommendedAccount}</span>
                 </div>
               </div>
-              <div style={{ width: '100%', height: '280px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: '1rem' }}>
-                <div style={{ fontSize: '3rem' }}>🏅</div>
-                <div style={{ textAlign: 'center' }}>
-                  <div style={{ fontSize: '1.1rem', fontWeight: 700, color: '#f43f5e' }}>{kpiData.topRecommendedAccount}</div>
-                  <div style={{ fontSize: '0.875rem', color: '#94a3b8', marginTop: '0.5rem' }}>Top account by recommendation revenue</div>
-                </div>
+              <div style={{
+                background: 'linear-gradient(135deg, rgba(168,85,247,0.15), rgba(99,102,241,0.1))',
+                border: '1px solid rgba(168,85,247,0.3)',
+                borderRadius: '8px',
+                padding: '0.5rem 1rem',
+                marginBottom: '0.75rem',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between'
+              }}>
+                <span style={{ fontSize: '0.8rem', fontWeight: 700, color: '#a855f7' }}>{kpiData.topRecommendedAccount}</span>
+                <span style={{ fontSize: '0.72rem', color: '#94a3b8' }}>
+                  Revenue: <strong style={{ color: '#a855f7' }}>₹{getAccountEngagementData[getAccountEngagementData.length - 1]?.revenue} Cr</strong>
+                </span>
+              </div>
+              <div style={{ width: '100%', height: '210px' }}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <ComposedChart data={getAccountEngagementData} margin={{ top: 10, right: 20, left: 0, bottom: 20 }}>
+                    <defs>
+                      <linearGradient id="mgr-revenueGrad" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#a855f7" stopOpacity={0.4}/>
+                        <stop offset="95%" stopColor="#a855f7" stopOpacity={0}/>
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(148, 163, 184, 0.08)" />
+                    <XAxis dataKey="month" stroke="#94a3b8" tick={{ fill: '#94a3b8', fontSize: 11 }} />
+                    <YAxis stroke="#a855f7" tick={{ fill: '#a855f7', fontSize: 11 }} label={{ value: '₹ Cr', angle: -90, position: 'insideLeft', fill: '#a855f7', fontSize: 10, dx: -5 }} />
+                    <Tooltip contentStyle={{ backgroundColor: 'rgba(15, 23, 42, 0.98)', border: '1px solid rgba(168,85,247,0.4)', borderRadius: '10px', color: '#ffffff', fontSize: '12px' }} formatter={(value) => [`₹${value} Cr`, 'Revenue']} />
+                    <Legend wrapperStyle={{ color: '#94a3b8', fontSize: '11px', paddingTop: '4px' }} />
+                    <Line type="monotone" dataKey="revenue" name="Revenue" stroke="#a855f7" strokeWidth={2.5} dot={false} activeDot={{ r: 5, fill: '#a855f7' }} />
+                    <Scatter dataKey="revenue" name="Revenue" fill="#a855f7" r={5} legendType="none" />
+                  </ComposedChart>
+                </ResponsiveContainer>
               </div>
             </GlassCard>
 
