@@ -11,19 +11,23 @@
           "UpsellRevenue": 442560000,
           "TopCrossSellService": "Digital",
           "TopUpsellService": "Data Engineering",
-          "TopRegionByRecommendationRevenue": "West"
+          "TopRegionByRecommendationRevenue": "West",
+          "TopRecommendedAccount": "ACCELYA SOLUTIONS INDIA LIMITED"
         },
         "SalesManager": {
-          "TeamCrossSellConversionRate": 24.8,
-          "TeamUpsellConversionRate": 19.6,
-          "RecommendationToWinCycleTimeDays": 32.4,
-          "TopSalesRepByRecommendationRevenue": "Rahul Sharma",
-          "TopSalesRepByRecommendationConversionRate": "Neha singh"
+          "CrossSellRevenue": 742860000,
+          "UpsellRevenue": 442560000,
+          "TopCrossSellService": "Digital",
+          "TopUpsellService": "Data Engineering",
+          "TopRegionByRecommendationRevenue": "West",
+          "TopRecommendedAccount": "ACCELYA SOLUTIONS INDIA LIMITED"
         },
         "SalesRep": {
-          "RecommendationConversionRate": 26.8,
-          "CrossSellWins": 68,
-          "UpsellWins": 42,
+          "CrossSellRevenue": 742860000,
+          "UpsellRevenue": 442560000,
+          "TopCrossSellService": "Digital",
+          "TopUpsellService": "Data Engineering",
+          "TopRegionByRecommendationRevenue": "West",
           "TopRecommendedAccount": "ACCELYA SOLUTIONS INDIA LIMITED"
         }
       },

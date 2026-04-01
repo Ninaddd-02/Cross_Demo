@@ -52,8 +52,14 @@ const AnalyticsDashboard = () => {
   
   // Get direct access to tenant data for team conversion rates
   const tenantInfo = useMemo(() => getTenantInfo(), [refreshKey]);
-  const teamCrossSellRate = tenantInfo?.KPI?.SalesManager?.TeamCrossSellConversionRate || 24.8;
-  const teamUpsellRate = tenantInfo?.KPI?.SalesManager?.TeamUpsellConversionRate || 19.6;
+  const managerKpiRaw = tenantInfo?.KPI?.SalesManager;
+  const managerTotalRevenue = (managerKpiRaw?.CrossSellRevenue || 0) + (managerKpiRaw?.UpsellRevenue || 0);
+  const teamCrossSellRate = managerTotalRevenue > 0
+    ? ((managerKpiRaw?.CrossSellRevenue / managerTotalRevenue) * 100).toFixed(1)
+    : 24.8;
+  const teamUpsellRate = managerTotalRevenue > 0
+    ? ((managerKpiRaw?.UpsellRevenue / managerTotalRevenue) * 100).toFixed(1)
+    : 19.6;
 
   // Handle refresh
   const handleRefresh = () => {

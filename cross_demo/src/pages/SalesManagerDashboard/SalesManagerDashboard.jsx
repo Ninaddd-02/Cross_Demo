@@ -156,85 +156,91 @@ const SalesManagerDashboard = () => {
             </div>
           </div>
 
-          {/* KPI Cards Grid - 5 Cards */}
+          {/* KPI Cards Grid - 6 Cards */}
           <div className="charts-grid">
-            
-            {/* 1. Team Cross-Sell Conversion Rate - Radial Gauge */}
-            <GlassCard className="chart-card large-chart">
+
+            {/* 1. Cross-Sell Revenue */}
+            <GlassCard className="chart-card">
               <div className="chart-header">
                 <div className="chart-title-group">
-                  <TrendingUp size={24} className="chart-icon" />
+                  <TrendingUp size={24} className="chart-icon" style={{ color: '#0176d3' }} />
                   <div>
-                    <h3 className="chart-title">Team Cross-Sell Conversion Rate</h3>
-                    <p className="chart-subtitle">Cross-sell success rate</p>
+                    <h3 className="chart-title">Cross-Sell Revenue</h3>
+                    <p className="chart-subtitle">Total cross-sell revenue</p>
                   </div>
                 </div>
                 <div className="chart-value-badge success">
-                  <span className="badge-value">24.8%</span>
-                  <span className="badge-trend">
-                    <ArrowUp size={14} />
-                    Conversion
-                  </span>
+                  <span className="badge-value">{kpiData.crossSellRevenue}</span>
                 </div>
               </div>
               <div style={{ width: '100%', height: '280px' }}>
                 <ResponsiveContainer width="100%" height="100%">
-                  <RadialBarChart 
-                    cx="50%" 
-                    cy="50%" 
-                    innerRadius="60%" 
-                    outerRadius="90%" 
-                    data={[{ name: 'Cross-Sell Rate', value: 24.8, fill: '#3b82f6' }]}
-                    startAngle={180}
-                    endAngle={0}
+                  <BarChart
+                    data={[
+                      { quarter: 'Q1', revenue: 15.2 },
+                      { quarter: 'Q2', revenue: 18.5 },
+                      { quarter: 'Q3', revenue: 20.8 },
+                      { quarter: 'Q4', revenue: 19.8 }
+                    ]}
+                    margin={{ top: 20, right: 20, left: 10, bottom: 20 }}
                   >
-                    <RadialBar
-                      minAngle={15}
-                      background
-                      clockWise
-                      dataKey="value"
-                      cornerRadius={10}
-                    />
-                    <text 
-                      x="50%" 
-                      y="50%" 
-                      textAnchor="middle" 
-                      dominantBaseline="middle"
-                      style={{ fontSize: '2.5rem', fontWeight: '700', fill: '#3b82f6' }}
-                    >
-                      24.8%
-                    </text>
-                    <Tooltip 
-                      cursor={false}
-                      contentStyle={{ 
-                        backgroundColor: 'rgba(15, 23, 42, 0.98)', 
-                        border: '1px solid rgba(148, 163, 184, 0.3)',
-                        borderRadius: '8px',
-                        color: '#ffffff'
-                      }}
-                      formatter={(value) => [`${value}%`, 'Conversion Rate']}
-                    />
-                  </RadialBarChart>
+                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(148, 163, 184, 0.1)" />
+                    <XAxis dataKey="quarter" stroke="#94a3b8" tick={{ fill: '#94a3b8', fontSize: 14 }} />
+                    <YAxis stroke="#94a3b8" tick={{ fill: '#94a3b8', fontSize: 14 }} label={{ value: '₹ Cr', angle: -90, position: 'insideLeft', fill: '#94a3b8' }} />
+                    <Tooltip contentStyle={{ backgroundColor: 'rgba(15, 23, 42, 0.98)', border: '1px solid rgba(148, 163, 184, 0.3)', borderRadius: '8px', color: '#ffffff' }} formatter={(value) => [`₹${value} Cr`, 'Revenue']} />
+                    <Bar dataKey="revenue" fill="#0176d3" radius={[8, 8, 0, 0]} />
+                  </BarChart>
                 </ResponsiveContainer>
               </div>
             </GlassCard>
 
-            {/* 2. Team Upsell Conversion Rate - Pie Chart */}
-            <GlassCard className="chart-card large-chart">
+            {/* 2. Upsell Revenue */}
+            <GlassCard className="chart-card">
               <div className="chart-header">
                 <div className="chart-title-group">
-                  <Activity size={24} className="chart-icon" />
+                  <ArrowUp size={24} className="chart-icon" style={{ color: '#22c55e' }} />
                   <div>
-                    <h3 className="chart-title">Team Upsell Conversion Rate</h3>
-                    <p className="chart-subtitle">Upsell success rate</p>
+                    <h3 className="chart-title">Upsell Revenue</h3>
+                    <p className="chart-subtitle">Total upsell revenue</p>
                   </div>
                 </div>
                 <div className="chart-value-badge success">
-                  <span className="badge-value">19.6%</span>
-                  <span className="badge-trend">
-                    <ArrowUp size={14} />
-                    Conversion
-                  </span>
+                  <span className="badge-value">{kpiData.upsellRevenue}</span>
+                </div>
+              </div>
+              <div style={{ width: '100%', height: '280px' }}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart
+                    data={[
+                      { quarter: 'Q1', revenue: 9.2 },
+                      { quarter: 'Q2', revenue: 11.1 },
+                      { quarter: 'Q3', revenue: 12.4 },
+                      { quarter: 'Q4', revenue: 11.8 }
+                    ]}
+                    margin={{ top: 20, right: 20, left: 10, bottom: 20 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(148, 163, 184, 0.1)" />
+                    <XAxis dataKey="quarter" stroke="#94a3b8" tick={{ fill: '#94a3b8', fontSize: 14 }} />
+                    <YAxis stroke="#94a3b8" tick={{ fill: '#94a3b8', fontSize: 14 }} label={{ value: '₹ Cr', angle: -90, position: 'insideLeft', fill: '#94a3b8' }} />
+                    <Tooltip contentStyle={{ backgroundColor: 'rgba(15, 23, 42, 0.98)', border: '1px solid rgba(148, 163, 184, 0.3)', borderRadius: '8px', color: '#ffffff' }} formatter={(value) => [`₹${value} Cr`, 'Revenue']} />
+                    <Bar dataKey="revenue" fill="#22c55e" radius={[8, 8, 0, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </GlassCard>
+
+            {/* 3. Top Cross-Sell Service */}
+            <GlassCard className="chart-card">
+              <div className="chart-header">
+                <div className="chart-title-group">
+                  <Award size={24} className="chart-icon" style={{ color: '#f59e0b' }} />
+                  <div>
+                    <h3 className="chart-title">Top Cross-Sell Service</h3>
+                    <p className="chart-subtitle">Leading service for cross-sell</p>
+                  </div>
+                </div>
+                <div className="chart-value-badge warning">
+                  <span className="badge-value">🏆 {kpiData.topCrossSellService}</span>
                 </div>
               </div>
               <div style={{ width: '100%', height: '280px' }}>
@@ -242,234 +248,122 @@ const SalesManagerDashboard = () => {
                   <PieChart>
                     <Pie
                       data={[
-                        { name: 'Converted', value: 19.6, fill: '#a78bfa' },
-                        { name: 'Pending', value: 80.4, fill: '#1e293b' }
+                        { name: kpiData.topCrossSellService, value: 35, fill: '#f59e0b' },
+                        { name: 'Cloud', value: 28, fill: '#3b82f6' },
+                        { name: 'Analytics', value: 22, fill: '#8b5cf6' },
+                        { name: 'Others', value: 15, fill: '#64748b' }
                       ]}
-                      cx="50%"
-                      cy="50%"
-                      innerRadius="60%"
-                      outerRadius="80%"
-                      paddingAngle={2}
-                      dataKey="value"
+                      cx="50%" cy="50%" labelLine={false}
+                      label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                      outerRadius={80} dataKey="value"
                     >
-                      {[
-                        { name: 'Converted', value: 19.6, fill: '#a78bfa' },
-                        { name: 'Pending', value: 80.4, fill: '#1e293b' }
-                      ].map((entry, index) => (
+                      {[{ fill: '#f59e0b' }, { fill: '#3b82f6' }, { fill: '#8b5cf6' }, { fill: '#64748b' }].map((entry, index) => (
                         <Cell key={`cell-${index}`} fill={entry.fill} />
                       ))}
                     </Pie>
-                    <Tooltip 
-                      contentStyle={{ 
-                        backgroundColor: 'rgba(15, 23, 42, 0.98)', 
-                        border: '1px solid rgba(148, 163, 184, 0.3)',
-                        borderRadius: '8px',
-                        color: '#ffffff'
-                      }}
-                      formatter={(value) => [`${value.toFixed(1)}%`, '']}
-                    />
-                    <text 
-                      x="50%" 
-                      y="50%" 
-                      textAnchor="middle" 
-                      dominantBaseline="middle"
-                      style={{ fontSize: '2rem', fontWeight: '700', fill: '#a78bfa' }}
-                    >
-                      19.6%
-                    </text>
+                    <Tooltip contentStyle={{ backgroundColor: 'rgba(15, 23, 42, 0.98)', border: '1px solid rgba(148, 163, 184, 0.3)', borderRadius: '8px', color: '#ffffff', fontSize: '12px' }} formatter={(value) => [`${value}%`, 'Share']} />
                   </PieChart>
                 </ResponsiveContainer>
               </div>
             </GlassCard>
 
-            {/* 3. Recommendation to Win Cycle Time - Line Chart */}
+            {/* 4. Top Upsell Service */}
             <GlassCard className="chart-card">
               <div className="chart-header">
                 <div className="chart-title-group">
-                  <Clock size={24} className="chart-icon" />
+                  <Activity size={24} className="chart-icon" style={{ color: '#8b5cf6' }} />
                   <div>
-                    <h3 className="chart-title">Recommendation to Win Cycle Time</h3>
-                    <p className="chart-subtitle">Days to close from recommendation</p>
+                    <h3 className="chart-title">Top Upsell Service</h3>
+                    <p className="chart-subtitle">Leading service for upsell</p>
                   </div>
                 </div>
-                <div className="chart-value-badge warning">
-                  <span className="badge-value">32.4 days</span>
-                  <span className="badge-trend">
-                    <Clock size={14} />
-                    Cycle Time
-                  </span>
+                <div className="chart-value-badge">
+                  <span className="badge-value">⭐ {kpiData.topUpsellService}</span>
                 </div>
               </div>
               <div style={{ width: '100%', height: '280px' }}>
                 <ResponsiveContainer width="100%" height="100%">
-                  <LineChart 
-                    data={getCycleTimeTrendData}
+                  <BarChart
+                    data={[
+                      { service: kpiData.topUpsellService?.substring(0, 8), crossSell: 15, upsell: 32 },
+                      { service: kpiData.topCrossSellService, crossSell: 35, upsell: 18 },
+                      { service: 'Cloud', crossSell: 28, upsell: 22 },
+                      { service: 'Analytics', crossSell: 22, upsell: 28 }
+                    ]}
                     margin={{ top: 20, right: 20, left: 10, bottom: 20 }}
                   >
-                    <defs>
-                      <linearGradient id="colorDays" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#f59e0b" stopOpacity={0.8}/>
-                        <stop offset="95%" stopColor="#f59e0b" stopOpacity={0}/>
-                      </linearGradient>
-                    </defs>
                     <CartesianGrid strokeDasharray="3 3" stroke="rgba(148, 163, 184, 0.1)" />
-                    <XAxis 
-                      dataKey="month" 
-                      stroke="#94a3b8"
-                      tick={{ fill: '#94a3b8', fontSize: 12 }}
-                    />
-                    <YAxis 
-                      stroke="#94a3b8"
-                      tick={{ fill: '#94a3b8', fontSize: 12 }}
-                      domain={timePeriod === 'All' ? [25, 55] : [25, 50]}
-                    />
-                    <Tooltip 
-                      contentStyle={{ 
-                        backgroundColor: 'rgba(15, 23, 42, 0.98)', 
-                        border: '1px solid rgba(148, 163, 184, 0.3)',
-                        borderRadius: '8px',
-                        color: '#ffffff'
-                      }}
-                      formatter={(value) => [`${value} days`, 'Cycle Time']}
-                    />
-                    <Line 
-                      type="monotone" 
-                      dataKey="days" 
-                      stroke="#f59e0b" 
-                      strokeWidth={3}
-                      dot={{ fill: '#f59e0b', strokeWidth: 2, r: 4 }}
-                      activeDot={{ r: 6 }}
-                      fill="url(#colorDays)"
-                    />
-                  </LineChart>
-                </ResponsiveContainer>
-              </div>
-            </GlassCard>
-
-            {/* 4. Top Sales Rep by Recommendation Revenue - Vertical Bar Chart */}
-            <GlassCard className="chart-card">
-              <div className="chart-header">
-                <div className="chart-title-group">
-                  <Award size={24} className="chart-icon" />
-                  <div>
-                    <h3 className="chart-title">Top Sales Rep by Recommendation Revenue</h3>
-                    <p className="chart-subtitle">Revenue leader</p>
-                  </div>
-                </div>
-                <div className="chart-value-badge success">
-                  <span className="badge-value">🏆</span>
-                  <span className="badge-trend">
-                    <Award size={14} />
-                    Leader
-                  </span>
-                </div>
-              </div>
-              <div style={{ width: '100%', height: '280px' }}>
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart 
-                    data={[
-                      { name: 'Rahul Sharma', revenue: 25.6, fill: '#22c55e' },
-                      { name: 'Neha Singh', revenue: 22.3, fill: '#3b82f6' },
-                      { name: 'Priya Patel', revenue: 18.9, fill: '#8b5cf6' }
-                    ]}
-                    margin={{ top: 20, right: 20, left: 10, bottom: 40 }}
-                  >
-                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(148, 163, 184, 0.1)" />
-                    <XAxis 
-                      dataKey="name" 
-                      stroke="#94a3b8"
-                      tick={{ fill: '#94a3b8', fontSize: 11 }}
-                      angle={-15}
-                      textAnchor="end"
-                      height={60}
-                    />
-                    <YAxis 
-                      stroke="#94a3b8"
-                      tick={{ fill: '#94a3b8', fontSize: 12 }}
-                      label={{ value: '₹ Cr', angle: -90, position: 'insideLeft', fill: '#94a3b8' }}
-                    />
-                    <Tooltip 
-                      contentStyle={{ 
-                        backgroundColor: 'rgba(15, 23, 42, 0.98)', 
-                        border: '1px solid rgba(148, 163, 184, 0.3)',
-                        borderRadius: '8px',
-                        color: '#ffffff'
-                      }}
-                      formatter={(value) => [`₹${value} Cr`, 'Revenue']}
-                    />
-                    <Bar dataKey="revenue" radius={[8, 8, 0, 0]}>
-                      {[
-                        { name: 'Rahul Sharma', revenue: 25.6, fill: '#22c55e' },
-                        { name: 'Neha Singh', revenue: 22.3, fill: '#3b82f6' },
-                        { name: 'Priya Patel', revenue: 18.9, fill: '#8b5cf6' }
-                      ].map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.fill} />
-                      ))}
-                    </Bar>
+                    <XAxis dataKey="service" stroke="#94a3b8" tick={{ fill: '#94a3b8', fontSize: 12 }} />
+                    <YAxis stroke="#94a3b8" tick={{ fill: '#94a3b8', fontSize: 14 }} />
+                    <Tooltip contentStyle={{ backgroundColor: 'rgba(15, 23, 42, 0.98)', border: '1px solid rgba(148, 163, 184, 0.3)', borderRadius: '8px', color: '#ffffff' }} />
+                    <Bar dataKey="crossSell" stackId="a" fill="#f59e0b" radius={[8, 8, 0, 0]} name="Cross-Sell" />
+                    <Bar dataKey="upsell" stackId="a" fill="#8b5cf6" radius={[8, 8, 0, 0]} name="Upsell" />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
             </GlassCard>
 
-            {/* 5. Top Sales Rep by Conversion Rate - Horizontal Bar Chart */}
+            {/* 5. Top Region */}
             <GlassCard className="chart-card">
               <div className="chart-header">
                 <div className="chart-title-group">
-                  <CheckCircle size={24} className="chart-icon" />
+                  <MapPin size={24} className="chart-icon" style={{ color: '#06b6d4' }} />
                   <div>
-                    <h3 className="chart-title">Top Sales Rep by Conversion Rate</h3>
-                    <p className="chart-subtitle">Conversion leader</p>
+                    <h3 className="chart-title">Top Region</h3>
+                    <p className="chart-subtitle">By recommendation revenue</p>
                   </div>
                 </div>
-                <div className="chart-value-badge success">
-                  <span className="badge-value">⭐</span>
-                  <span className="badge-trend">
-                    <TrendingUp size={14} />
-                    Leader
-                  </span>
+                <div className="chart-value-badge">
+                  <span className="badge-value">📍 {kpiData.topRegion}</span>
                 </div>
               </div>
               <div style={{ width: '100%', height: '280px' }}>
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart 
+                  <BarChart
                     data={[
-                      { name: 'Neha Singh', rate: 32.8 },
-                      { name: 'Rahul Sharma', rate: 28.4 },
-                      { name: 'Priya Patel', rate: 25.2 }
+                      { region: kpiData.topRegion, revenue: 32.5 },
+                      { region: 'North', revenue: 28.3 },
+                      { region: 'South', revenue: 24.8 },
+                      { region: 'East', revenue: 18.9 }
                     ]}
                     layout="vertical"
-                    margin={{ top: 20, right: 30, left: 80, bottom: 20 }}
+                    margin={{ top: 20, right: 30, left: 60, bottom: 20 }}
                   >
                     <CartesianGrid strokeDasharray="3 3" stroke="rgba(148, 163, 184, 0.1)" />
-                    <XAxis 
-                      type="number"
-                      stroke="#94a3b8"
-                      tick={{ fill: '#94a3b8', fontSize: 12 }}
-                      label={{ value: 'Conversion %', position: 'insideBottom', offset: -10, fill: '#94a3b8' }}
-                    />
-                    <YAxis 
-                      type="category"
-                      dataKey="name"
-                      stroke="#94a3b8"
-                      tick={{ fill: '#94a3b8', fontSize: 12 }}
-                    />
-                    <Tooltip 
-                      cursor={{ fill: 'rgba(245, 158, 11, 0.1)' }}
-                      contentStyle={{ 
-                        backgroundColor: 'rgba(15, 23, 42, 0.98)', 
-                        border: '1px solid rgba(148, 163, 184, 0.3)',
-                        borderRadius: '8px',
-                        color: '#ffffff'
-                      }}
-                      formatter={(value) => [`${value}%`, 'Conversion']}
-                    />
-                    <Bar dataKey="rate" radius={[0, 8, 8, 0]}>
-                      <Cell fill="#f59e0b" />
+                    <XAxis type="number" stroke="#94a3b8" tick={{ fill: '#94a3b8', fontSize: 14 }} label={{ value: '₹ Cr', position: 'insideBottom', offset: -10, fill: '#94a3b8' }} />
+                    <YAxis type="category" dataKey="region" stroke="#94a3b8" tick={{ fill: '#94a3b8', fontSize: 14 }} />
+                    <Tooltip contentStyle={{ backgroundColor: 'rgba(15, 23, 42, 0.98)', border: '1px solid rgba(148, 163, 184, 0.3)', borderRadius: '8px', color: '#ffffff' }} formatter={(value) => [`₹${value} Cr`, 'Revenue']} />
+                    <Bar dataKey="revenue" radius={[0, 8, 8, 0]}>
+                      <Cell fill="#06b6d4" />
                       <Cell fill="#3b82f6" />
                       <Cell fill="#8b5cf6" />
+                      <Cell fill="#64748b" />
                     </Bar>
                   </BarChart>
                 </ResponsiveContainer>
+              </div>
+            </GlassCard>
+
+            {/* 6. Top Recommended Account */}
+            <GlassCard className="chart-card">
+              <div className="chart-header">
+                <div className="chart-title-group">
+                  <BarChart3 size={24} className="chart-icon" style={{ color: '#f43f5e' }} />
+                  <div>
+                    <h3 className="chart-title">Top Recommended Account</h3>
+                    <p className="chart-subtitle">Account with highest recommendation activity</p>
+                  </div>
+                </div>
+                <div className="chart-value-badge">
+                  <span className="badge-value">🏅</span>
+                </div>
+              </div>
+              <div style={{ width: '100%', height: '280px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: '1rem' }}>
+                <div style={{ fontSize: '3rem' }}>🏅</div>
+                <div style={{ textAlign: 'center' }}>
+                  <div style={{ fontSize: '1.1rem', fontWeight: 700, color: '#f43f5e' }}>{kpiData.topRecommendedAccount}</div>
+                  <div style={{ fontSize: '0.875rem', color: '#94a3b8', marginTop: '0.5rem' }}>Top account by recommendation revenue</div>
+                </div>
               </div>
             </GlassCard>
 

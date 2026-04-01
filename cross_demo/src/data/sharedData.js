@@ -1519,27 +1519,30 @@ export const calculateManagerKPIs = () => {
     return `₹${crores.toFixed(2)} Cr`;
   };
 
-  // NEW FORMAT ONLY - TeamCrossSellConversionRate, TeamUpsellConversionRate, etc.
-  const totalRevenue = headKPI.CrossSellRevenue + headKPI.UpsellRevenue;
-  
+  // NEW FORMAT - CrossSellRevenue, UpsellRevenue based KPIs
+  const totalRevenue = (kpiData.CrossSellRevenue || 0) + (kpiData.UpsellRevenue || 0);
+  const crossSellRevenue = kpiData.CrossSellRevenue || 0;
+  const upsellRevenue = kpiData.UpsellRevenue || 0;
+
   return {
     totalRevenue: formatCrores(totalRevenue),
     totalRevenueRaw: totalRevenue,
-    avgDealVelocity: Math.round(kpiData.RecommendationToWinCycleTimeDays),
-    avgDealVelocityDays: kpiData.RecommendationToWinCycleTimeDays,
+    crossSellRevenue: formatCrores(crossSellRevenue),
+    crossSellRevenueRaw: crossSellRevenue,
+    upsellRevenue: formatCrores(upsellRevenue),
+    upsellRevenueRaw: upsellRevenue,
+    avgDealVelocity: 32,
+    avgDealVelocityDays: 32,
     revenueAtRisk: formatCrores(totalRevenue * 0.15),
     revenueAtRiskRaw: totalRevenue * 0.15,
-    topServiceLine: headKPI.TopCrossSellService,
-    topTechnology: headKPI.TopUpsellService,
-    topRegion: headKPI.TopRegionByRecommendationRevenue,
-    avgSalesCycle: Math.round(kpiData.RecommendationToWinCycleTimeDays),
-    crossUpsellRate: ((kpiData.TeamCrossSellConversionRate + kpiData.TeamUpsellConversionRate) / 2).toFixed(1),
-    topProduct: {
-      name: headKPI.TopCrossSellService,
-      revenue: formatCrores(totalRevenue * 0.3)
-    },
-    topSalesRep: kpiData.TopSalesRepByRecommendationRevenue,
-    topRepByConversion: kpiData.TopSalesRepByRecommendationConversionRate
+    topCrossSellService: kpiData.TopCrossSellService || headKPI.TopCrossSellService,
+    topUpsellService: kpiData.TopUpsellService || headKPI.TopUpsellService,
+    topRegion: kpiData.TopRegionByRecommendationRevenue || headKPI.TopRegionByRecommendationRevenue,
+    topRecommendedAccount: kpiData.TopRecommendedAccount || headKPI.TopRecommendedAccount,
+    avgSalesCycle: 32,
+    crossUpsellRate: totalRevenue > 0 ? ((crossSellRevenue / totalRevenue) * 100).toFixed(1) : '0.0',
+    topSalesRep: kpiData.TopRecommendedAccount || headKPI.TopRecommendedAccount,
+    topRepByConversion: kpiData.TopRecommendedAccount || headKPI.TopRecommendedAccount
   };
 };
 
@@ -1572,6 +1575,7 @@ export const calculateHeadKPIs = () => {
     topCrossSellService: kpiData.TopCrossSellService,
     topUpsellService: kpiData.TopUpsellService,
     topRegion: kpiData.TopRegionByRecommendationRevenue,
+    topRecommendedAccount: kpiData.TopRecommendedAccount,
     
     // Calculated/default metrics for UI compatibility
     avgDealVelocity: 79,
@@ -1600,38 +1604,50 @@ export const calculateRepKPIs = () => {
     return `₹${crores.toFixed(2)} Cr`;
   };
 
-  // NEW FORMAT ONLY - RecommendationConversionRate, CrossSellWins, UpsellWins
-  const avgRecommendationValue = 50000000; // ₹5 Cr per win
-  const totalWins = kpiData.CrossSellWins + kpiData.UpsellWins;
-  const estimatedRevenue = totalWins * avgRecommendationValue;
-  
+  // NEW FORMAT - CrossSellRevenue, UpsellRevenue based KPIs
+  const crossSellRevenue = kpiData.CrossSellRevenue || 0;
+  const upsellRevenue = kpiData.UpsellRevenue || 0;
+  const totalRevenue = crossSellRevenue + upsellRevenue;
+
+  const crossSellWins = Math.round(crossSellRevenue / 50000000) || 0;
+  const upsellWins = Math.round(upsellRevenue / 50000000) || 0;
+  const totalWins = crossSellWins + upsellWins;
+  const estimatedRevenue = totalRevenue;
+
   // Calculate rates
   const crossSellRecommendations = recommendations.filter(r => r.RecommendationType === 'CROSS-SELL').length || 1;
   const upsellRecommendations = recommendations.filter(r => r.RecommendationType === 'UPSELL' || r.RecommendationType === 'UP-SELL').length || 1;
-  const crossSellRate = (kpiData.CrossSellWins / crossSellRecommendations * 100).toFixed(1);
-  const upsellRate = (kpiData.UpsellWins / upsellRecommendations * 100).toFixed(1);
+  const crossSellRate = ((crossSellWins / crossSellRecommendations) * 100).toFixed(1);
+  const upsellRate = ((upsellWins / upsellRecommendations) * 100).toFixed(1);
   
   return {
-    avgDealVelocity: 75, // Default estimate
+    avgDealVelocity: 75,
     revenueAtRisk: formatCrores(estimatedRevenue * 0.15),
     revenueAtRiskRaw: estimatedRevenue * 0.15,
     dealsClosed: totalWins,
-    avgDealSize: formatCrores(avgRecommendationValue),
-    avgDealSizeRaw: avgRecommendationValue,
-    renewalRate: kpiData.RecommendationConversionRate.toFixed(1),
+    avgDealSize: formatCrores(50000000),
+    avgDealSizeRaw: 50000000,
+    renewalRate: ((totalWins / (crossSellRecommendations + upsellRecommendations)) * 100).toFixed(1),
     crossSellRenewalRate: crossSellRate,
     upSellRenewalRate: upsellRate,
-    crossSellWins: kpiData.CrossSellWins,
-    upsellWins: kpiData.UpsellWins,
-    crossSellPotential: formatCrores(kpiData.CrossSellWins * avgRecommendationValue * 0.3),
-    crossSellPotentialRaw: kpiData.CrossSellWins * avgRecommendationValue * 0.3,
-    upsellPotential: formatCrores(kpiData.UpsellWins * avgRecommendationValue * 0.3),
-    upsellPotentialRaw: kpiData.UpsellWins * avgRecommendationValue * 0.3,
-    totalExpansionPotential: formatCrores(totalWins * avgRecommendationValue * 0.3),
+    crossSellWins: crossSellWins,
+    upsellWins: upsellWins,
+    crossSellRevenue: formatCrores(crossSellRevenue),
+    crossSellRevenueRaw: crossSellRevenue,
+    upsellRevenue: formatCrores(upsellRevenue),
+    upsellRevenueRaw: upsellRevenue,
+    crossSellPotential: formatCrores(crossSellRevenue * 0.3),
+    crossSellPotentialRaw: crossSellRevenue * 0.3,
+    upsellPotential: formatCrores(upsellRevenue * 0.3),
+    upsellPotentialRaw: upsellRevenue * 0.3,
+    totalExpansionPotential: formatCrores(totalRevenue * 0.3),
     totalRevenue: formatCrores(estimatedRevenue),
     totalRevenueRaw: estimatedRevenue,
-    avgProjectDuration: 90, // Default estimate
-    totalUsers: totalWins * 5, // Estimate
+    avgProjectDuration: 90,
+    totalUsers: totalWins * 5,
+    topCrossSellService: kpiData.TopCrossSellService,
+    topUpsellService: kpiData.TopUpsellService,
+    topRegion: kpiData.TopRegionByRecommendationRevenue,
     topRecommendedAccount: kpiData.TopRecommendedAccount
   };
 };

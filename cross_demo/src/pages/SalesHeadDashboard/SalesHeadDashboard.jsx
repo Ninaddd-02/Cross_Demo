@@ -9,7 +9,8 @@ import {
   Target,
   BarChart3,
   ArrowUp,
-  Activity
+  Activity,
+  Star
 } from 'lucide-react';
 import {
   LineChart, Line, BarChart, Bar, PieChart, Pie, Cell,
@@ -201,7 +202,7 @@ const SalesHeadDashboard = () => {
                   </div>
                 </div>
                 <div className="chart-value-badge" style={{ background: 'rgba(1, 118, 211, 0.1)', color: '#0176d3' }}>
-                  <span className="badge-value">₹74.29 Cr</span>
+                  <span className="badge-value">{kpiData.crossSellRevenue}</span>
                 </div>
               </div>
               <div style={{ width: '100%', height: '280px' }}>
@@ -248,7 +249,7 @@ const SalesHeadDashboard = () => {
                   </div>
                 </div>
                 <div className="chart-value-badge" style={{ background: 'rgba(34, 197, 94, 0.1)', color: '#22c55e' }}>
-                  <span className="badge-value">₹44.26 Cr</span>
+                  <span className="badge-value">{kpiData.upsellRevenue}</span>
                 </div>
               </div>
               <div style={{ width: '100%', height: '280px' }}>
@@ -306,7 +307,7 @@ const SalesHeadDashboard = () => {
                   </div>
                 </div>
                 <div className="chart-value-badge" style={{ background: 'rgba(245, 158, 11, 0.1)', color: '#f59e0b' }}>
-                  <span className="badge-value">🏆 Digital</span>
+                  <span className="badge-value">🏆 {kpiData.topCrossSellService}</span>
                 </div>
               </div>
               <div style={{ width: '100%', height: '280px' }}>
@@ -361,7 +362,7 @@ const SalesHeadDashboard = () => {
                   </div>
                 </div>
                 <div className="chart-value-badge" style={{ background: 'rgba(139, 92, 246, 0.1)', color: '#8b5cf6' }}>
-                  <span className="badge-value">⭐ Data Engineering</span>
+                  <span className="badge-value">⭐ {kpiData.topUpsellService}</span>
                 </div>
               </div>
               <div style={{ width: '100%', height: '280px' }}>
@@ -411,7 +412,7 @@ const SalesHeadDashboard = () => {
                   </div>
                 </div>
                 <div className="chart-value-badge" style={{ background: 'rgba(6, 182, 212, 0.1)', color: '#06b6d4' }}>
-                  <span className="badge-value">📍 West</span>
+                  <span className="badge-value">📍 {kpiData.topRegion}</span>
                 </div>
               </div>
               <div style={{ width: '100%', height: '280px' }}>
@@ -457,6 +458,29 @@ const SalesHeadDashboard = () => {
                     </Bar>
                   </BarChart>
                 </ResponsiveContainer>
+              </div>
+            </GlassCard>
+
+            {/* 6. Top Recommended Account */}
+            <GlassCard className="chart-card">
+              <div className="chart-header">
+                <div className="chart-title-group">
+                  <Star size={24} className="chart-icon" style={{ color: '#f43f5e' }} />
+                  <div>
+                    <h3 className="chart-title">Top Recommended Account</h3>
+                    <p className="chart-subtitle">Account with highest recommendation activity</p>
+                  </div>
+                </div>
+                <div className="chart-value-badge" style={{ background: 'rgba(244, 63, 94, 0.1)', color: '#f43f5e' }}>
+                  <span className="badge-value">🏅 {kpiData.topRecommendedAccount}</span>
+                </div>
+              </div>
+              <div style={{ width: '100%', height: '280px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: '1rem' }}>
+                <div style={{ fontSize: '3rem' }}>🏅</div>
+                <div style={{ textAlign: 'center' }}>
+                  <div style={{ fontSize: '1.25rem', fontWeight: 700, color: '#f43f5e' }}>{kpiData.topRecommendedAccount}</div>
+                  <div style={{ fontSize: '0.875rem', color: '#94a3b8', marginTop: '0.5rem' }}>Top account by recommendation revenue</div>
+                </div>
               </div>
             </GlassCard>
           </div>
