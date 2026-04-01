@@ -112,7 +112,7 @@ const TeamActivityPage = () => {
       if (syncEvent.type === 'activity_updated' || 
           syncEvent.type === 'recommendation_accepted' || 
           syncEvent.type === 'recommendation_rejected') {
-        console.log('📡 Activity update received:', syncEvent);
+        console.debug('Activity update received:', syncEvent.type);
         setRefreshKey(prev => prev + 1); // Force refresh
       }
     });
@@ -120,11 +120,11 @@ const TeamActivityPage = () => {
     return cleanup;
   }, []);
   
-  // Polling: Auto-refresh every 5 seconds for same-tab updates
+  // Polling: Auto-refresh every 30 seconds for same-tab updates
   useEffect(() => {
     const cleanup = createPollingRefresh(() => {
       setRefreshKey(prev => prev + 1);
-    }, 5000);
+    }, 30000);
     
     return cleanup;
   }, []);

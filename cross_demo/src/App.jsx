@@ -2,11 +2,13 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'sonner';
 import { useAuth } from './context/AuthContext';
+import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
 
 // Auth
 import Login from './pages/Login/Login';
 
 // Sales Pages
+import RepDashboard from './pages/RepDashboard/RepDashboard';
 import AIRecommendations from './pages/AIRecommendations/AIRecommendations';
 import ActionConfirmation from './pages/ActionConfirmation/ActionConfirmation';
 import RetrainVisualization from './pages/RetrainVisualization/RetrainVisualization';
@@ -17,6 +19,7 @@ import AccountDetail from './pages/AccountDetail/AccountDetail';
 // Sales Head Pages
 import SalesHeadDashboard from './pages/SalesHeadDashboard/SalesHeadDashboard';
 import OrganizationPlan from './pages/OrganizationPlan/OrganizationPlan';
+import AnalyticsDashboard from './pages/AnalyticsDashboard/AnalyticsDashboard';
 
 // Sales Manager Pages
 import SalesManagerDashboard from './pages/SalesManagerDashboard/SalesManagerDashboard';
@@ -70,7 +73,7 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
 
 function App() {
   return (
-    <>
+    <ErrorBoundary>
       <Toaster 
         position="top-right" 
         theme="dark"
@@ -85,6 +88,11 @@ function App() {
         <Route path="/login" element={<Login />} />
         
         {/* Sales Routes */}
+        <Route path="/sales/dashboard" element={
+          <ProtectedRoute allowedRoles={['sales-rep']}>
+            <RepDashboard />
+          </ProtectedRoute>
+        } />
         <Route path="/sales/accounts" element={
           <ProtectedRoute allowedRoles={['sales-rep']}>
             <AccountsList />
@@ -120,6 +128,11 @@ function App() {
         <Route path="/sales-head/dashboard" element={
           <ProtectedRoute allowedRoles={['sales-head']}>
             <SalesHeadDashboard />
+          </ProtectedRoute>
+        } />
+        <Route path="/sales-head/analytics" element={
+          <ProtectedRoute allowedRoles={['sales-head']}>
+            <AnalyticsDashboard />
           </ProtectedRoute>
         } />
         <Route path="/sales-head/accounts" element={
@@ -224,7 +237,7 @@ function App() {
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     </Router>
-    </>
+    </ErrorBoundary>
   );
 }
 

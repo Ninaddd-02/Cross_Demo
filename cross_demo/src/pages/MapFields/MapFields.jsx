@@ -6,6 +6,7 @@ import GlassCard from '../../components/GlassCard/GlassCard';
 import GradientButton from '../../components/GradientButton/GradientButton';
 import StatusBadge from '../../components/StatusBadge/StatusBadge';
 import { ArrowRight, CheckCircle, XCircle, Zap } from 'lucide-react';
+import logger from '../../utils/logger';
 import './MapFields.css';
 
 const MapFields = () => {
@@ -25,7 +26,7 @@ const MapFields = () => {
   ]);
 
   const handleAutoMap = () => {
-    console.log('Auto-mapping fields...');
+    logger.info('Auto-mapping fields');
   };
 
   const handleSaveAndContinue = () => {

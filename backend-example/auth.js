@@ -55,6 +55,7 @@ async function createTables(db) {
         id VARCHAR(50) PRIMARY KEY,
         name VARCHAR(255) NOT NULL,
         email VARCHAR(255) UNIQUE NOT NULL,
+        emp_id VARCHAR(20),
         password_hash VARCHAR(255) NOT NULL,
         security_token_hash VARCHAR(255) NOT NULL,
         role VARCHAR(50) NOT NULL CHECK (role IN ('sales-head', 'sales-manager', 'sales-rep')),
@@ -612,42 +613,48 @@ async function seedDemoUsers(db) {
       ['P2SCSJ91BR52L8U', 'Demo Organization', true]
     );
 
-    // Demo users
+    // Demo users (3 users - simplified hierarchy)
     const demoUsers = [
+      // Sales Head
       {
         id: 'head-1',
         name: 'Vikram Singh',
         email: 'vikram.singh@company.com',
+        empId: 'EMP001',
         password: 'vp123',
         securityToken: 'VP2026TOKEN',
         role: 'sales-head',
         title: 'VP of Sales',
         avatar: '👤',
-        regions: ['North', 'South', 'East', 'West']
+        region: 'North'
       },
+      // Sales Manager
       {
         id: 'manager-1',
         name: 'Rajesh Kumar',
         email: 'rajesh.kumar@company.com',
+        empId: 'EMP002',
         password: 'manager123',
         securityToken: 'MGR2026TOKEN',
         role: 'sales-manager',
-        title: 'Sales Manager - All Regions',
-        region: 'All Regions',
+        title: 'Sales Manager - North',
+        region: 'North',
         managerId: 1,
         teamSize: 1,
         teamMembers: ['rep-1'],
         avatar: '👤'
       },
+      // Sales Representative
       {
         id: 'rep-1',
         name: 'Rahul Sharma',
         email: 'rahul.sharma@company.com',
-        password: 'sales123',
+        empId: 'EMP003',
+        password: 'rep123',
         securityToken: 'REP2026TOKEN',
         role: 'sales-rep',
-        title: 'Sales Representative - All Regions',
-        region: 'All Regions',
+        title: 'Sales Representative - North',
+        region: 'North',
         manager: 'Rajesh Kumar',
         managerId: 1,
         repId: 1,
@@ -663,19 +670,19 @@ async function seedDemoUsers(db) {
       // Create or update user
       await client.query(
         `INSERT INTO users (
-          id, name, email, password_hash, security_token_hash, role, title, 
-          avatar, region, regions, manager, manager_id, rep_id, team_size, 
+          id, name, email, emp_id, password_hash, security_token_hash, role, title, 
+          avatar, region, manager, manager_id, rep_id, team_size, 
           team_members, is_active, failed_login_attempts
         )
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
         ON CONFLICT (id) DO UPDATE SET
-          name = $2, email = $3, password_hash = $4, security_token_hash = $5,
-          role = $6, title = $7, avatar = $8, region = $9, regions = $10,
+          name = $2, email = $3, emp_id = $4, password_hash = $5, security_token_hash = $6,
+          role = $7, title = $8, avatar = $9, region = $10,
           manager = $11, manager_id = $12, rep_id = $13, team_size = $14,
           team_members = $15, is_active = $16, failed_login_attempts = $17`,
         [
-          userData.id, userData.name, userData.email, passwordHash, securityTokenHash,
-          userData.role, userData.title, userData.avatar, userData.region, userData.regions,
+          userData.id, userData.name, userData.email, userData.empId, passwordHash, securityTokenHash,
+          userData.role, userData.title, userData.avatar, userData.region,
           userData.manager, userData.managerId, userData.repId, userData.teamSize,
           userData.teamMembers, true, 0
         ]

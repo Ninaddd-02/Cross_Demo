@@ -5,6 +5,7 @@ import TopNavbar from '../../components/TopNavbar/TopNavbar';
 import GlassCard from '../../components/GlassCard/GlassCard';
 import GradientButton from '../../components/GradientButton/GradientButton';
 import { ThumbsUp, ThumbsDown, MessageSquare } from 'lucide-react';
+import logger from '../../utils/logger';
 import './Feedback.css';
 
 const Feedback = () => {
@@ -14,7 +15,7 @@ const Feedback = () => {
 
   const handleSubmit = () => {
     // Submit feedback to API
-    console.log('Feedback submitted:', { type: feedbackType, comment });
+    logger.info('Feedback submitted', { type: feedbackType });
     navigate('/sales/retrain-visualization');
   };
 

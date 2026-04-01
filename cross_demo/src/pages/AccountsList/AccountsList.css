@@ -1,258 +1,95 @@
-/* KPI Section Container */
-.kpi-section {
-  padding: 2rem 3rem;
-  max-width: 100%;
-  margin: 0;
-}
-
-/* KPI Grid Styles */
-.kpi-grid {
-  display: flex;
-  flex-wrap: nowrap;
-  gap: 1rem;
-  margin-bottom: 2rem;
-  overflow-x: auto;
-  overflow-y: hidden;
-  padding-bottom: 0.5rem;
-  width: 100%;
-}
-
-.kpi-grid::-webkit-scrollbar {
-  height: 6px;
-}
-
-.kpi-grid::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 3px;
-}
-
-.kpi-grid::-webkit-scrollbar-thumb {
-  background: rgba(0, 161, 224, 0.5);
-  border-radius: 3px;
-}
-
-.kpi-grid::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 161, 224, 0.7);
-}
-
-.kpi-card {
-  min-width: 200px;
-  max-width: 220px;
-  flex: 1 1 200px;
-  flex-shrink: 0;
-}
-
-@media (max-width: 1200px) {
-  .kpi-grid {
-    gap: 1.5rem;
-  }
-  
-  .kpi-section {
-    padding: 1.5rem 2rem;
-  }
-}
-
-@media (max-width: 768px) {
-  .kpi-grid {
-    gap: 1.25rem;
-  }
-  
-  .kpi-section {
-    padding: 1rem;
-  }
-}
-
-.kpi-card {
-  padding: 2rem;
-  transition: all var(--transition-normal);
-  display: flex;
-  flex-direction: column;
-  min-height: 200px;
-}
-
-.kpi-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
-}
-
-.kpi-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 1rem;
-}
-
-.kpi-icon {
-  width: 48px;
-  height: 48px;
-  border-radius: var(--radius-md);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, var(--salesforce-blue), var(--cyan));
-  box-shadow: 0 4px 12px rgba(27, 150, 255, 0.3);
-}
-
-.kpi-icon svg {
-  color: white;
-  stroke: white;
-}
-
-/* Warning status icon should use warning color */
-.kpi-card .kpi-icon[style*="--warning"] svg,
-.kpi-card .kpi-icon[style*="orange"] svg {
-  color: var(--warning);
-  stroke: var(--warning);
-}
-
-.kpi-trend {
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-  font-size: 0.875rem;
-  font-weight: 600;
-  padding: 0.25rem 0.75rem;
-  border-radius: var(--radius-full);
-  background: rgba(255, 255, 255, 0.05);
-}
-
-.kpi-trend-up {
-  color: var(--success);
-}
-
-.kpi-trend-down {
-  color: var(--error);
-}
-
-.kpi-title {
-  font-size: 0.875rem;
-  color: var(--text-muted);
-  font-weight: 500;
-  margin-bottom: 0.5rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.kpi-value {
-  font-size: 2rem;
-  font-weight: 700;
-  color: var(--text-primary);
-  margin-bottom: 0.25rem;
-  line-height: 1.2;
-}
-
-.kpi-subtitle {
-  font-size: 0.875rem;
-  color: var(--text-muted);
-}
-
 /* Accounts List Container Styles */
 .accounts-list-container {
   width: 100%;
-  padding: 2rem;
+  padding: 2rem 3rem;
   max-width: 1600px;
   margin: 0 auto;
 }
 
-.accounts-header {
-  display: flex;
-  align-items: center;
+/* Enhanced KPI Summary Strip */
+.kpi-summary-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 1.5rem;
   margin-bottom: 2.5rem;
 }
 
-.search-bar {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: var(--radius-lg);
-  padding: 1.25rem 1.5rem;
-  backdrop-filter: blur(10px);
-  transition: all var(--transition-normal);
-  flex: 2;
-  min-width: 300px;
-}
-
-.search-bar:focus-within {
-  border-color: var(--cyan);
-  box-shadow: 0 0 0 3px rgba(27, 150, 255, 0.1);
-}
-
-.search-bar svg {
-  color: var(--text-muted);
-}
-
-.search-input {
-  flex: 1;
-  background: transparent;
-  border: none;
-  outline: none;
-  color: var(--text-primary);
-  font-size: 1rem;
-  font-family: 'Inter', sans-serif;
-}
-
-.search-input::placeholder {
-  color: var(--text-muted);
-}
-
-.accounts-stats {
-  display: flex;
-  gap: 1.5rem;
-  flex: 1;
-  flex-wrap: nowrap;
-}
-
-.stat-item {
+.kpi-summary-card {
   display: flex;
   align-items: center;
   gap: 1.25rem;
-  flex: 1;
-  min-width: 200px;
-  padding: 1.5rem 2rem;
+  padding: 1.5rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  cursor: default;
+  position: relative;
+  overflow: hidden;
+}
+
+.kpi-summary-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--salesforce-blue), var(--cyan));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.kpi-summary-card:hover {
   background: rgba(255, 255, 255, 0.05);
-  border: 2px solid rgba(27, 150, 255, 0.3);
-  border-radius: var(--radius-lg);
-  backdrop-filter: blur(10px);
-  transition: all var(--transition-normal);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-}
-
-.stat-item:hover {
-  border-color: var(--cyan);
-  box-shadow: 0 8px 30px rgba(27, 150, 255, 0.2);
+  border-color: rgba(27, 150, 255, 0.3);
   transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
 }
 
-.stat-item svg {
-  color: var(--cyan);
-  padding: 0.75rem;
-  background: rgba(27, 150, 255, 0.15);
-  border-radius: var(--radius-md);
-  width: 48px;
-  height: 48px;
+.kpi-summary-card:hover::before {
+  opacity: 1;
+}
+
+.kpi-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--salesforce-blue), var(--cyan));
+  color: white;
   flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(27, 150, 255, 0.3);
 }
 
-.stat-value {
-  font-size: 2rem;
+.kpi-icon.revenue {
+  background: linear-gradient(135deg, #10b981, #34d399);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.kpi-icon.opportunities {
+  background: linear-gradient(135deg, #f59e0b, #fbbf24);
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+}
+
+.kpi-content {
+  flex: 1;
+}
+
+.kpi-value {
+  font-size: 1.75rem;
   font-weight: 700;
   color: var(--text-primary);
-  line-height: 1;
-  margin-bottom: 0.4rem;
-  background: linear-gradient(135deg, #ffffff, var(--cyan));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  line-height: 1.2;
+  margin-bottom: 0.25rem;
 }
 
-.stat-label {
+.kpi-label {
   font-size: 0.875rem;
   color: var(--text-muted);
   font-weight: 500;
-  letter-spacing: 0.3px;
 }
 
 .accounts-grid {
@@ -264,22 +101,24 @@
 
 .account-card {
   cursor: pointer;
-  transition: all var(--transition-normal);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   height: 100%;
   display: flex;
   flex-direction: column;
+  -webkit-user-select: none;
   user-select: none;
+  overflow: visible;
 }
 
 .account-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 24px 64px rgba(27, 150, 255, 0.25);
-  border-color: var(--salesforce-blue);
+  transform: translateY(-8px);
+  box-shadow: 0 24px 64px rgba(27, 150, 255, 0.3), 0 0 0 1px rgba(27, 150, 255, 0.5);
+  border-color: rgba(27, 150, 255, 0.5);
 }
 
 .account-card:active {
-  transform: translateY(-4px);
+  transform: translateY(-6px);
 }
 
 .account-card::before {
@@ -288,11 +127,11 @@
   top: 0;
   left: 0;
   right: 0;
-  height: 3px;
+  height: 4px;
   background: linear-gradient(90deg, var(--salesforce-blue), var(--cyan));
   border-radius: var(--radius-lg) var(--radius-lg) 0 0;
   opacity: 0;
-  transition: opacity var(--transition-normal);
+  transition: opacity 0.25s ease;
 }
 
 .account-card:hover::before {
@@ -301,29 +140,22 @@
 
 .account-card-header {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
   margin-bottom: 1.25rem;
 }
 
-.account-icon {
-  width: 52px;
-  height: 52px;
-  border-radius: var(--radius-md);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, var(--salesforce-blue), var(--cyan));
-  color: white;
-  box-shadow: 0 4px 12px rgba(27, 150, 255, 0.3);
-}
-
 .account-name {
-  font-size: 1.3rem;
+  font-size: 1.375rem;
   font-weight: 700;
   color: var(--text-primary);
   margin: 0 0 0.5rem 0;
   line-height: 1.3;
+  transition: color 0.2s ease;
+}
+
+.account-card:hover .account-name {
+  color: var(--cyan);
 }
 
 .account-industry {
@@ -331,6 +163,97 @@
   color: var(--text-muted);
   margin: 0 0 1.5rem 0;
   line-height: 1.5;
+}
+
+/* Revenue Section */
+.account-revenue-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  padding: 1rem 0;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.revenue-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.revenue-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  background: linear-gradient(135deg, var(--salesforce-blue), var(--cyan));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Progress Bar */
+.revenue-progress {
+  margin-bottom: 1.25rem;
+}
+
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.progress-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.progress-percentage {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--salesforce-blue);
+}
+
+.progress-bar {
+  height: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--salesforce-blue), var(--cyan));
+  border-radius: 4px;
+  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.progress-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
 }
 
 .account-metrics {
@@ -377,7 +300,7 @@
   justify-content: space-between;
   align-items: center;
   margin-top: auto;
-  padding-top: 0.5rem;
+  padding-top: 0.75rem;
 }
 
 .account-location {
@@ -395,17 +318,117 @@
   height: 16px;
 }
 
-.account-opportunities {
+.account-opportunities-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.375rem 0.75rem;
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  border-radius: 6px;
   font-size: 0.875rem;
-  font-weight: 700;
-  color: var(--salesforce-blue);
-  padding: 0.5rem 1rem;
-  background: rgba(27, 150, 255, 0.15);
-  border-radius: var(--radius-sm);
-  border: 1px solid rgba(27, 150, 255, 0.3);
-  transition: all var(--transition-normal);
+  font-weight: 600;
+  color: #f59e0b;
+}
+
+.account-opportunities-badge svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* Quick Actions */
+.quick-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.quick-actions.visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: all;
+}
+
+.action-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border: none;
   cursor: pointer;
+  transition: all 0.2s ease;
   font-family: inherit;
+}
+
+.action-btn.primary {
+  background: linear-gradient(135deg, var(--salesforce-blue), var(--cyan));
+  color: white;
+  box-shadow: 0 2px 8px rgba(27, 150, 255, 0.3);
+}
+
+.action-btn.primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(27, 150, 255, 0.4);
+}
+
+.action-btn.secondary {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-primary);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.action-btn.secondary:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(27, 150, 255, 0.3);
+  color: var(--cyan);
+}
+
+.action-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .kpi-summary-strip {
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  }
+  
+  .accounts-grid {
+    grid-template-columns: repeat(auto-fill, minmax(min(340px, 100%), 1fr));
+    gap: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .accounts-list-container {
+    padding: 1.5rem 1rem;
+  }
+  
+  .kpi-summary-strip {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .accounts-grid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+  
+  .quick-actions {
+    flex-direction: column;
+  }
+  
+  .action-btn {
+    width: 100%;
+  }
 }
 
 .account-opportunities:hover {
@@ -624,6 +647,97 @@
   white-space: nowrap;
 }
 
+/* No Opportunities State */
+.no-opportunities {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 2rem;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.no-opportunities svg {
+  color: #D1D5DB;
+  margin-bottom: 1rem;
+}
+
+.no-opportunities p {
+  font-size: 1rem;
+  margin: 0;
+  color: var(--text-secondary);
+}
+
+/* Opportunity Item New Structure */
+.opportunity-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.opportunity-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, rgba(1, 118, 211, 0.1), rgba(27, 150, 255, 0.1));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--salesforce-blue);
+  flex-shrink: 0;
+}
+
+.opportunity-details {
+  flex: 1;
+  min-width: 0;
+}
+
+.opportunity-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 0.25rem 0;
+  line-height: 1.4;
+}
+
+.opportunity-type {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--cyan);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0;
+}
+
+.opportunity-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid #F3F4F6;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.info-label {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.info-value {
+  font-size: 0.875rem;
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .accounts-list-container {
@@ -640,12 +754,13 @@
   }
 
   .accounts-stats {
-    flex-direction: column;
+    grid-template-columns: 1fr;
     gap: 1rem;
+    max-width: 100%;
   }
 
   .stat-item {
-    min-width: 100%;
+    width: 100%;
   }
 
   .account-metrics {

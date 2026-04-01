@@ -1,0 +1,1 @@
+import{j as a}from"./index-CcgGELPO.js";const r=({status:t,label:e,icon:s=null,size:d="medium"})=>a.jsxs("span",{className:`status-badge status-badge-${t} status-badge-${d}`,children:[s&&a.jsx("span",{className:"badge-icon",children:s}),e]});export{r as S};

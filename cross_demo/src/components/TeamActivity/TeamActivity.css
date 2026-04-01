@@ -151,7 +151,7 @@
 
 .percentage {
   fill: var(--text-primary);
-  font-family: sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 0.5em;
   font-weight: bold;
   text-anchor: middle;

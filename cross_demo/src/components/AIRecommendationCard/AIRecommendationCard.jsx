@@ -8,6 +8,11 @@ import './AIRecommendationCard.css';
 const AIRecommendationCard = ({ 
   type = 'cross-sell',
   accountName = '',
+  opportunityName = '',
+  currentProduct = '',
+  recommendedProduct = '',
+  recommendationType = '',
+  salesRegion = '',
   title = '',
   description = '',
   confidence = 0,
@@ -43,47 +48,54 @@ const AIRecommendationCard = ({
 
   return (
     <GlassCard className="ai-recommendation-card" glow={true} glowColor={config.color}>
-      <div className="recommendation-header">
-        <div className="recommendation-type">
-          <span className={`type-icon type-icon-${config.color}`}>{config.icon}</span>
-          <StatusBadge status={confidenceLevel} label={config.label} size="small" />
-        </div>
-        <div className="recommendation-confidence">
-          <Sparkles size={16} className="sparkle-icon" />
-          <span className="confidence-text">{confidence}% Match</span>
-        </div>
-      </div>
-
       <div className="recommendation-body">
-        {accountName && (
-          <div className="recommendation-account-name">{accountName}</div>
-        )}
-        
-        {product && !hasOptions && (
+        {/* NEW FORMAT FIELDS IN CORRECT SEQUENCE */}
+        {accountName && !hasOptions && (
           <div className="recommendation-detail">
-            <span className="detail-label">Recommended Product:</span>
-            <span className="detail-value">{product}</span>
+            <span className="detail-label">ACCOUNT NAME:</span>
+            <span className="detail-value">{accountName}</span>
           </div>
         )}
         
-        {technology && !hasOptions && (
+        {opportunityName && !hasOptions && (
           <div className="recommendation-detail">
-            <span className="detail-label">Technology:</span>
-            <span className="detail-value">{technology}</span>
+            <span className="detail-label">OPPORTUNITY NAME:</span>
+            <span className="detail-value">{opportunityName}</span>
           </div>
         )}
         
-        {partner && !hasOptions && (
+        {currentProduct && !hasOptions && (
           <div className="recommendation-detail">
-            <span className="detail-label">Partner:</span>
-            <span className="detail-value">{partner}</span>
+            <span className="detail-label">CURRENT PRODUCT:</span>
+            <span className="detail-value">{currentProduct}</span>
           </div>
         )}
         
-        {estimatedValue && !hasOptions && (
+        {(recommendedProduct || product) && !hasOptions && (
           <div className="recommendation-detail">
-            <span className="detail-label">Estimated Value:</span>
-            <span className="detail-value highlight">{estimatedValue}</span>
+            <span className="detail-label">RECOMMENDED PRODUCT:</span>
+            <span className="detail-value">{recommendedProduct || product}</span>
+          </div>
+        )}
+        
+        {recommendationType && !hasOptions && (
+          <div className="recommendation-detail">
+            <span className="detail-label">RECOMMENDATION TYPE:</span>
+            <span className="detail-value">{recommendationType}</span>
+          </div>
+        )}
+        
+        {(confidence !== null && confidence !== undefined) && !hasOptions && (
+          <div className="recommendation-detail">
+            <span className="detail-label">CONFIDENCE SCORE:</span>
+            <span className="detail-value">{confidence}%</span>
+          </div>
+        )}
+        
+        {salesRegion && !hasOptions && (
+          <div className="recommendation-detail">
+            <span className="detail-label">SALES REGION:</span>
+            <span className="detail-value">{salesRegion}</span>
           </div>
         )}
 
@@ -179,7 +191,7 @@ const AIRecommendationCard = ({
           onClick={onAccept}
           fullWidth
         >
-          {selectedOption ? `Apply Option ${selectedOption}` : 'Apply Recommendation'}
+          {selectedOption ? `Convert Option ${selectedOption}` : 'Convert Recommendation'}
         </GradientButton>
         <GradientButton 
           variant="secondary" 

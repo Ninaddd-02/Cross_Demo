@@ -1,4 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { logger } from '../utils/logger';
+import * as sessionManager from '../utils/sessionManager';
 
 const AuthContext = createContext();
 
@@ -70,10 +72,22 @@ export const AuthProvider = ({ children }) => {
     const storedTenantId = localStorage.getItem('tenantId');
     if (storedUser) {
       try {
-        setCurrentUser(JSON.parse(storedUser));
+        const parsedUser = JSON.parse(storedUser);
+        setCurrentUser(parsedUser);
         setTenantId(storedTenantId);
+        // Re-attach session timeout for restored sessions
+        sessionManager.start({
+          onExpire: () => {
+            logger.info('Session expired due to inactivity');
+            setCurrentUser(null);
+            setTenantId(null);
+            localStorage.removeItem('currentUser');
+            localStorage.removeItem('tenantId');
+            sessionManager.stop();
+          },
+        });
       } catch (error) {
-        console.error('Error loading user from localStorage:', error);
+        logger.error('Error loading user from localStorage:', error);
         localStorage.removeItem('currentUser');
         localStorage.removeItem('tenantId');
       }
@@ -88,12 +102,22 @@ export const AuthProvider = ({ children }) => {
       setTenantId(orgId);
       localStorage.setItem('currentUser', JSON.stringify(user));
       localStorage.setItem('tenantId', orgId);
+
+      // Start session timeout — auto-logout after 30 minutes of inactivity
+      sessionManager.start({
+        onExpire: () => {
+          logger.info('Session expired due to inactivity');
+          logout();
+        },
+      });
+
       return user;
     }
     return null;
   };
 
   const logout = () => {
+    sessionManager.stop();
     setCurrentUser(null);
     setTenantId(null);
     localStorage.removeItem('currentUser');
@@ -162,7 +186,7 @@ export const AuthProvider = ({ children }) => {
       case 'sales-manager':
         return '/sales-manager/dashboard';
       case 'sales-rep':
-        return '/sales/accounts';
+        return '/sales/dashboard';
       default:
         return '/login';
     }

@@ -1,0 +1,1 @@
+import{j as l}from"./index-CcgGELPO.js";import"./GlassCard-D_HwScmn.js";const d=({children:s,className:r="",hover:a=!0,glow:e=!1,glowColor:o="blue",...t})=>l.jsx("div",{className:`glass-card ${a?"glass-card-hover":""} ${e?`glow-${o}`:""} ${r}`,...t,children:s});export{d as G};

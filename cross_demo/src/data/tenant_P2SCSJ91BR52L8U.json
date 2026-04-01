@@ -1,117 +1,302 @@
 {
-  "generated_at_utc": "2026-03-16T09:54:27.295890+00:00",
-  "source_file": "tenant_exports/tenant_P2SCSJ91BR52L8U.csv",
+  "generated_at_utc": "2026-03-30T11:58:18.697659+00:00",
+  "source_file": "Newdata.xlsx",
   "tenant": {
     "P2SCSJ91BR52L8U": {
-      "recommendation_count": 9,
+      "recommendation_count": 30,
       "account_count": 3,
       "KPI": {
         "SalesHead": {
-          "TotalRevenue": 10178548953.64,
-          "AvgDealVelocityDays": 78.86,
-          "RevenueAtRisk": 467868710.0,
-          "RenewalRevenueSharePct": 39.58,
-          "AvgMarginPct": 23.92,
-          "AvgContributionMarginPct": 12207827.38
+          "CrossSellRevenue": 742860000,
+          "UpsellRevenue": 442560000,
+          "TopCrossSellService": "Digital",
+          "TopUpsellService": "Data Engineering",
+          "TopRegionByRecommendationRevenue": "West"
         },
         "SalesManager": {
-          "TotalRevenue": 10178548953.64,
-          "AvgDealVelocityDays": 78.86,
-          "RevenueAtRisk": 467868710.0,
-          "TopServiceLine": "Digital",
-          "TopTechnology": "Project Management",
-          "TopRegion": "West"
+          "TeamCrossSellConversionRate": 24.8,
+          "TeamUpsellConversionRate": 19.6,
+          "RecommendationToWinCycleTimeDays": 32.4,
+          "TopSalesRepByRecommendationRevenue": "Rahul Sharma",
+          "TopSalesRepByRecommendationConversionRate": "Neha singh"
         },
         "SalesRep": {
-          "TotalRevenue": 10178548953.64,
-          "AvgDealVelocityDays": 78.86,
-          "RevenueAtRisk": 467868710.0,
-          "AvgProjectDurationDays": 228.56,
-          "RenewalRatePct": 18.09,
-          "TotalUsers": 3
+          "RecommendationConversionRate": 26.8,
+          "CrossSellWins": 68,
+          "UpsellWins": 42,
+          "TopRecommendedAccount": "ACCELYA SOLUTIONS INDIA LIMITED"
         }
       },
       "recommendations": [
         {
           "AccountName": "ACCELYA SOLUTIONS INDIA LIMITED",
-          "Recommended_Product": "Data Engineering",
-          "Opportunity_Type": "CROSS-SELL",
-          "Technology": "Project Management",
-          "Partner": "SNC-Lavalin",
-          "Confidence": 1.0,
-          "Method": "popularity_fallback"
+          "OpportunityName": "OR# 8012526",
+          "CurrentProduct": "AI Management",
+          "RecommendedProduct": "Supply Chain",
+          "RecommendationType": "CROSS-SELL",
+          "ConfidenceScore": 1.0,
+          "SalesRegion": "West"
         },
         {
           "AccountName": "ACCELYA SOLUTIONS INDIA LIMITED",
-          "Recommended_Product": "Connectivity & Comms",
-          "Opportunity_Type": "CROSS-SELL",
-          "Technology": "Water Resources Management",
-          "Partner": "Tetra Tech",
-          "Confidence": 0.879,
-          "Method": "popularity_fallback"
+          "OpportunityName": "OR# 9445261",
+          "CurrentProduct": "Embedded Systems",
+          "RecommendedProduct": "CySec-Architecture",
+          "RecommendationType": "CROSS-SELL",
+          "ConfidenceScore": 0.963,
+          "SalesRegion": "West"
         },
         {
           "AccountName": "ACCELYA SOLUTIONS INDIA LIMITED",
-          "Recommended_Product": "Migrations",
-          "Opportunity_Type": "CROSS-SELL",
-          "Technology": "Rapid PLM Services",
-          "Partner": "Rapid PLM",
-          "Confidence": 0.862,
-          "Method": "popularity_fallback"
+          "OpportunityName": "OR# 3671672",
+          "CurrentProduct": "Estate & CMDB",
+          "RecommendedProduct": "Customer Experince",
+          "RecommendationType": "CROSS-SELL",
+          "ConfidenceScore": 0.886,
+          "SalesRegion": "West"
+        },
+        {
+          "AccountName": "ACCELYA SOLUTIONS INDIA LIMITED",
+          "OpportunityName": "OR# 5167794",
+          "CurrentProduct": "Migrations",
+          "RecommendedProduct": "Maintenance",
+          "RecommendationType": "UPSELL",
+          "ConfidenceScore": 0.871,
+          "SalesRegion": "North"
+        },
+        {
+          "AccountName": "ACCELYA SOLUTIONS INDIA LIMITED",
+          "OpportunityName": "OR# 2132864",
+          "CurrentProduct": "Cy-Sec-Ops",
+          "RecommendedProduct": "Integrations",
+          "RecommendationType": "UPSELL",
+          "ConfidenceScore": 0.858,
+          "SalesRegion": "North"
+        },
+        {
+          "AccountName": "ACCELYA SOLUTIONS INDIA LIMITED",
+          "OpportunityName": "OR# 4874363",
+          "CurrentProduct": "PLM Services",
+          "RecommendedProduct": "Apps Management",
+          "RecommendationType": "CROSS-SELL",
+          "ConfidenceScore": 0.833,
+          "SalesRegion": "North"
+        },
+        {
+          "AccountName": "ACCELYA SOLUTIONS INDIA LIMITED",
+          "OpportunityName": "OR# 9454520",
+          "CurrentProduct": "Smart Services",
+          "RecommendedProduct": "Data Mining",
+          "RecommendationType": "UPSELL",
+          "ConfidenceScore": 0.798,
+          "SalesRegion": "South"
+        },
+        {
+          "AccountName": "ACCELYA SOLUTIONS INDIA LIMITED",
+          "OpportunityName": "OR# 6049122",
+          "CurrentProduct": "Cy-Sec-Ops",
+          "RecommendedProduct": "Data Engineering",
+          "RecommendationType": "UPSELL",
+          "ConfidenceScore": 0.734,
+          "SalesRegion": "North"
+        },
+        {
+          "AccountName": "ACCELYA SOLUTIONS INDIA LIMITED",
+          "OpportunityName": "OR# 1720644",
+          "CurrentProduct": "Enterprise Planning",
+          "RecommendedProduct": "AI Management",
+          "RecommendationType": "CROSS-SELL",
+          "ConfidenceScore": 0.718,
+          "SalesRegion": "North"
+        },
+        {
+          "AccountName": "ACCELYA SOLUTIONS INDIA LIMITED",
+          "OpportunityName": "OR# 6491844",
+          "CurrentProduct": "Automation",
+          "RecommendedProduct": "Migration Services",
+          "RecommendationType": "UPSELL",
+          "ConfidenceScore": 0.718,
+          "SalesRegion": "West"
         },
         {
           "AccountName": "ADANI WILMAR LIMITED",
-          "Recommended_Product": "Data Engineering",
-          "Opportunity_Type": "CROSS-SELL",
-          "Technology": "Project Management",
-          "Partner": "SNC-Lavalin",
-          "Confidence": 1.0,
-          "Method": "popularity_fallback"
+          "OpportunityName": "OR# 1870385",
+          "CurrentProduct": "Embedded Systems",
+          "RecommendedProduct": "Apps Rationalization",
+          "RecommendationType": "CROSS-SELL",
+          "ConfidenceScore": 1.0,
+          "SalesRegion": "South"
         },
         {
           "AccountName": "ADANI WILMAR LIMITED",
-          "Recommended_Product": "Connectivity & Comms",
-          "Opportunity_Type": "CROSS-SELL",
-          "Technology": "Water Resources Management",
-          "Partner": "Tetra Tech",
-          "Confidence": 0.879,
-          "Method": "popularity_fallback"
+          "OpportunityName": "OR# 9768310",
+          "CurrentProduct": "Enterprise Planning",
+          "RecommendedProduct": "DevOps",
+          "RecommendationType": "CROSS-SELL",
+          "ConfidenceScore": 0.912,
+          "SalesRegion": "West"
         },
         {
           "AccountName": "ADANI WILMAR LIMITED",
-          "Recommended_Product": "Migrations",
-          "Opportunity_Type": "CROSS-SELL",
-          "Technology": "Rapid PLM Services",
-          "Partner": "Rapid PLM",
-          "Confidence": 0.862,
-          "Method": "popularity_fallback"
+          "OpportunityName": "OR# 2748137",
+          "CurrentProduct": "Data Engineering",
+          "RecommendedProduct": "Enterprise Planning",
+          "RecommendationType": "UPSELL",
+          "ConfidenceScore": 0.878,
+          "SalesRegion": "West"
+        },
+        {
+          "AccountName": "ADANI WILMAR LIMITED",
+          "OpportunityName": "OR# 8272659",
+          "CurrentProduct": "Apps Maintenance",
+          "RecommendedProduct": "Integrations",
+          "RecommendationType": "UPSELL",
+          "ConfidenceScore": 0.848,
+          "SalesRegion": "West"
+        },
+        {
+          "AccountName": "ADANI WILMAR LIMITED",
+          "OpportunityName": "OR# 7586732",
+          "CurrentProduct": "Compliance",
+          "RecommendedProduct": "Automation",
+          "RecommendationType": "UPSELL",
+          "ConfidenceScore": 0.788,
+          "SalesRegion": "Central"
+        },
+        {
+          "AccountName": "ADANI WILMAR LIMITED",
+          "OpportunityName": "OR# 1912864",
+          "CurrentProduct": "AI & Analytics",
+          "RecommendedProduct": "Connectivity & Comms",
+          "RecommendationType": "UPSELL",
+          "ConfidenceScore": 0.754,
+          "SalesRegion": "East"
+        },
+        {
+          "AccountName": "ADANI WILMAR LIMITED",
+          "OpportunityName": "OR# 6137143",
+          "CurrentProduct": "Maintenance",
+          "RecommendedProduct": "Data Management",
+          "RecommendationType": "UPSELL",
+          "ConfidenceScore": 0.725,
+          "SalesRegion": "West"
+        },
+        {
+          "AccountName": "ADANI WILMAR LIMITED",
+          "OpportunityName": "OR# 2672620",
+          "CurrentProduct": "Maintenance",
+          "RecommendedProduct": "Systems Engineering",
+          "RecommendationType": "UPSELL",
+          "ConfidenceScore": 0.698,
+          "SalesRegion": "South"
+        },
+        {
+          "AccountName": "ADANI WILMAR LIMITED",
+          "OpportunityName": "OR# 9333927",
+          "CurrentProduct": "Automation",
+          "RecommendedProduct": "Test Management",
+          "RecommendationType": "CROSS-SELL",
+          "ConfidenceScore": 0.625,
+          "SalesRegion": "West"
+        },
+        {
+          "AccountName": "ADANI WILMAR LIMITED",
+          "OpportunityName": "OR# 4071037",
+          "CurrentProduct": "Network Management",
+          "RecommendedProduct": "Engg OS Services",
+          "RecommendationType": "UPSELL",
+          "ConfidenceScore": 0.604,
+          "SalesRegion": "West"
         },
         {
           "AccountName": "ADANI GREEN ENERGY LIMITED",
-          "Recommended_Product": "Data Engineering",
-          "Opportunity_Type": "CROSS-SELL",
-          "Technology": "Project Management",
-          "Partner": "SNC-Lavalin",
-          "Confidence": 1.0,
-          "Method": "popularity_fallback"
+          "OpportunityName": "OR# 2360538",
+          "CurrentProduct": "Data Architecture",
+          "RecommendedProduct": "Data Mining",
+          "RecommendationType": "CROSS-SELL",
+          "ConfidenceScore": 1.0,
+          "SalesRegion": "North"
         },
         {
           "AccountName": "ADANI GREEN ENERGY LIMITED",
-          "Recommended_Product": "Connectivity & Comms",
-          "Opportunity_Type": "CROSS-SELL",
-          "Technology": "Water Resources Management",
-          "Partner": "Tetra Tech",
-          "Confidence": 0.879,
-          "Method": "popularity_fallback"
+          "OpportunityName": "OR# 5415153",
+          "CurrentProduct": "Smart Services",
+          "RecommendedProduct": "Engg OS Services",
+          "RecommendationType": "CROSS-SELL",
+          "ConfidenceScore": 0.919,
+          "SalesRegion": "West"
         },
         {
           "AccountName": "ADANI GREEN ENERGY LIMITED",
-          "Recommended_Product": "Migrations",
-          "Opportunity_Type": "CROSS-SELL",
-          "Technology": "Rapid PLM Services",
-          "Partner": "Rapid PLM",
-          "Confidence": 0.862,
-          "Method": "popularity_fallback"
+          "OpportunityName": "OR# 9745357",
+          "CurrentProduct": "Migration Services",
+          "RecommendedProduct": "Customer Experince",
+          "RecommendationType": "CROSS-SELL",
+          "ConfidenceScore": 0.866,
+          "SalesRegion": "West"
+        },
+        {
+          "AccountName": "ADANI GREEN ENERGY LIMITED",
+          "OpportunityName": "OR# 2409261",
+          "CurrentProduct": "Data Engineering",
+          "RecommendedProduct": "AI & Analytics",
+          "RecommendationType": "UPSELL",
+          "ConfidenceScore": 0.846,
+          "SalesRegion": "South"
+        },
+        {
+          "AccountName": "ADANI GREEN ENERGY LIMITED",
+          "OpportunityName": "OR# 5846354",
+          "CurrentProduct": "Apps Rationalization",
+          "RecommendedProduct": "Connectivity & Comms",
+          "RecommendationType": "UPSELL",
+          "ConfidenceScore": 0.825,
+          "SalesRegion": "South"
+        },
+        {
+          "AccountName": "ADANI GREEN ENERGY LIMITED",
+          "OpportunityName": "OR# 6563677",
+          "CurrentProduct": "Test Env & Data Serv",
+          "RecommendedProduct": "Compliance",
+          "RecommendationType": "CROSS-SELL",
+          "ConfidenceScore": 0.812,
+          "SalesRegion": "South"
+        },
+        {
+          "AccountName": "ADANI GREEN ENERGY LIMITED",
+          "OpportunityName": "OR# 1947448",
+          "CurrentProduct": "DevOps",
+          "RecommendedProduct": "Migrations",
+          "RecommendationType": "UPSELL",
+          "ConfidenceScore": 0.807,
+          "SalesRegion": "West"
+        },
+        {
+          "AccountName": "ADANI GREEN ENERGY LIMITED",
+          "OpportunityName": "OR# 4415388",
+          "CurrentProduct": "CRM",
+          "RecommendedProduct": "Management",
+          "RecommendationType": "UPSELL",
+          "ConfidenceScore": 0.757,
+          "SalesRegion": "North"
+        },
+        {
+          "AccountName": "ADANI GREEN ENERGY LIMITED",
+          "OpportunityName": "OR# 7094432",
+          "CurrentProduct": "Test Automation",
+          "RecommendedProduct": "AI Management",
+          "RecommendationType": "CROSS-SELL",
+          "ConfidenceScore": 0.757,
+          "SalesRegion": "West"
+        },
+        {
+          "AccountName": "ADANI GREEN ENERGY LIMITED",
+          "OpportunityName": "OR# 1326267",
+          "CurrentProduct": "Automation",
+          "RecommendedProduct": "Maintenance",
+          "RecommendationType": "UPSELL",
+          "ConfidenceScore": 0.721,
+          "SalesRegion": "South"
         }
       ]
     }

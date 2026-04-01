@@ -11,7 +11,8 @@ import {
   Calendar,
   Eye,
   FileText,
-  Sparkles
+  Sparkles,
+  BarChart3
 } from 'lucide-react';
 import './SidebarNavigation.css';
 
@@ -41,6 +42,7 @@ const SidebarNavigation = ({ role }) => {
   }, [isOpen]);
 
   const salesNavItems = [
+    { path: '/sales/dashboard', icon: <LayoutDashboard size={20} />, label: 'Dashboard' },
     { path: '/sales/accounts', icon: <Users size={20} />, label: 'Accounts' },
     { path: '/sales/my-plan', icon: <Calendar size={20} />, label: 'My Plan' },
     { path: '/sales/recommendations', icon: <Activity size={20} />, label: 'Recommendations' },
@@ -48,6 +50,7 @@ const SidebarNavigation = ({ role }) => {
 
   const salesHeadNavItems = [
     { path: '/sales-head/dashboard', icon: <LayoutDashboard size={20} />, label: 'Dashboard' },
+    { path: '/sales-head/analytics', icon: <BarChart3 size={20} />, label: 'Analytics' },
     { path: '/sales-head/accounts', icon: <Users size={20} />, label: 'All Accounts' },
     { path: '/sales-head/team-recommendations', icon: <Eye size={20} />, label: 'Team Recommendations' },
     { path: '/sales-head/organization-plan', icon: <FileText size={20} />, label: 'Organization Plan' },

@@ -1,31 +1,63 @@
 .team-plan-page {
-  padding: 2rem;
+  padding: 1.5rem;
+  width: 100%;
 }
 
 .team-plan-header {
   margin-bottom: 2rem;
+  width: 100%;
 }
 
 .header-stats {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(2, 1fr);
   gap: 1.5rem;
   margin-bottom: 2rem;
+  width: 100%;
 }
 
 .stat-item {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  padding: 1.5rem;
-  background: var(--glass-bg);
-  border: 1px solid var(--glass-border);
+  gap: 1.25rem;
+  padding: 1.75rem;
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
   border-radius: 12px;
-  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--salesforce-blue), var(--cyan));
+  opacity: 0.8;
+  transition: opacity 0.25s ease;
+}
+
+.stat-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  border-color: rgba(27, 150, 255, 0.3);
+}
+
+.stat-item:hover::before {
+  opacity: 1;
 }
 
 .stat-item svg {
   color: var(--salesforce-blue);
+  flex-shrink: 0;
+  filter: drop-shadow(0 2px 4px rgba(1, 118, 211, 0.2));
 }
 
 .stat-value {
@@ -33,61 +65,104 @@
   font-weight: 700;
   color: var(--text-primary);
   line-height: 1;
+  background: linear-gradient(135deg, var(--salesforce-blue), var(--cyan));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .stat-label {
   font-size: 0.875rem;
-  color: var(--text-muted);
-  margin-top: 0.25rem;
+  color: #6B7280;
+  margin-top: 0.5rem;
+  font-weight: 500;
 }
 
 .team-reps-plans {
   display: flex;
   flex-direction: column;
-  gap: 3rem;
+  gap: 2rem;
+  width: 100%;
 }
 
 .rep-plan-section {
-  background: var(--glass-bg);
-  border: 1px solid var(--glass-border);
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
   border-radius: 16px;
   padding: 2rem;
-  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.rep-plan-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--salesforce-blue), var(--cyan), var(--purple));
+  opacity: 0.8;
+}
+
+.rep-plan-section:hover {
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border-color: rgba(27, 150, 255, 0.2);
 }
 
 .rep-plan-header {
   margin-bottom: 1.5rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid var(--glass-border);
+  padding-bottom: 1.25rem;
+  border-bottom: 2px solid #F3F4F6;
 }
 
 .rep-info {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 1.25rem;
 }
 
 .rep-avatar {
-  font-size: 2.5rem;
-  width: 60px;
-  height: 60px;
+  font-size: 2rem;
+  width: 64px;
+  height: 64px;
   background: linear-gradient(135deg, var(--salesforce-blue), var(--cyan));
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: 0 4px 12px rgba(1, 118, 211, 0.25);
+  border: 3px solid #FFFFFF;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.rep-plan-section:hover .rep-avatar {
+  transform: scale(1.05);
+  box-shadow: 0 6px 16px rgba(1, 118, 211, 0.35);
 }
 
 .rep-info h3 {
-  font-size: 1.5rem;
+  font-size: 1.375rem;
   margin: 0;
   color: var(--text-primary);
+  font-weight: 700;
 }
 
 .rep-region {
   font-size: 0.875rem;
-  color: var(--text-muted);
-  margin: 0.25rem 0 0 0;
+  color: #6B7280;
+  margin: 0.375rem 0 0 0;
+  font-weight: 500;
+}
+
+@media (max-width: 1024px) {
+  .header-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 @media (max-width: 768px) {
@@ -97,9 +172,24 @@
 
   .header-stats {
     grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .stat-item {
+    padding: 1.25rem;
   }
 
   .rep-plan-section {
-    padding: 1rem;
+    padding: 1.5rem;
+  }
+
+  .rep-info h3 {
+    font-size: 1.25rem;
+  }
+
+  .rep-avatar {
+    width: 56px;
+    height: 56px;
+    font-size: 1.75rem;
   }
 }

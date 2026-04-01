@@ -4,8 +4,9 @@
   box-sizing: border-box;
 }
 
+/* Light Theme */
 :root {
-  /* Salesforce White Theme Colors */
+  /* Background Colors */
   --bg-primary: #FFFFFF;
   --bg-secondary: #F3F4F6;
   --surface: #FFFFFF;
@@ -27,6 +28,10 @@
   --text-primary: #181818;
   --text-secondary: #3E3E3C;
   --text-muted: #706E6B;
+  
+  /* Border Colors */
+  --border-color: rgba(0, 0, 0, 0.1);
+  --border-hover: rgba(0, 0, 0, 0.2);
   
   /* Effects */
   --glow-blue: 0 0 20px rgba(1, 118, 211, 0.15);
@@ -55,6 +60,7 @@ body {
   background: var(--bg-primary);
   color: var(--text-primary);
   overflow-x: hidden;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 code {

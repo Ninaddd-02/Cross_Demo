@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import SidebarNavigation from '../../components/SidebarNavigation/SidebarNavigation';
 import TopNavbar from '../../components/TopNavbar/TopNavbar';
@@ -12,18 +12,75 @@ import { Sparkles, TrendingUp, Filter, X, ChevronDown, RefreshCw } from 'lucide-
 import { getAIRecommendations } from '../../data/sharedData';
 import './AIRecommendations.css';
 
+// Helper function to format time since last update
+const getTimeSinceUpdate = (lastUpdated) => {
+  const now = new Date();
+  const diffInSeconds = Math.floor((now - lastUpdated) / 1000);
+  
+  if (diffInSeconds < 60) return 'Just now';
+  
+  const diffInMinutes = Math.floor(diffInSeconds / 60);
+  if (diffInMinutes < 60) return `${diffInMinutes} minute${diffInMinutes !== 1 ? 's' : ''} ago`;
+  
+  const diffInHours = Math.floor(diffInMinutes / 60);
+  if (diffInHours < 24) return `${diffInHours} hour${diffInHours !== 1 ? 's' : ''} ago`;
+  
+  const diffInDays = Math.floor(diffInHours / 24);
+  return `${diffInDays} day${diffInDays !== 1 ? 's' : ''} ago`;
+};
+
 const AIRecommendations = () => {
   const navigate = useNavigate();
-  const { currentUser } = useAuth();
+  const location = useLocation();
+  const { currentUser, tenantId } = useAuth();
   const [selectedRecommendation, setSelectedRecommendation] = useState(null);
+  const [dismissedIds, setDismissedIds] = useState([]);
   const [refreshKey, setRefreshKey] = useState(0);
   const [showFilters, setShowFilters] = useState(false);
+  const [lastUpdated, setLastUpdated] = useState(new Date());
+  const [timeDisplay, setTimeDisplay] = useState('Just now');
+  
+  // Update time display every minute
+  useEffect(() => {
+    const updateTimeDisplay = () => {
+      setTimeDisplay(getTimeSinceUpdate(lastUpdated));
+    };
+    
+    updateTimeDisplay(); // Initial update
+    const interval = setInterval(updateTimeDisplay, 60000); // Update every minute
+    
+    return () => clearInterval(interval);
+  }, [lastUpdated]);
+  
+  // Get account from navigation state if coming from Accounts page
+  const selectedAccount = location.state?.accountName || '';
+  
   const [filters, setFilters] = useState({
     technology: '',
     partner: '',
     opportunityType: '',
     accountName: ''
   });
+
+  // Update filter when coming from account selection
+  useEffect(() => {
+    if (selectedAccount) {
+      setFilters(prev => ({
+        ...prev,
+        accountName: selectedAccount
+      }));
+      // Filter is applied but panel stays closed unless user opens it
+    }
+  }, [selectedAccount]);
+  
+  // Auto-refresh when tenant changes
+  useEffect(() => {
+    if (tenantId) {
+      console.log('🔄 Tenant changed - refreshing recommendations');
+      setRefreshKey(prev => prev + 1);
+      setLastUpdated(new Date());
+    }
+  }, [tenantId]);
   
   // Get fresh recommendations based on current tenant
   const sharedAIRecommendations = useMemo(() => getAIRecommendations(), [refreshKey]);
@@ -129,6 +186,7 @@ const AIRecommendations = () => {
       if (syncEvent.data.repId === currentUser?.repId) {
         console.log('📡 Recommendation updated in another tab - refreshing');
         setRefreshKey(prev => prev + 1);
+        setLastUpdated(new Date());
       }
     });
 
@@ -177,13 +235,14 @@ const AIRecommendations = () => {
   // Apply filters to recommendations
   const filteredRecommendations = useMemo(() => {
     return repRecommendations.filter(rec => {
+      if (dismissedIds.includes(rec.id)) return false;
       if (filters.technology && rec.technology !== filters.technology) return false;
       if (filters.partner && rec.partner !== filters.partner) return false;
       if (filters.opportunityType && rec.opportunityType !== filters.opportunityType) return false;
       if (filters.accountName && rec.company !== filters.accountName) return false;
       return true;
     });
-  }, [repRecommendations, filters]);
+  }, [repRecommendations, filters, dismissedIds]);
   
   // Sort by confidence and get top 3 across ALL accounts
   const topRecommendations = useMemo(() => {
@@ -284,7 +343,8 @@ const AIRecommendations = () => {
       rejectRecommendation(id, 'Rejected from AI Recommendations page');
       console.log('❌ Recommendation rejected and synced');
     }
-    navigate('/sales/feedback');
+    // Dismiss the card without navigating away
+    setDismissedIds(prev => [...prev, id]);
   };
 
   return (
@@ -293,49 +353,27 @@ const AIRecommendations = () => {
       <div className="admin-content">
         <TopNavbar 
           title="Product Recommendations" 
-          subtitle={`Intelligent insights for ${accountName}`}
+          subtitle={selectedAccount 
+            ? `Recommendations for ${selectedAccount}` 
+            : `Intelligent insights for ${accountName}`
+          }
           user="Sales User"
         />
         
         <div className="page-body">
           <div className="recommendations-container">
-            <GlassCard className="recommendations-header-card">
-            <div className="reco-header-content">
-              <div className="reco-icon">
-                <Sparkles size={32} />
-              </div>
-              <div>
-                <h2 className="reco-header-title">Product Recommendations</h2>
-                <p className="reco-header-subtitle">
-                  Cross Sync analyzed historical data, market trends, and account behavior to generate these personalized recommendations
-                </p>
-              </div>
-            </div>
-            <div className="reco-stats">
-              <div className="reco-stat-item">
-                <div className="stat-number">{recommendationStats.activeCount}</div>
-                <div className="stat-text">Active Recommendations</div>
-              </div>
-              <div className="reco-stat-item">
-                <div className="stat-number">₹{recommendationStats.totalValue} Cr</div>
-                <div className="stat-text">Total Opportunity Value</div>
-              </div>
-              <div className="reco-stat-item">
-                <div className="stat-number">{recommendationStats.avgConfidence}%</div>
-                <div className="stat-text">Avg Confidence Score</div>
-              </div>
-            </div>
-          </GlassCard>
-
           <div className="recommendations-controls">
             <div className="controls-left">
               <StatusBadge status="active" label="Real-time" icon={<TrendingUp size={14} />} />
-              <span className="update-text">Last updated: 2 minutes ago</span>
+              <span className="update-text">Last updated: {timeDisplay}</span>
             </div>
             <div className="controls-right">
               <button 
                 className="refresh-button"
-                onClick={() => setRefreshKey(prev => prev + 1)}
+                onClick={() => {
+                  setRefreshKey(prev => prev + 1);
+                  setLastUpdated(new Date());
+                }}
                 title="Refresh recommendations"
               >
                 <RefreshCw size={18} />
@@ -438,10 +476,6 @@ const AIRecommendations = () => {
                   </div>
                 </div>
               </div>
-              
-              <div className="filter-results-count">
-                Showing {filteredRecommendations.length} of {repRecommendations.length} recommendations
-              </div>
             </GlassCard>
           )}
 
@@ -451,11 +485,35 @@ const AIRecommendations = () => {
               <p className="section-subtitle">Highest confidence opportunities across {accountName}</p>
             </div>
             <div className="recommendations-grid">
-              {topRecommendations.map((reco) => (
+              {topRecommendations.length === 0 ? (
+                <GlassCard className="empty-state" style={{gridColumn: '1 / -1', textAlign: 'center', padding: '3rem'}}>
+                  <Sparkles size={48} style={{opacity: 0.3, margin: '0 auto 1rem'}} />
+                  <h3>No recommendations found{selectedAccount && ` for ${selectedAccount}`}</h3>
+                  <p style={{marginBottom: '1.5rem'}}>There are no recommendations matching your current filters.</p>
+                  {selectedAccount && (
+                    <button 
+                      className="filter-button"
+                      onClick={() => {
+                        setFilters({technology: '', partner: '', opportunityType: '', accountName: ''});
+                        window.history.replaceState({}, document.title);
+                      }}
+                      style={{background: 'var(--salesforce-blue)', color: 'white', border: 'none'}}
+                    >
+                      View All Recommendations
+                    </button>
+                  )}
+                </GlassCard>
+              ) : (
+                topRecommendations.map((reco) => (
                 <AIRecommendationCard
                   key={reco.id}
                   type={reco.type}
                   accountName={reco.company || accountName}
+                  opportunityName={reco.opportunityName}
+                  currentProduct={reco.currentProduct}
+                  recommendedProduct={reco.recommendedProduct}
+                  recommendationType={reco.opportunityType}
+                  salesRegion={reco.salesRegion}
                   title={reco.title}
                   description={reco.description}
                   confidence={reco.confidence}
@@ -469,7 +527,8 @@ const AIRecommendations = () => {
                   onAccept={() => handleAccept(reco.id)}
                   onReject={() => handleReject(reco.id)}
                 />
-              ))}
+              ))
+              )}
             </div>
           </div>
 
@@ -479,11 +538,17 @@ const AIRecommendations = () => {
               <p className="section-subtitle">Additional opportunities for growth and optimization</p>
             </div>
             <div className="recommendations-grid">
-              {moreRecommendations.map((reco) => (
+              {moreRecommendations.length > 0 ? (
+                moreRecommendations.map((reco) => (
                 <AIRecommendationCard
                   key={reco.id}
                   type={reco.type}
                   accountName={reco.company || accountName}
+                  opportunityName={reco.opportunityName}
+                  currentProduct={reco.currentProduct}
+                  recommendedProduct={reco.recommendedProduct}
+                  recommendationType={reco.opportunityType}
+                  salesRegion={reco.salesRegion}
                   title={reco.title}
                   description={reco.description}
                   confidence={reco.confidence}
@@ -495,43 +560,12 @@ const AIRecommendations = () => {
                   onAccept={() => handleAccept(reco.id)}
                   onReject={() => handleReject(reco.id)}
                 />
-              ))}
+              ))
+              ) : topRecommendations.length > 0 ? (
+                <p style={{gridColumn: '1 / -1', textAlign: 'center', color: 'var(--text-muted)', padding: '2rem'}}>No additional recommendations at this time.</p>
+              ) : null}
             </div>
           </div>
-
-          <GlassCard className="how-it-works-card">
-            <h3 className="how-title">How Cross Sync Generates Recommendations</h3>
-            <div className="how-steps">
-              <div className="how-step">
-                <div className="step-num">1</div>
-                <div>
-                  <h4>Data Analysis</h4>
-                  <p>Analyzes account history, product usage, and transaction patterns</p>
-                </div>
-              </div>
-              <div className="how-step">
-                <div className="step-num">2</div>
-                <div>
-                  <h4>Pattern Recognition</h4>
-                  <p>ML engine identifies similarities with successful customer journeys</p>
-                </div>
-              </div>
-              <div className="how-step">
-                <div className="step-num">3</div>
-                <div>
-                  <h4>Confidence Scoring</h4>
-                  <p>Each recommendation receives a confidence score based on multiple factors</p>
-                </div>
-              </div>
-              <div className="how-step">
-                <div className="step-num">4</div>
-                <div>
-                  <h4>Continuous Learning</h4>
-                  <p>Feedback loops improve accuracy over time</p>
-                </div>
-              </div>
-            </div>
-          </GlassCard>
           </div>
         </div>
       </div>

@@ -6,6 +6,7 @@ import GlassCard from '../../components/GlassCard/GlassCard';
 import StatusBadge from '../../components/StatusBadge/StatusBadge';
 import GradientButton from '../../components/GradientButton/GradientButton';
 import { Database, Cloud, Server, FileText, CheckCircle, AlertCircle, Plus, Upload } from 'lucide-react';
+import logger from '../../utils/logger';
 import './ConnectDataSource.css';
 
 const ConnectDataSource = () => {
@@ -79,7 +80,7 @@ const ConnectDataSource = () => {
   ]);
 
   const handleConnect = (sourceId) => {
-    console.log('Connecting source:', sourceId);
+    logger.info('Connecting source', { sourceId });
     // Navigate to field mapping after connection
     navigate('/admin/map-fields');
   };
@@ -104,7 +105,7 @@ const ConnectDataSource = () => {
             <GradientButton 
               variant="primary" 
               icon={<Plus size={20} />}
-              onClick={() => console.log('Add custom source')}
+              onClick={() => logger.info('Add custom source clicked')}
             >
               Add Custom Source
             </GradientButton>

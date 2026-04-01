@@ -4,6 +4,7 @@ import { X } from 'lucide-react';
 import useDealsStore from '../../stores/useDealsStore';
 import useActivitiesStore from '../../stores/useActivitiesStore';
 import { notify } from '../../utils/notifications';
+import logger from '../../utils/logger';
 import './DealForm.css';
 
 const DealForm = ({ deal = null, repId, repName, region, onClose, onSave }) => {
@@ -85,7 +86,7 @@ const DealForm = ({ deal = null, repId, repName, region, onClose, onSave }) => {
       if (onSave) onSave();
       onClose();
     } catch (error) {
-      console.error('Error saving deal:', error);
+      logger.error('Error saving deal:', error);
       notify.saveError();
     }
   };

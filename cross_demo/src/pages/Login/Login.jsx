@@ -7,7 +7,7 @@ import './Login.css';
 const Login = () => {
   const navigate = useNavigate();
   const { login, getDefaultRoute } = useAuth();
-  const [orgId, setOrgId] = useState('');
+  const [orgId, setOrgId] = useState('P2SCSJ91BR52L8U');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [securityToken, setSecurityToken] = useState('');
@@ -52,7 +52,7 @@ const Login = () => {
     
     if (!userEmail) {
       // Clear form if no user selected
-      setOrgId('');
+      setOrgId('P2SCSJ91BR52L8U');
       setEmail('');
       setPassword('');
       setSecurityToken('');

@@ -1,88 +1,76 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import SidebarNavigation from '../../components/SidebarNavigation/SidebarNavigation';
 import TopNavbar from '../../components/TopNavbar/TopNavbar';
 import GlassCard from '../../components/GlassCard/GlassCard';
 import StatusBadge from '../../components/StatusBadge/StatusBadge';
-import { Building, MapPin, DollarSign, Users, Search, TrendingUp, Target, Activity, RefreshCw, AlertTriangle, Sparkles, ArrowUp, ArrowDown } from 'lucide-react';
-import { getAccountsByRepId, getAllAccounts, calculateRepKPIs } from '../../data/sharedData';
+import { Building, MapPin, DollarSign, TrendingUp, ArrowUpRight, Eye, Edit, Target, X } from 'lucide-react';
+import { getAccountsByRepId, getAllAccounts, getTenantInfo } from '../../data/sharedData';
 import './AccountsList.css';
 
 const AccountsList = () => {
   const navigate = useNavigate();
-  const { currentUser } = useAuth();
+  const { currentUser, tenantId } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
+  const [hoveredCard, setHoveredCard] = useState(null);
+  const [opportunitiesModal, setOpportunitiesModal] = useState({ isOpen: false, account: null, opportunities: [] });
+  const [refreshKey, setRefreshKey] = useState(0);
 
-  // Calculate Rep KPIs from tenant data
-  const kpiData = calculateRepKPIs();
-
-  // Sales Rep KPIs - Real Data from Tenant JSON
-  const repKPIs = [
-    {
-      title: 'Total Revenue',
-      value: kpiData.totalRevenue,
-      change: '+12.3%',
-      trend: 'up',
-      subtitle: 'Overall revenue',
-      icon: <DollarSign size={24} />,
-      status: 'success'
-    },
-    {
-      title: 'Avg Deal Velocity',
-      value: `${kpiData.avgDealVelocity} days`,
-      change: '-8 days',
-      trend: 'up',
-      subtitle: 'Time to close',
-      icon: <Activity size={24} />,
-      status: 'success'
-    },
-    {
-      title: 'Revenue at Risk',
-      value: kpiData.revenueAtRisk,
-      change: '7.8% of pipeline',
-      trend: 'down',
-      subtitle: 'Needs attention',
-      icon: <AlertTriangle size={24} />,
-      status: 'warning'
-    },
-    {
-      title: 'Avg Project Duration',
-      value: `${kpiData.avgProjectDuration} days`,
-      change: '+15 days',
-      trend: 'down',
-      subtitle: 'Project timeline',
-      icon: <Target size={24} />,
-      status: 'success'
-    },
-    {
-      title: 'Renewal Rate',
-      value: `${kpiData.renewalRate}%`,
-      change: '+4.2%',
-      trend: 'up',
-      subtitle: 'Customer retention',
-      icon: <RefreshCw size={24} />,
-      status: 'success'
-    },
-    {
-      title: 'Cross Sell Renewal Rate',
-      value: `${kpiData.crossSellRenewalRate}%`,
-      change: '+3.1%',
-      trend: 'up',
-      subtitle: 'Cross-sell success',
-      icon: <TrendingUp size={24} />,
-      status: 'success'
-    },
-    {
-      title: 'Up Sell Renewal Rate',
-      value: `${kpiData.upSellRenewalRate}%`,
-      change: '+5.7%',
-      trend: 'up',
-      subtitle: 'Upsell success',
-      icon: <ArrowUp size={24} />,
-      status: 'success'
+  // Auto-refresh when tenant changes
+  useEffect(() => {
+    if (tenantId) {
+      console.log('🔄 Tenant changed - refreshing accounts');
+      setRefreshKey(prev => prev + 1);
     }
-  ];
+  }, [tenantId]);
+
+  // Get opportunities for a specific account
+  const getAccountOpportunities = (accountName) => {
+    const tenantInfo = getTenantInfo();
+    const recommendations = tenantInfo.recommendations || [];
+    return recommendations.filter(rec => rec.AccountName === accountName);
+  };
+
+  // Handle opening opportunities modal
+  const handleOpenOpportunities = (account) => {
+    const opportunities = getAccountOpportunities(account.name);
+    setOpportunitiesModal({
+      isOpen: true,
+      account: account,
+      opportunities: opportunities
+    });
+  };
+
+  // Handle closing opportunities modal
+  const handleCloseOpportunities = () => {
+    setOpportunitiesModal({ isOpen: false, account: null, opportunities: [] });
+  };
+
+  // Navigate to recommendations based on user role
+  const handleAccountClick = (account) => {
+    let recommendationsPath;
+    
+    if (currentUser?.role === 'sales-rep') {
+      recommendationsPath = '/sales/recommendations';
+    } else if (currentUser?.role === 'sales-head') {
+      recommendationsPath = '/sales-head/team-recommendations';
+    } else if (currentUser?.role === 'sales-manager') {
+      recommendationsPath = '/sales-manager/team-recommendations';
+    } else {
+      // Fallback to account detail if role is unknown
+      navigate(`/sales/accounts/${account.id}`);
+      return;
+    }
+    
+    // Navigate with account information
+    navigate(recommendationsPath, {
+      state: {
+        accountName: account.name,
+        accountId: account.id
+      }
+    });
+  };
 
   // Get accounts based on user role
   const accounts = useMemo(() => {
@@ -94,7 +82,7 @@ const AccountsList = () => {
       return getAccountsByRepId(currentUser.repId);
     }
     return [];
-  }, [currentUser]);
+  }, [currentUser, refreshKey]);
 
   const filteredAccounts = accounts.filter(account =>
     account.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -109,105 +97,156 @@ const AccountsList = () => {
         <TopNavbar 
           title="Accounts"
           subtitle={`${filteredAccounts.length} Active Accounts`}
-          user="Sales User"
+          user={currentUser?.name || currentUser?.email || 'User'}
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+          searchPlaceholder="Search accounts..."
         />
         
         <div className="page-body">
-          {/* KPI Cards - Show for all roles */}
-          <div className="kpi-section">
-            <div className="kpi-grid">
-              {repKPIs.map((kpi, index) => (
-                <GlassCard key={index} className="kpi-card">
-                  <div className="kpi-header">
-                    <div className="kpi-icon" style={{ 
-                      background: kpi.status === 'warning' 
-                        ? 'linear-gradient(135deg, var(--warning), var(--orange))' 
-                        : 'linear-gradient(135deg, var(--salesforce-blue), var(--cyan))' 
-                    }}>
-                      {kpi.icon}
-                    </div>
-                  </div>
-                  <h3 className="kpi-title">{kpi.title}</h3>
-                  <div className="kpi-value">{kpi.value}</div>
-                  <p className="kpi-subtitle">{kpi.subtitle}</p>
-                </GlassCard>
-              ))}
-            </div>
-          </div>
-
           <div className="accounts-list-container">
-            <div className="accounts-header">
-              <div className="search-bar">
-                <Search size={20} />
-                <input
-                  type="text"
-                  placeholder="Search accounts..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="search-input"
-                />
+            {/* Enhanced KPI Summary Strip */}
+            <div className="kpi-summary-strip">
+              <div className="kpi-summary-card">
+                <div className="kpi-icon">
+                  <Building size={24} />
+                </div>
+                <div className="kpi-content">
+                  <div className="kpi-value">{filteredAccounts.length}</div>
+                  <div className="kpi-label">Active Accounts In Pipeline</div>
+                </div>
               </div>
               
-              <div className="accounts-stats">
-                <div className="stat-item">
-                  <Building size={20} />
-                  <div>
-                    <div className="stat-value">{filteredAccounts.length}</div>
-                    <div className="stat-label">Active Accounts</div>
-                  </div>
+              <div className="kpi-summary-card">
+                <div className="kpi-icon opportunities">
+                  <Target size={24} />
                 </div>
-                <div className="stat-item">
-                  <TrendingUp size={20} />
-                  <div>
-                    <div className="stat-value">{filteredAccounts.reduce((sum, acc) => sum + acc.opportunities, 0)}</div>
-                    <div className="stat-label">Total Opportunities</div>
-                  </div>
+                <div className="kpi-content">
+                  <div className="kpi-value">{filteredAccounts.reduce((sum, acc) => sum + acc.opportunities, 0)}</div>
+                  <div className="kpi-label">Total Opportunities</div>
                 </div>
               </div>
             </div>
 
             <div className="accounts-grid">
-              {filteredAccounts.map((account) => (
-                <GlassCard 
-                  key={account.id}
-                  className="account-card"
-                  onClick={() => navigate(`/sales/accounts/${account.id}`)}
-                >
-                  <div className="account-card-header">
-                    <div className="account-icon">
-                      <Building size={24} />
+              {filteredAccounts.map((account) => {
+                return (
+                  <GlassCard 
+                    key={account.id}
+                    className="account-card"
+                    onMouseEnter={() => setHoveredCard(account.id)}
+                    onMouseLeave={() => setHoveredCard(null)}
+                  >
+                    <div className="account-card-header">
+                      <StatusBadge 
+                        status={account.status === 'Active' ? 'success' : 'warning'} 
+                        label={account.status} 
+                        size="small" 
+                      />
                     </div>
-                    <StatusBadge status="success" label={account.status} size="small" />
-                  </div>
 
-                  <h3 className="account-name">{account.name}</h3>
-                  <p className="account-industry">{account.industry}</p>
+                    <h3 className="account-name">{account.name}</h3>
+                    <p className="account-industry">{account.industry}</p>
 
-                  <div className="account-metrics">
-                    <div className="metric">
-                      <DollarSign size={16} />
-                      <div>
-                        <div className="metric-label">Revenue</div>
-                        <div className="metric-value">{account.revenue}</div>
+                    <div className="account-footer">
+                      <div className="account-location">
+                        <MapPin size={14} />
+                        <span>{account.location}</span>
+                      </div>
+                      <div className="account-opportunities-badge">
+                        <Target size={12} />
+                        <span>{account.opportunities}</span>
                       </div>
                     </div>
-                  </div>
 
-                  <div className="account-footer">
-                    <div className="account-location">
-                      <MapPin size={14} />
-                      <span>{account.location}</span>
+                    {/* Quick Actions - Always Visible */}
+                    <div className="quick-actions visible">
+                      <button 
+                        className="action-btn primary"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleAccountClick(account);
+                        }}
+                      >
+                        <Eye size={16} />
+                        <span>View Recommendations</span>
+                      </button>
+
                     </div>
-                    <div className="account-opportunities-count">
-                      {account.opportunities} recommendations
-                    </div>
-                  </div>
-                </GlassCard>
-              ))}
+                  </GlassCard>
+                );
+              })}
             </div>
           </div>
         </div>
       </div>
+
+      {/* Opportunities Modal */}
+      {opportunitiesModal.isOpen && (
+        <div className="opportunities-modal-overlay" onClick={handleCloseOpportunities}>
+          <div className="opportunities-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <div>
+                <h2 className="modal-title">Opportunities</h2>
+                <p className="modal-subtitle">{opportunitiesModal.account?.name}</p>
+              </div>
+              <button className="modal-close-btn" onClick={handleCloseOpportunities}>
+                <X size={24} />
+              </button>
+            </div>
+            <div className="modal-body">
+              {opportunitiesModal.opportunities.length === 0 ? (
+                <div className="no-opportunities">
+                  <Target size={48} />
+                  <p>No opportunities found for this account</p>
+                </div>
+              ) : (
+                <div className="opportunities-list">
+                  {opportunitiesModal.opportunities.map((opp, index) => (
+                    <div key={index} className="opportunity-item">
+                      <div className="opportunity-header">
+                        <div className="opportunity-icon">
+                          <Target size={20} />
+                        </div>
+                        <div className="opportunity-details">
+                          <h3 className="opportunity-title">{opp.RecommendedProduct || 'Technology Solution'}</h3>
+                          <p className="opportunity-type">{opp.RecommendationType || 'OPPORTUNITY'}</p>
+                        </div>
+                      </div>
+                      <div className="opportunity-info">
+                        {opp.RecommendedProduct && (
+                          <div className="info-item">
+                            <span className="info-label">Product:</span>
+                            <span className="info-value">{opp.RecommendedProduct}</span>
+                          </div>
+                        )}
+                        {opp.Partner && (
+                          <div className="info-item">
+                            <span className="info-label">Partner:</span>
+                            <span className="info-value">{opp.Partner}</span>
+                          </div>
+                        )}
+                        {opp.ConfidenceScore && (
+                          <div className="info-item">
+                            <span className="info-label">Confidence:</span>
+                            <span className="info-value">{(opp.ConfidenceScore * 100).toFixed(0)}%</span>
+                          </div>
+                        )}
+                        {opp.Method && (
+                          <div className="info-item">
+                            <span className="info-label">Method:</span>
+                            <span className="info-value">{opp.Method.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}</span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
