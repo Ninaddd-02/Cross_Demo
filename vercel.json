@@ -1,0 +1,7 @@
+{
+  "buildCommand": "cd cross_demo && npm install && npm run build",
+  "outputDirectory": "cross_demo/dist",
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}
