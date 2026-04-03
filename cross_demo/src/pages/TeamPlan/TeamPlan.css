@@ -192,4 +192,14 @@
     height: 56px;
     font-size: 1.75rem;
   }
+
+  .rep-info h3 {
+    font-size: 1.25rem;
+  }
+
+  .rep-avatar {
+    width: 56px;
+    height: 56px;
+    font-size: 1.75rem;
+  }
 }
