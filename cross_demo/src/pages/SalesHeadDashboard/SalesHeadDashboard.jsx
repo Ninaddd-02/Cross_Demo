@@ -15,12 +15,8 @@ import {
 import {
   LineChart, Line, BarChart, Bar, PieChart, Pie, Cell,
   AreaChart, Area, ComposedChart, Scatter, XAxis, YAxis,
-  CartesianGrid, Tooltip, ResponsiveContainer, Legend
-} from 'recharts';
-import { 
-  LineChart, Line, BarChart, Bar, PieChart, Pie, 
-  RadialBarChart, RadialBar, Cell, XAxis, YAxis, 
-  CartesianGrid, Tooltip, Legend, ResponsiveContainer
+  CartesianGrid, Tooltip, ResponsiveContainer, Legend,
+  RadialBarChart, RadialBar
 } from 'recharts';
 import { 
   calculateHeadKPIs
