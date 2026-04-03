@@ -86,30 +86,57 @@
   box-shadow: 0 2px 8px rgba(1, 118, 211, 0.2);
 }
 
+.type-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-secondary);
+}
+
 .recommendation-confidence {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.5rem 0.875rem;
-  background: linear-gradient(135deg, rgba(251, 191, 36, 0.1), rgba(252, 211, 77, 0.1));
+  padding: 0.4rem 0.85rem;
   border-radius: 20px;
-  border: 1px solid rgba(251, 191, 36, 0.3);
-  color: var(--text-secondary);
-  font-size: 0.875rem;
+  border: 1px solid transparent;
+  font-size: 0.8rem;
   font-weight: 700;
-  box-shadow: 0 2px 8px rgba(251, 191, 36, 0.15);
+  transition: background 0.2s ease, border-color 0.2s ease;
 }
+
+/* ── Confidence color classes (inline value pill) ───── */
+.confidence-value {
+  display: inline-block;
+  padding: 0.15rem 0.55rem;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 0.9375rem;
+}
+
+.high-confidence {
+  background: #e6f7ee;
+  color: #1f9d55;
+}
+
+.medium-confidence {
+  background: #e8f1fd;
+  color: #2f6fed;
+}
+
+.low-confidence {
+  background: #fff4e5;
+  color: #f08c00;
+}
+
+/* ── Card left-border accent ─────────────────────────── */
+.card-accent-green { border-left: 3px solid #34c577 !important; }
+.card-accent-blue  { border-left: 3px solid #2f6fed !important; }
+.card-accent-orange { border-left: 3px solid #f08c00 !important; }
 
 .sparkle-icon {
-  color: #F59E0B;
   animation: pulse 2s ease-in-out infinite;
-}
-
-.confidence-text {
-  background: linear-gradient(135deg, #F59E0B, #FBBF24);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
 }
 
 .recommendation-body {
