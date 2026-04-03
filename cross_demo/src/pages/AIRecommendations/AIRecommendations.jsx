@@ -440,9 +440,9 @@ const AIRecommendations = () => {
                   </div>
                 </div>
 
-                {/* Recommendation Type Filter */}
+                {/* Opportunity Type Filter */}
                 <div className="filter-group">
-                  <label className="filter-label">Recommendation Type</label>
+                  <label className="filter-label">Opportunity Type</label>
                   <div className="filter-select-wrapper">
                     <select 
                       className="filter-select"

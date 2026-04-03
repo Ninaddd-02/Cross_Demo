@@ -20,7 +20,6 @@ import AccountDetail from './pages/AccountDetail/AccountDetail';
 import SalesHeadDashboard from './pages/SalesHeadDashboard/SalesHeadDashboard';
 import OrganizationPlan from './pages/OrganizationPlan/OrganizationPlan';
 import AnalyticsDashboard from './pages/AnalyticsDashboard/AnalyticsDashboard';
-import SalesHeadTeamActivity from './pages/SalesHeadTeamActivity/SalesHeadTeamActivity';
 
 // Sales Manager Pages
 import SalesManagerDashboard from './pages/SalesManagerDashboard/SalesManagerDashboard';
@@ -131,6 +130,11 @@ function App() {
             <SalesHeadDashboard />
           </ProtectedRoute>
         } />
+        <Route path="/sales-head/analytics" element={
+          <ProtectedRoute allowedRoles={['sales-head']}>
+            <AnalyticsDashboard />
+          </ProtectedRoute>
+        } />
         <Route path="/sales-head/accounts" element={
           <ProtectedRoute allowedRoles={['sales-head']}>
             <AccountsList />
@@ -174,11 +178,6 @@ function App() {
         <Route path="/sales-head/team-recommendations" element={
           <ProtectedRoute allowedRoles={['sales-head']}>
             <TeamRecommendations />
-          </ProtectedRoute>
-        } />
-        <Route path="/sales-head/team-activity" element={
-          <ProtectedRoute allowedRoles={['sales-head']}>
-            <SalesHeadTeamActivity />
           </ProtectedRoute>
         } />
         
