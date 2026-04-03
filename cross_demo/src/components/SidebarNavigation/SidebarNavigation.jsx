@@ -50,8 +50,8 @@ const SidebarNavigation = ({ role }) => {
 
   const salesHeadNavItems = [
     { path: '/sales-head/dashboard', icon: <LayoutDashboard size={20} />, label: 'Dashboard' },
-    { path: '/sales-head/analytics', icon: <BarChart3 size={20} />, label: 'Analytics' },
     { path: '/sales-head/accounts', icon: <Users size={20} />, label: 'All Accounts' },
+    { path: '/sales-head/team-activity', icon: <Activity size={20} />, label: 'Team Activity' },
     { path: '/sales-head/team-recommendations', icon: <Eye size={20} />, label: 'Team Recommendations' },
     { path: '/sales-head/organization-plan', icon: <FileText size={20} />, label: 'Organization Plan' },
     { path: '/sales-head/all-recommendations', icon: <Sparkles size={20} />, label: 'All Recommendations' },
